@@ -37,8 +37,8 @@ class Timeline {
   }
 }
 
-function drawCenterAxis(ctx, maxX, maxY) {
-  ctx.strokeStyle = "gray";
+function drawCenterAxis(ctx, maxX, maxY, color) {
+  ctx.strokeStyle = color;
   ctx.lineWidth = 1;
 
   ctx.beginPath();
@@ -77,7 +77,7 @@ function setupCanvas() {
   let scaleWidth = 100;
   timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
 
-  drawCenterAxis(ctx, canvas.width, canvas.height);
+  drawCenterAxis(ctx, canvas.width, canvas.height, "blue");
 }
 
 window.addEventListener("load", setupCanvas);

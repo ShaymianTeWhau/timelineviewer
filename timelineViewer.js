@@ -1,6 +1,7 @@
 class Timeline {
   #focusDate = new Date();
   #scaleType = "year";
+  #focusX = 100;
   #scaleWidth = 100; // in pixels
   constructor() {}
   setFocusDate(focusDate) {
@@ -28,9 +29,10 @@ class Timeline {
     }
     this.#scaleType = scaleType;
   }
-  draw(ctx, canvas, focusDate, scaleType, scaleWidth) {
+  draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth) {
     this.setFocusDate(focusDate);
     this.setScaleType(scaleType);
+    this.#focusX = focusX;
   }
 }
 
@@ -55,8 +57,9 @@ function setupCanvas() {
   const timeline = new Timeline();
   let focusDate = new Date(2018, 11, 24, 10, 33, 30, 12);
   let scaleType = "year";
+  let focusX = canvas.width / 2;
   let scaleWidth = 100;
-  timeline.draw(ctx, canvas, focusDate, scaleType, scaleWidth);
+  timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
   console.log("focus date: " + focusDate + " ms:" + focusDate.getMilliseconds());
 }
 

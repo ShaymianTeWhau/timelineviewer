@@ -29,11 +29,27 @@ class Timeline {
     }
     this.#scaleType = scaleType;
   }
+
   draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth) {
     this.setFocusDate(focusDate);
     this.setScaleType(scaleType);
     this.#focusX = focusX;
   }
+}
+
+function drawCenterAxis(ctx, maxX, maxY) {
+  ctx.strokeStyle = "gray";
+  ctx.lineWidth = 1;
+
+  ctx.beginPath();
+  ctx.moveTo(maxX / 2, 0);
+  ctx.lineTo(maxX / 2, maxY);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(0, maxY / 2);
+  ctx.lineTo(maxX, maxY / 2);
+  ctx.stroke();
 }
 
 function setupCanvas() {
@@ -60,7 +76,8 @@ function setupCanvas() {
   let focusX = canvas.width / 2;
   let scaleWidth = 100;
   timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
-  console.log("focus date: " + focusDate + " ms:" + focusDate.getMilliseconds());
+
+  drawCenterAxis(ctx, canvas.width, canvas.height);
 }
 
 window.addEventListener("load", setupCanvas);

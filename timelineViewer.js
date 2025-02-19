@@ -4,6 +4,9 @@ class Timeline {
   #scaleWidth = 100; // in pixels
   constructor() {}
   setFocusDate(focusDate) {
+    if (!(focusDate instanceof Date)) {
+      throw new Error("focusDate must be an instance of the Date class.");
+    }
     this.#focusDate = focusDate;
   }
   setScaleType(scaleType) {
@@ -51,7 +54,7 @@ function setupCanvas() {
 
   const timeline = new Timeline();
   let focusDate = new Date(2018, 11, 24, 10, 33, 30, 12);
-  let scaleType = "years";
+  let scaleType = "year";
   let scaleWidth = 100;
   timeline.draw(ctx, canvas, focusDate, scaleType, scaleWidth);
   console.log("focus date: " + focusDate + " ms:" + focusDate.getMilliseconds());

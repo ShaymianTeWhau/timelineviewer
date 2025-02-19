@@ -51,7 +51,7 @@ function setupCanvas() {
 
   const ctx = canvas.getContext("2d");
 
-  canvas.width = window.innerWidth;
+  canvas.width = window.innerWidth - 10;
   canvas.height = 1000;
 
   const timeline = new Timeline();

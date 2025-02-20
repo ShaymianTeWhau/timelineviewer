@@ -170,9 +170,11 @@ class Timeline {
       curGridLineX = focusX + pixelDistanceFromFocus;
 
       let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, linesAboveCenter);
-      let CurValue = getFocusDateAsValue(curDate, this.#scaleType);
-      console.log("linesAbove center: " + linesAboveCenter + " curValue: " + CurValue);
-      ctx.fillText(CurValue, curGridLineX, 80);
+      let curValue = getFocusDateAsValue(curDate, this.#scaleType);
+      // temp
+      if (this.#scaleType == "month")
+        curValue = curDate.toLocaleString("default", { month: "long" });
+      ctx.fillText(curValue, curGridLineX, 80);
 
       // draw line
       ctx.beginPath();
@@ -192,8 +194,11 @@ class Timeline {
       curGridLineX = focusX - pixelDistanceFromFocus;
 
       let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, -linesBelowCenter);
-      let CurValue = getFocusDateAsValue(curDate, this.#scaleType);
-      ctx.fillText(CurValue, curGridLineX, 80);
+      let curValue = getFocusDateAsValue(curDate, this.#scaleType);
+      // temp
+      if (this.#scaleType == "month")
+        curValue = curDate.toLocaleString("default", { month: "long" });
+      ctx.fillText(curValue, curGridLineX, 80);
 
       // draw line
       ctx.beginPath();
@@ -243,7 +248,7 @@ function setupCanvas() {
 
   const timeline = new Timeline();
   let focusDate = new Date(2005, 11, 28, 23, 58, 57, 999);
-  let scaleType = "month";
+  let scaleType = "year";
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);

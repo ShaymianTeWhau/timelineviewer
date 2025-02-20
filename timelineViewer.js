@@ -269,6 +269,19 @@ function setupCanvas() {
       timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
     }
   });
+
+  window.addEventListener("wheel", (event) => {
+    if (event.shiftKey) {
+      if (event.deltaY > 0) {
+        // shift + Scroll down
+        focusX += horizontalScrollSpeed;
+      } else if (event.deltaY < 0) {
+        // shift + Scroll up
+        focusX -= horizontalScrollSpeed;
+      }
+    }
+    timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
+  });
 }
 
 window.addEventListener("load", setupCanvas);

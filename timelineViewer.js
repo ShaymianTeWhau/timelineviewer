@@ -38,6 +38,8 @@ class Timeline {
     let linesAboveCenterValue = [];
     let linesBelowCenterX = [];
 
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1;
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     ctx.font = "20px Arial";
@@ -56,8 +58,6 @@ class Timeline {
       }
 
       // draw line
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(curGridLineX, 0);
       ctx.lineTo(curGridLineX, canvas.height);
@@ -81,8 +81,6 @@ class Timeline {
       }
 
       // draw line
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(curGridLineX, 0);
       ctx.lineTo(curGridLineX, canvas.height);

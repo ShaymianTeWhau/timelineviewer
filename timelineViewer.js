@@ -152,9 +152,6 @@ class Timeline {
     this.setScaleType(scaleType);
     this.#focusX = focusX;
 
-    let linesAboveCenterValue = [];
-    let linesBelowCenterX = [];
-
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
     ctx.textAlign = "center";

@@ -252,8 +252,6 @@ function setupCanvas() {
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
-
-  //drawCenterAxis(ctx, canvas.width, canvas.height, "blue");
 }
 
 window.addEventListener("load", setupCanvas);

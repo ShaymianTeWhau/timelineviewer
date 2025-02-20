@@ -125,7 +125,7 @@ function incrementDateByScaleType(oldDate, scaleType, increment) {
       newDate.setMilliseconds(newDate.getMilliseconds() + increment);
       break;
   }
-  console.log("new date: " + newDate + " millisecond:" + newDate.getMilliseconds());
+  //console.log("new date: " + newDate + " millisecond:" + newDate.getMilliseconds());
   return newDate;
 }
 
@@ -181,15 +181,15 @@ class Timeline {
     // draw lines above focusPoint (including focus point)
     let pixelDistanceFromFocus = 0;
     let curGridLineX = 0;
-    let linesAboveCenter = 0;
+    let linesAboveFocus = 0;
     while (curGridLineX < canvas.width) {
       // temp color focus date and grid line
-      if (linesAboveCenter == 0) ctx.strokeStyle = "red";
+      if (linesAboveFocus == 0) ctx.strokeStyle = "red";
       else ctx.strokeStyle = "black";
 
       curGridLineX = focusX + pixelDistanceFromFocus;
 
-      let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, linesAboveCenter);
+      let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, linesAboveFocus);
       let curValue = getFocusDateAsValue(curDate, this.#scaleType);
       // temp
       if (this.#scaleType == "month")
@@ -202,18 +202,18 @@ class Timeline {
       ctx.lineTo(curGridLineX, canvas.height);
       ctx.stroke();
       pixelDistanceFromFocus += scaleWidth;
-      linesAboveCenter++;
+      linesAboveFocus++;
     }
 
     // draw lines below focus point (does not include focus point)
     pixelDistanceFromFocus = scaleWidth;
     curGridLineX = canvas.width; // arbitrary number rightside of canvas
-    let linesBelowCenter = 0;
+    let linesBelowFocus = 0;
     while (curGridLineX > 0) {
-      linesBelowCenter++;
+      linesBelowFocus++;
       curGridLineX = focusX - pixelDistanceFromFocus;
 
-      let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, -linesBelowCenter);
+      let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, -linesBelowFocus);
       let curValue = getFocusDateAsValue(curDate, this.#scaleType);
       // temp
       if (this.#scaleType == "month")
@@ -228,8 +228,8 @@ class Timeline {
 
       pixelDistanceFromFocus += scaleWidth;
     }
-    console.log("lines above center (including center): " + linesAboveCenter);
-    console.log("lines below center: " + linesBelowCenter);
+    console.log("lines above focus (including center): " + linesAboveFocus);
+    console.log("lines below focus: " + linesBelowFocus);
   }
 }
 

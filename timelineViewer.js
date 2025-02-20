@@ -1,3 +1,57 @@
+function getFocusValue(date, scaleType, increment) {
+  let value;
+  const validScaleTypes = [
+    "millennium",
+    "century",
+    "decade",
+    "year",
+    "month",
+    "date",
+    "hour",
+    "minute",
+    "second",
+    "millisecond",
+  ];
+  if (!validScaleTypes.includes(scaleType)) {
+    throw new Error(
+      "Invalid scaleType, scaleType cannot be '" + scaleType + "' must be " + validScaleTypes
+    );
+  }
+  switch (scaleType) {
+    case "millennium":
+      value = date.getFullYear() + increment * 1000;
+      break;
+    case "century":
+      value = date.getFullYear() + increment * 100;
+      break;
+    case "decade":
+      value = date.getFullYear() + increment * 10;
+      break;
+    case "year":
+      value = date.getFullYear() + increment * 1;
+      break;
+    case "month":
+      value = date.getMonth() + increment * 1;
+      break;
+    case "date":
+      value = date.getDate() + increment * 1;
+      break;
+    case "hour":
+      value = date.getHours() + increment * 1;
+      break;
+    case "minute":
+      value = date.getMinutes() + increment * 1;
+      break;
+    case "second":
+      value = date.getSeconds() + increment * 1;
+      break;
+    case "millisecond":
+      value = date.getMilliseconds() + increment * 1;
+      break;
+  }
+  return value;
+}
+
 class Timeline {
   #focusDate = new Date();
   #scaleType = "year";
@@ -17,7 +71,7 @@ class Timeline {
       "decade",
       "year",
       "month",
-      "day",
+      "date",
       "hour",
       "second",
       "millisecond",
@@ -51,11 +105,8 @@ class Timeline {
     while (curGridLineX < canvas.width) {
       curGridLineX = focusX + pixelDistanceFromFocus;
 
-      // temp label grid line
-      if (scaleType == "year") {
-        let curYear = this.#focusDate.getFullYear() + 1 * linesAboveCenter;
-        ctx.fillText(curYear, curGridLineX, 80);
-      }
+      let CurValue = getFocusValue(this.#focusDate, this.#scaleType, linesAboveCenter);
+      ctx.fillText(CurValue, curGridLineX, 80);
 
       // draw line
       ctx.beginPath();
@@ -74,11 +125,8 @@ class Timeline {
       linesBelowCenter++;
       curGridLineX = focusX - pixelDistanceFromFocus;
 
-      // temp label grid line
-      if (scaleType == "year") {
-        let curYear = this.#focusDate.getFullYear() - 1 * linesBelowCenter;
-        ctx.fillText(curYear, curGridLineX, 100);
-      }
+      let CurValue = getFocusValue(this.#focusDate, this.#scaleType, -linesBelowCenter);
+      ctx.fillText(CurValue, curGridLineX, 80);
 
       // draw line
       ctx.beginPath();
@@ -127,8 +175,8 @@ function setupCanvas() {
   canvas.height = 1000;
 
   const timeline = new Timeline();
-  let focusDate = new Date(2000, 11, 24, 10, 33, 30, 12);
-  let scaleType = "year";
+  let focusDate = new Date(2000, 11, 29, 10, 33, 30, 12);
+  let scaleType = "date";
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);

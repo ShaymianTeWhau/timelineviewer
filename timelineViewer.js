@@ -184,7 +184,7 @@ class Timeline {
     let linesAboveFocus = 0;
     while (curGridLineX < canvas.width) {
       // temp color focus date and grid line
-      if (linesAboveFocus == 0) ctx.strokeStyle = "red";
+      if (linesAboveFocus == 0 && focusX < canvas.width) ctx.strokeStyle = "red";
       else ctx.strokeStyle = "black";
 
       curGridLineX = focusX + pixelDistanceFromFocus;

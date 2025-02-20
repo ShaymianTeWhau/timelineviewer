@@ -1,4 +1,4 @@
-function getFocusValue(date, scaleType, increment) {
+function getFocusDateAsValue(date, scaleType) {
   let value;
   const validScaleTypes = [
     "millennium",
@@ -19,37 +19,99 @@ function getFocusValue(date, scaleType, increment) {
   }
   switch (scaleType) {
     case "millennium":
-      value = date.getFullYear() + increment * 1000;
+      value = date.getFullYear();
       break;
     case "century":
-      value = date.getFullYear() + increment * 100;
+      value = date.getFullYear();
       break;
     case "decade":
-      value = date.getFullYear() + increment * 10;
+      value = date.getFullYear();
       break;
     case "year":
-      value = date.getFullYear() + increment * 1;
+      value = date.getFullYear();
       break;
     case "month":
-      value = date.getMonth() + increment * 1;
+      value = date.getMonth();
       break;
     case "date":
-      value = date.getDate() + increment * 1;
+      value = date.getDate();
       break;
     case "hour":
-      value = date.getHours() + increment * 1;
+      value = date.getHours();
       break;
     case "minute":
-      value = date.getMinutes() + increment * 1;
+      value = date.getMinutes();
       break;
     case "second":
-      value = date.getSeconds() + increment * 1;
+      value = date.getSeconds();
       break;
     case "millisecond":
-      value = date.getMilliseconds() + increment * 1;
+      value = date.getMilliseconds();
       break;
   }
   return value;
+}
+
+function incrementDateByScaleType(oldDate, scaleType, increment) {
+  let newDate = new Date(oldDate);
+  let year;
+
+  switch (scaleType) {
+    case "millennium":
+      year = newDate.getFullYear() + increment * 1000;
+      year = Math.floor(year / 1000) * 1000;
+      newDate = new Date(year, 0);
+      break;
+    case "century":
+      year = newDate.getFullYear() + increment * 100;
+      year = Math.floor(year / 100) * 100;
+      newDate = new Date(year, 0);
+      break;
+    case "decade":
+      year = newDate.getFullYear() + increment * 10;
+      year = Math.floor(year / 10) * 10;
+      newDate = new Date(year, 0);
+      break;
+    case "year":
+      year = newDate.getFullYear() + increment;
+      newDate = new Date(year, 0);
+      break;
+    case "month":
+      newDate.setDate(1);
+      newDate.setHours(0);
+      newDate.setMinutes(0);
+      newDate.setSeconds(0);
+      newDate.setMilliseconds(0);
+      newDate.setMonth(newDate.getMonth() + increment);
+      break;
+    case "date":
+      newDate.setHours(0);
+      newDate.setMinutes(0);
+      newDate.setSeconds(0);
+      newDate.setMilliseconds(0);
+      newDate.setDate(newDate.getDate() + increment);
+      break;
+    case "hour":
+      newDate.setMinutes(0);
+      newDate.setSeconds(0);
+      newDate.setMilliseconds(0);
+      newDate.setHours(newDate.getHours() + increment);
+      break;
+    case "minute":
+      newDate.setSeconds(0);
+      newDate.setMilliseconds(0);
+      newDate.setMinutes(newDate.getMinutes() + increment);
+      break;
+    case "second":
+      newDate.setMilliseconds(0);
+      newDate.setSeconds(newDate.getSeconds() + increment);
+      break;
+    case "millisecond":
+      newDate.setMilliseconds(newDate.getMilliseconds() + increment);
+      break;
+  }
+  console.log("new date: " + newDate + " millisecond:" + newDate.getMilliseconds());
+  return newDate;
 }
 
 class Timeline {
@@ -73,6 +135,7 @@ class Timeline {
       "month",
       "date",
       "hour",
+      "minute",
       "second",
       "millisecond",
     ];
@@ -103,9 +166,15 @@ class Timeline {
     let curGridLineX = 0;
     let linesAboveCenter = 0;
     while (curGridLineX < canvas.width) {
+      // temp color focus date and grid line
+      if (linesAboveCenter == 0) ctx.strokeStyle = "red";
+      else ctx.strokeStyle = "black";
+
       curGridLineX = focusX + pixelDistanceFromFocus;
 
-      let CurValue = getFocusValue(this.#focusDate, this.#scaleType, linesAboveCenter);
+      let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, linesAboveCenter);
+      let CurValue = getFocusDateAsValue(curDate, this.#scaleType);
+      console.log("linesAbove center: " + linesAboveCenter + " curValue: " + CurValue);
       ctx.fillText(CurValue, curGridLineX, 80);
 
       // draw line
@@ -125,7 +194,8 @@ class Timeline {
       linesBelowCenter++;
       curGridLineX = focusX - pixelDistanceFromFocus;
 
-      let CurValue = getFocusValue(this.#focusDate, this.#scaleType, -linesBelowCenter);
+      let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, -linesBelowCenter);
+      let CurValue = getFocusDateAsValue(curDate, this.#scaleType);
       ctx.fillText(CurValue, curGridLineX, 80);
 
       // draw line
@@ -175,8 +245,8 @@ function setupCanvas() {
   canvas.height = 1000;
 
   const timeline = new Timeline();
-  let focusDate = new Date(2000, 11, 29, 10, 33, 30, 12);
-  let scaleType = "date";
+  let focusDate = new Date(2005, 11, 28, 23, 58, 57, 999);
+  let scaleType = "month";
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);

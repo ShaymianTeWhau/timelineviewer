@@ -163,10 +163,15 @@ class Timeline {
   }
 
   draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth) {
+    // clear canvas
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     this.setFocusDate(focusDate);
     this.setScaleType(scaleType);
     this.#focusX = focusX;
 
+    ctx.fillStyle = "black";
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
     ctx.textAlign = "center";
@@ -242,9 +247,9 @@ function setupCanvas() {
   }
 
   const ctx = canvas.getContext("2d");
-
   canvas.width = window.innerWidth - 10;
   canvas.height = 1000;
+  let horizontalScrollSpeed = 50;
 
   const timeline = new Timeline();
   let focusDate = new Date(2005, 11, 28, 23, 58, 57, 999);
@@ -252,6 +257,18 @@ function setupCanvas() {
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
+
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowRight") {
+      console.log("arrow right");
+      focusX += horizontalScrollSpeed;
+      timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
+    } else if (event.key === "ArrowLeft") {
+      console.log("arrow left");
+      focusX -= horizontalScrollSpeed;
+      timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
+    }
+  });
 }
 
 window.addEventListener("load", setupCanvas);

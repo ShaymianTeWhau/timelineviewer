@@ -34,6 +34,64 @@ class Timeline {
     this.setFocusDate(focusDate);
     this.setScaleType(scaleType);
     this.#focusX = focusX;
+
+    let linesAboveCenterValue = [];
+    let linesBelowCenterX = [];
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.font = "20px Arial";
+
+    // draw lines above focusPoint (including focus point)
+    let pixelDistanceFromFocus = 0;
+    let curGridLineX = 0;
+    let linesAboveCenter = 0;
+    while (curGridLineX < canvas.width) {
+      curGridLineX = focusX + pixelDistanceFromFocus;
+
+      // temp label grid line
+      if (scaleType == "year") {
+        let curYear = this.#focusDate.getFullYear() + 1 * linesAboveCenter;
+        ctx.fillText(curYear, curGridLineX, 80);
+      }
+
+      // draw line
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(curGridLineX, 0);
+      ctx.lineTo(curGridLineX, canvas.height);
+      ctx.stroke();
+      pixelDistanceFromFocus += scaleWidth;
+      linesAboveCenter++;
+    }
+
+    // draw lines below focus point (does not include focus point)
+    pixelDistanceFromFocus = scaleWidth;
+    curGridLineX = canvas.width; // arbitrary number rightside of canvas
+    let linesBelowCenter = 0;
+    while (curGridLineX > 0) {
+      linesBelowCenter++;
+      curGridLineX = focusX - pixelDistanceFromFocus;
+
+      // temp label grid line
+      if (scaleType == "year") {
+        let curYear = this.#focusDate.getFullYear() - 1 * linesBelowCenter;
+        ctx.fillText(curYear, curGridLineX, 100);
+      }
+
+      // draw line
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(curGridLineX, 0);
+      ctx.lineTo(curGridLineX, canvas.height);
+      ctx.stroke();
+
+      pixelDistanceFromFocus += scaleWidth;
+    }
+    console.log("lines above center (including center): " + linesAboveCenter);
+    console.log("lines below center: " + linesBelowCenter);
   }
 }
 
@@ -71,13 +129,13 @@ function setupCanvas() {
   canvas.height = 1000;
 
   const timeline = new Timeline();
-  let focusDate = new Date(2018, 11, 24, 10, 33, 30, 12);
+  let focusDate = new Date(2000, 11, 24, 10, 33, 30, 12);
   let scaleType = "year";
   let focusX = canvas.width / 2;
-  let scaleWidth = 100;
+  let scaleWidth = 200;
   timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
 
-  drawCenterAxis(ctx, canvas.width, canvas.height, "blue");
+  //drawCenterAxis(ctx, canvas.width, canvas.height, "blue");
 }
 
 window.addEventListener("load", setupCanvas);

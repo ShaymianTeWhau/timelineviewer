@@ -163,6 +163,9 @@ class Timeline {
   }
 
   draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth) {
+    // temp code prevents crash if scale width is less than 1
+    if (scaleWidth < 1) scaleWidth = 1;
+
     // clear canvas
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -182,6 +185,7 @@ class Timeline {
     let pixelDistanceFromFocus = 0;
     let curGridLineX = 0;
     let linesAboveFocus = 0;
+
     while (curGridLineX < canvas.width) {
       // temp color focus date and grid line
       if (linesAboveFocus == 0 && focusX < canvas.width) ctx.strokeStyle = "red";
@@ -250,6 +254,7 @@ function setupCanvas() {
   canvas.width = window.innerWidth - 10;
   canvas.height = 1000;
   let horizontalScrollSpeed = 50;
+  let rescaleSpeed = 50;
 
   const timeline = new Timeline();
   let focusDate = new Date(2005, 11, 28, 23, 58, 57, 999);
@@ -280,6 +285,17 @@ function setupCanvas() {
         focusX -= horizontalScrollSpeed;
       }
     }
+
+    if (event.altKey) {
+      if (event.deltaY > 0) {
+        // alt + Scroll down
+        scaleWidth -= rescaleSpeed;
+      } else if (event.deltaY < 0) {
+        // alt + Scroll down
+        scaleWidth += rescaleSpeed;
+      }
+    }
+    console.log("scaleWidth: " + scaleWidth);
     timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
   });
 }

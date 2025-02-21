@@ -170,10 +170,16 @@ class Timeline {
   getScaleWidth() {
     return "" + this.#scaleWidth;
   }
+  #getBaselineLabel(date, scaleType, scaleWidth) {
+    let label = getFocusDateAsValue(date, scaleType);
+    if (scaleType == "month") label = date.toLocaleString("default", { month: "long" });
+    return label;
+  }
   rescale(rescaleSpeed) {
     // -rescaleSpeed to scale zoom out, +rescaleSpeed to scale zoom in
     this.#scaleWidth += rescaleSpeed;
   }
+
   drawBaseline(ctx, canvas) {
     // draw backing for baseline
     ctx.fillStyle = "rgb(197, 197, 197)";
@@ -203,8 +209,8 @@ class Timeline {
 
       // text
       let curDate = this.#lineDateArr[i];
-      let curValue = getFocusDateAsValue(curDate, this.#scaleType);
-      ctx.fillText(curValue, this.#linePosArr[i], baselineY + 10);
+      let baselineLabel = this.#getBaselineLabel(curDate, this.#scaleType, this.#scaleWidth);
+      ctx.fillText(baselineLabel, this.#linePosArr[i], baselineY + 10);
     }
   }
   draw(ctx, canvas, focusDate, focusX) {
@@ -251,8 +257,6 @@ class Timeline {
       let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, linesAboveFocus);
       let curValue = getFocusDateAsValue(curDate, this.#scaleType);
       // temp
-      if (this.#scaleType == "month")
-        curValue = curDate.toLocaleString("default", { month: "long" });
       if (this.#scaleWidth <= 70 && this.#scaleWidth > 30) {
         // print only multiples of 2
         if (curValue % 2 == 0) ctx.fillText(curValue, curGridLineX, 80);
@@ -285,8 +289,7 @@ class Timeline {
       let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, -linesBelowFocus);
       let curValue = getFocusDateAsValue(curDate, this.#scaleType);
       // temp
-      if (this.#scaleType == "month")
-        curValue = curDate.toLocaleString("default", { month: "long" });
+
       if (this.#scaleWidth <= 70 && this.#scaleWidth > 30) {
         // print only multiples of 2
         if (curValue % 2 == 0) ctx.fillText(curValue, curGridLineX, 80);
@@ -333,7 +336,7 @@ function setupCanvas() {
   let rescaleSpeed = 10;
 
   let focusDate = new Date(2005, 11, 28, 23, 58, 57, 999);
-  let scaleType = "year";
+  let scaleType = "month";
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   const timeline = new Timeline(scaleWidth, scaleType);

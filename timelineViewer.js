@@ -168,7 +168,7 @@ class Timeline {
     this.#scaleType = scaleType;
   }
   getScaleWidth() {
-    return "" + this.#scaleWidth;
+    return this.#scaleWidth;
   }
   #getBaselineLabel(date, scaleType, scaleWidth) {
     let label = getFocusDateAsValue(date, scaleType);

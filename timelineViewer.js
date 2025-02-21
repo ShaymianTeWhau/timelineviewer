@@ -221,12 +221,11 @@ class Timeline {
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // clear line arrays
+    // clear line date and position arrays
     this.#lineDateArr = [];
     this.#linePosArr = [];
 
     this.setFocusDate(focusDate);
-    //this.setScaleType(scaleType);
     this.#focusX = focusX;
 
     if (this.#scaleWidth <= 10) {
@@ -257,13 +256,7 @@ class Timeline {
       let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, linesAboveFocus);
       let curValue = getFocusDateAsValue(curDate, this.#scaleType);
       // temp
-      if (this.#scaleWidth <= 70 && this.#scaleWidth > 30) {
-        // print only multiples of 2
-        if (curValue % 2 == 0) ctx.fillText(curValue, curGridLineX, 80);
-      } else if (this.#scaleWidth <= 30) {
-        // print only multiples of 5
-        if (curValue % 5 == 0) ctx.fillText(curValue, curGridLineX, 80);
-      } else ctx.fillText(curValue, curGridLineX, 80);
+      ctx.fillText(curValue, curGridLineX, 80);
 
       // save line date and x position
       this.#lineDateArr.push(curDate);
@@ -289,14 +282,7 @@ class Timeline {
       let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, -linesBelowFocus);
       let curValue = getFocusDateAsValue(curDate, this.#scaleType);
       // temp
-
-      if (this.#scaleWidth <= 70 && this.#scaleWidth > 30) {
-        // print only multiples of 2
-        if (curValue % 2 == 0) ctx.fillText(curValue, curGridLineX, 80);
-      } else if (this.#scaleWidth <= 30) {
-        // print only multiples of 5
-        if (curValue % 5 == 0) ctx.fillText(curValue, curGridLineX, 80);
-      } else ctx.fillText(curValue, curGridLineX, 80);
+      ctx.fillText(curValue, curGridLineX, 80);
 
       // save line date and x position
       this.#lineDateArr.push(curDate);

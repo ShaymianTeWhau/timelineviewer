@@ -178,6 +178,22 @@ class Timeline {
   rescale(rescaleSpeed, mouseX) {
     // -rescaleSpeed to scale zoom out, +rescaleSpeed to scale zoom in
     this.#scaleWidth += rescaleSpeed;
+
+    // set focusX to the line position x closest to mouseX
+    let closestIndex = 0;
+    let diff = Math.abs(this.#linePosArr[0] - mouseX);
+    for (let i = 0; i < this.#linePosArr.length; i++) {
+      let curDiff = Math.abs(this.#linePosArr[i] - mouseX);
+      if (curDiff < diff) {
+        diff = curDiff;
+        closestIndex = i;
+      }
+    }
+    this.#focusX = this.#linePosArr[closestIndex];
+
+    // set focusDate to equal index as chosen line position
+    this.#focusDate = this.#lineDateArr[closestIndex];
+    console.log("closest line: " + closestIndex + " value: " + this.#lineDateArr[closestIndex]);
   }
 
   drawBaseline(ctx, canvas) {
@@ -374,7 +390,7 @@ function setupCanvas() {
     mouseX = event.clientX - rect.left;
     mouseY = event.clientY - rect.top;
 
-    console.log("mousexy: " + mouseX + "," + mouseY);
+    //console.log("mouse xy: " + mouseX + "," + mouseY);
   });
 }
 

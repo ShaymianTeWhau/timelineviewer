@@ -184,6 +184,13 @@ class Timeline {
     //this.setScaleType(scaleType);
     this.#focusX = focusX;
 
+    if (this.#scaleWidth <= 10) {
+      // increment scale type?
+      this.#scaleType = "decade";
+      this.#scaleWidth = 180;
+      this.#focusX -= 180 / 2;
+    }
+
     ctx.fillStyle = "black";
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
@@ -198,17 +205,23 @@ class Timeline {
 
     while (curGridLineX < canvas.width) {
       // temp color focus date and grid line
-      if (linesAboveFocus == 0 && focusX < canvas.width) ctx.strokeStyle = "red";
-      else ctx.strokeStyle = "black";
+      if (linesAboveFocus == 0 && this.#focusX < canvas.width) ctx.strokeStyle = "red";
+      else ctx.strokeStyle = "rgb(183, 183, 183)";
 
-      curGridLineX = focusX + pixelDistanceFromFocus;
+      curGridLineX = this.#focusX + pixelDistanceFromFocus;
 
       let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, linesAboveFocus);
       let curValue = getFocusDateAsValue(curDate, this.#scaleType);
       // temp
       if (this.#scaleType == "month")
         curValue = curDate.toLocaleString("default", { month: "long" });
-      ctx.fillText(curValue, curGridLineX, 80);
+      if (this.#scaleWidth <= 70 && this.#scaleWidth > 30) {
+        // print only multiples of 2
+        if (curValue % 2 == 0) ctx.fillText(curValue, curGridLineX, 80);
+      } else if (this.#scaleWidth <= 30) {
+        // print only multiples of 5
+        if (curValue % 5 == 0) ctx.fillText(curValue, curGridLineX, 80);
+      } else ctx.fillText(curValue, curGridLineX, 80);
 
       // draw line
       ctx.beginPath();
@@ -225,14 +238,20 @@ class Timeline {
     let linesBelowFocus = 0;
     while (curGridLineX > 0) {
       linesBelowFocus++;
-      curGridLineX = focusX - pixelDistanceFromFocus;
+      curGridLineX = this.#focusX - pixelDistanceFromFocus;
 
       let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, -linesBelowFocus);
       let curValue = getFocusDateAsValue(curDate, this.#scaleType);
       // temp
       if (this.#scaleType == "month")
         curValue = curDate.toLocaleString("default", { month: "long" });
-      ctx.fillText(curValue, curGridLineX, 80);
+      if (this.#scaleWidth <= 70 && this.#scaleWidth > 30) {
+        // print only multiples of 2
+        if (curValue % 2 == 0) ctx.fillText(curValue, curGridLineX, 80);
+      } else if (this.#scaleWidth <= 30) {
+        // print only multiples of 5
+        if (curValue % 5 == 0) ctx.fillText(curValue, curGridLineX, 80);
+      } else ctx.fillText(curValue, curGridLineX, 80);
 
       // draw line
       ctx.beginPath();

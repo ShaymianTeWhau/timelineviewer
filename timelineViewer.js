@@ -75,21 +75,25 @@ function incrementDateByScaleType(oldDate, scaleType, increment) {
     case "millennium":
       year = newDate.getFullYear() + increment * 1000;
       year = Math.floor(year / 1000) * 1000;
-      newDate = new Date(year, 0);
+      newDate.setFullYear(year);
+      newDate.setMonth(0);
       break;
     case "century":
       year = newDate.getFullYear() + increment * 100;
       year = Math.floor(year / 100) * 100;
-      newDate = new Date(year, 0);
+      newDate.setFullYear(year);
+      newDate.setMonth(0);
       break;
     case "decade":
       year = newDate.getFullYear() + increment * 10;
       year = Math.floor(year / 10) * 10;
-      newDate = new Date(year, 0);
+      newDate.setFullYear(year);
+      newDate.setMonth(0);
       break;
     case "year":
       year = newDate.getFullYear() + increment;
-      newDate = new Date(year, 0);
+      newDate.setFullYear(year);
+      newDate.setMonth(0);
       break;
     case "month":
       newDate.setDate(1);
@@ -141,6 +145,7 @@ class Timeline {
     this.#scaleWidth = scaleWidth;
     this.setScaleType(scaleType);
     this.#focusDate = focusDate;
+    console.log("constructor focus date:" + this.#focusDate);
     this.#focusX = focusX;
   }
   setFocusDate(focusDate) {
@@ -347,8 +352,10 @@ function setupCanvas() {
   let horizontalScrollSpeed = 50;
   let rescaleSpeed = 10;
 
-  let focusDate = new Date(2005, 11, 28, 23, 58, 57, 999);
-  let scaleType = "millennium";
+  let focusDate = new Date(1, 11, 28, 23, 58, 57, 999);
+  focusDate.setFullYear(1);
+  //console.log(focusDate);
+  let scaleType = "year";
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   const timeline = new Timeline(scaleWidth, scaleType, focusDate, focusX);

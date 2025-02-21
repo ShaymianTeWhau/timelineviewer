@@ -322,7 +322,7 @@ function setupCanvas() {
   let rescaleSpeed = 10;
 
   let focusDate = new Date(2005, 11, 28, 23, 58, 57, 999);
-  let scaleType = "month";
+  let scaleType = "millennium";
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   const timeline = new Timeline(scaleWidth, scaleType);

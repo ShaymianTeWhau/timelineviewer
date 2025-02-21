@@ -134,6 +134,7 @@ class Timeline {
   #scaleType = "year";
   #focusX = 100;
   #scaleWidth = 100; // in pixels
+  #baseLineHeight = 150;
   constructor(scaleWidth, scaleType) {
     this.#scaleWidth = scaleWidth;
     this.setScaleType(scaleType);
@@ -171,7 +172,11 @@ class Timeline {
     // -rescaleSpeed to scale zoom out, +rescaleSpeed to scale zoom in
     this.#scaleWidth += rescaleSpeed;
   }
-
+  drawBaseline(ctx, canvas) {
+    // draw backing for baseline
+    ctx.fillStyle = "rgb(197, 197, 197)";
+    ctx.fillRect(0, canvas.height - this.#baseLineHeight, canvas.width, this.#baseLineHeight);
+  }
   draw(ctx, canvas, focusDate, focusX) {
     // temp code prevents crash if scale width is less than 1
     if (this.#scaleWidth < 1) this.#scaleWidth = 1;
@@ -263,6 +268,7 @@ class Timeline {
     }
     //console.log("lines above focus (including center): " + linesAboveFocus);
     //console.log("lines below focus: " + linesBelowFocus);
+    this.drawBaseline(ctx, canvas);
   }
 }
 

@@ -164,6 +164,13 @@ class Timeline {
     }
     this.#scaleType = scaleType;
   }
+  getScaleWidth() {
+    return "" + this.#scaleWidth;
+  }
+  rescale(rescaleSpeed) {
+    // -rescaleSpeed to scale zoom out, +rescaleSpeed to scale zoom in
+    this.#scaleWidth += rescaleSpeed;
+  }
 
   draw(ctx, canvas, focusDate, focusX) {
     // temp code prevents crash if scale width is less than 1
@@ -235,8 +242,8 @@ class Timeline {
 
       pixelDistanceFromFocus += this.#scaleWidth;
     }
-    console.log("lines above focus (including center): " + linesAboveFocus);
-    console.log("lines below focus: " + linesBelowFocus);
+    //console.log("lines above focus (including center): " + linesAboveFocus);
+    //console.log("lines below focus: " + linesBelowFocus);
   }
 }
 
@@ -257,7 +264,7 @@ function setupCanvas() {
   canvas.width = window.innerWidth - 10;
   canvas.height = 1000;
   let horizontalScrollSpeed = 50;
-  let rescaleSpeed = 50;
+  let rescaleSpeed = 10;
 
   let focusDate = new Date(2005, 11, 28, 23, 58, 57, 999);
   let scaleType = "year";
@@ -268,17 +275,16 @@ function setupCanvas() {
 
   window.addEventListener("keydown", (event) => {
     if (event.key === "ArrowRight") {
-      console.log("arrow right");
       focusX += horizontalScrollSpeed;
       timeline.draw(ctx, canvas, focusDate, focusX);
     } else if (event.key === "ArrowLeft") {
-      console.log("arrow left");
       focusX -= horizontalScrollSpeed;
       timeline.draw(ctx, canvas, focusDate, focusX);
     }
   });
 
   window.addEventListener("wheel", (event) => {
+    // horizontal movement
     if (event.shiftKey) {
       if (event.deltaY > 0) {
         // shift + Scroll down
@@ -289,16 +295,19 @@ function setupCanvas() {
       }
     }
 
+    // rescale
     if (event.altKey) {
       if (event.deltaY > 0) {
+        // scale zoom out
         // alt + Scroll down
-        scaleWidth -= rescaleSpeed;
+        timeline.rescale(-rescaleSpeed);
       } else if (event.deltaY < 0) {
+        // scale zoom in
         // alt + Scroll down
-        scaleWidth += rescaleSpeed;
+        timeline.rescale(rescaleSpeed);
       }
     }
-    console.log("scaleWidth: " + scaleWidth);
+    console.log("scaleWidth: " + timeline.getScaleWidth());
     timeline.draw(ctx, canvas, focusDate, focusX);
   });
 }

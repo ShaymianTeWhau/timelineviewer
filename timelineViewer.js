@@ -135,6 +135,8 @@ class Timeline {
   #focusX = 100;
   #scaleWidth = 100; // in pixels
   #baseLineHeight = 150;
+  #linePosArr = []; // currently unordered
+  #lineDateArr = []; // currently unordered
   constructor(scaleWidth, scaleType) {
     this.#scaleWidth = scaleWidth;
     this.setScaleType(scaleType);
@@ -186,7 +188,24 @@ class Timeline {
     ctx.lineTo(canvas.width, baselineY);
     ctx.stroke();
 
-    // draw tick marks
+    // draw tick marks and values
+    ctx.lineWidth = 2;
+    ctx.font = "20px Arial";
+    ctx.fillStyle = "black";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    for (let i = 0; i < this.#linePosArr.length; i++) {
+      // tick mark
+      ctx.beginPath();
+      ctx.moveTo(this.#linePosArr[i], baselineY - 5);
+      ctx.lineTo(this.#linePosArr[i], baselineY + 5);
+      ctx.stroke();
+
+      // text
+      let curDate = this.#lineDateArr[i];
+      let curValue = getFocusDateAsValue(curDate, this.#scaleType);
+      ctx.fillText(curValue, this.#linePosArr[i], baselineY + 10);
+    }
   }
   draw(ctx, canvas, focusDate, focusX) {
     // temp code prevents crash if scale width is less than 1
@@ -195,6 +214,10 @@ class Timeline {
     // clear canvas
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // clear line arrays
+    this.#lineDateArr = [];
+    this.#linePosArr = [];
 
     this.setFocusDate(focusDate);
     //this.setScaleType(scaleType);
@@ -218,7 +241,6 @@ class Timeline {
     let pixelDistanceFromFocus = 0;
     let curGridLineX = 0;
     let linesAboveFocus = 0;
-
     while (curGridLineX < canvas.width) {
       // temp color focus date and grid line
       if (linesAboveFocus == 0 && this.#focusX < canvas.width) ctx.strokeStyle = "red";
@@ -238,6 +260,10 @@ class Timeline {
         // print only multiples of 5
         if (curValue % 5 == 0) ctx.fillText(curValue, curGridLineX, 80);
       } else ctx.fillText(curValue, curGridLineX, 80);
+
+      // save line date and x position
+      this.#lineDateArr.push(curDate);
+      this.#linePosArr.push(curGridLineX);
 
       // draw line
       ctx.beginPath();
@@ -268,6 +294,10 @@ class Timeline {
         // print only multiples of 5
         if (curValue % 5 == 0) ctx.fillText(curValue, curGridLineX, 80);
       } else ctx.fillText(curValue, curGridLineX, 80);
+
+      // save line date and x position
+      this.#lineDateArr.push(curDate);
+      this.#linePosArr.push(curGridLineX);
 
       // draw line
       ctx.beginPath();

@@ -165,16 +165,16 @@ class Timeline {
     this.#scaleType = scaleType;
   }
 
-  draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth) {
+  draw(ctx, canvas, focusDate, focusX) {
     // temp code prevents crash if scale width is less than 1
-    if (scaleWidth < 1) scaleWidth = 1;
+    if (this.#scaleWidth < 1) this.#scaleWidth = 1;
 
     // clear canvas
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     this.setFocusDate(focusDate);
-    this.setScaleType(scaleType);
+    //this.setScaleType(scaleType);
     this.#focusX = focusX;
 
     ctx.fillStyle = "black";
@@ -208,12 +208,12 @@ class Timeline {
       ctx.moveTo(curGridLineX, 0);
       ctx.lineTo(curGridLineX, canvas.height);
       ctx.stroke();
-      pixelDistanceFromFocus += scaleWidth;
+      pixelDistanceFromFocus += this.#scaleWidth;
       linesAboveFocus++;
     }
 
     // draw lines below focus point (does not include focus point)
-    pixelDistanceFromFocus = scaleWidth;
+    pixelDistanceFromFocus = this.#scaleWidth;
     curGridLineX = canvas.width; // arbitrary number rightside of canvas
     let linesBelowFocus = 0;
     while (curGridLineX > 0) {
@@ -233,7 +233,7 @@ class Timeline {
       ctx.lineTo(curGridLineX, canvas.height);
       ctx.stroke();
 
-      pixelDistanceFromFocus += scaleWidth;
+      pixelDistanceFromFocus += this.#scaleWidth;
     }
     console.log("lines above focus (including center): " + linesAboveFocus);
     console.log("lines below focus: " + linesBelowFocus);
@@ -264,17 +264,17 @@ function setupCanvas() {
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   const timeline = new Timeline(scaleWidth, scaleType);
-  timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
+  timeline.draw(ctx, canvas, focusDate, focusX);
 
   window.addEventListener("keydown", (event) => {
     if (event.key === "ArrowRight") {
       console.log("arrow right");
       focusX += horizontalScrollSpeed;
-      timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
+      timeline.draw(ctx, canvas, focusDate, focusX);
     } else if (event.key === "ArrowLeft") {
       console.log("arrow left");
       focusX -= horizontalScrollSpeed;
-      timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
+      timeline.draw(ctx, canvas, focusDate, focusX);
     }
   });
 
@@ -299,7 +299,7 @@ function setupCanvas() {
       }
     }
     console.log("scaleWidth: " + scaleWidth);
-    timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
+    timeline.draw(ctx, canvas, focusDate, focusX);
   });
 }
 

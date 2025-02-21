@@ -175,7 +175,7 @@ class Timeline {
     if (scaleType == "month") label = date.toLocaleString("default", { month: "long" });
     return label;
   }
-  rescale(rescaleSpeed) {
+  rescale(rescaleSpeed, mouseX) {
     // -rescaleSpeed to scale zoom out, +rescaleSpeed to scale zoom in
     this.#scaleWidth += rescaleSpeed;
   }
@@ -318,6 +318,8 @@ function setupCanvas() {
   const ctx = canvas.getContext("2d");
   canvas.width = window.innerWidth - 10;
   canvas.height = 1000;
+  let mouseX = -1;
+  let mouseY = -1;
   let horizontalScrollSpeed = 50;
   let rescaleSpeed = 10;
 
@@ -355,11 +357,11 @@ function setupCanvas() {
       if (event.deltaY > 0) {
         // scale zoom out
         // alt + Scroll down
-        timeline.rescale(-rescaleSpeed);
+        timeline.rescale(-rescaleSpeed, mouseX);
       } else if (event.deltaY < 0) {
         // scale zoom in
         // alt + Scroll down
-        timeline.rescale(rescaleSpeed);
+        timeline.rescale(rescaleSpeed, mouseX);
       }
     }
     console.log("scaleWidth: " + timeline.getScaleWidth());

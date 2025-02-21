@@ -180,6 +180,12 @@ class Timeline {
   #getBaselineLabel(date, scaleType, scaleWidth) {
     let label = getFocusDateAsValue(date, scaleType);
     if (scaleType == "month") label = date.toLocaleString("default", { month: "long" });
+
+    // don't display year 0 - applys only to large scaleType's
+    if (scaleType == "millennium" || scaleType == "century" || scaleType == "decade") {
+      if (date.getFullYear() == 0) label = "";
+    }
+
     return label;
   }
   rescale(rescaleSpeed, mouseX) {
@@ -355,7 +361,7 @@ function setupCanvas() {
   let focusDate = new Date(1, 11, 28, 23, 58, 57, 999);
   focusDate.setFullYear(1);
   //console.log(focusDate);
-  let scaleType = "year";
+  let scaleType = "decade";
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   const timeline = new Timeline(scaleWidth, scaleType, focusDate, focusX);

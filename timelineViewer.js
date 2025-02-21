@@ -137,9 +137,11 @@ class Timeline {
   #baseLineHeight = 150;
   #linePosArr = []; // currently unordered
   #lineDateArr = []; // currently unordered
-  constructor(scaleWidth, scaleType) {
+  constructor(scaleWidth, scaleType, focusDate, focusX) {
     this.#scaleWidth = scaleWidth;
     this.setScaleType(scaleType);
+    this.#focusDate = focusDate;
+    this.#focusX = focusX;
   }
   setFocusDate(focusDate) {
     if (!(focusDate instanceof Date)) {
@@ -343,7 +345,7 @@ function setupCanvas() {
   let scaleType = "millennium";
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
-  const timeline = new Timeline(scaleWidth, scaleType);
+  const timeline = new Timeline(scaleWidth, scaleType, focusDate, focusX);
   timeline.draw(ctx, canvas, focusDate, focusX);
 
   window.addEventListener("keydown", (event) => {

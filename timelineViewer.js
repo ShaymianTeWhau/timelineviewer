@@ -197,7 +197,9 @@ class Timeline {
     this.#focusDate = this.#lineDateArr[closestIndex];
     console.log("closest line: " + closestIndex + " value: " + this.#lineDateArr[closestIndex]);
   }
-
+  moveHorizontal(horizontalScrollSpeed) {
+    this.#focusX += horizontalScrollSpeed;
+  }
   drawBaseline(ctx, canvas) {
     // draw backing for baseline
     ctx.fillStyle = "rgb(197, 197, 197)";
@@ -360,10 +362,12 @@ function setupCanvas() {
     if (event.shiftKey) {
       if (event.deltaY > 0) {
         // shift + Scroll down
-        focusX += horizontalScrollSpeed;
+        //focusX += horizontalScrollSpeed;
+        timeline.moveHorizontal(horizontalScrollSpeed);
       } else if (event.deltaY < 0) {
         // shift + Scroll up
-        focusX -= horizontalScrollSpeed;
+        //focusX -= horizontalScrollSpeed;
+        timeline.moveHorizontal(-horizontalScrollSpeed);
       }
     }
 

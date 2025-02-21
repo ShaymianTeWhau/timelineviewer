@@ -231,7 +231,7 @@ class Timeline {
       ctx.fillText(baselineLabel, this.#linePosArr[i], baselineY + 10);
     }
   }
-  draw(ctx, canvas, focusDate, focusX) {
+  draw(ctx, canvas) {
     // temp code prevents crash if scale width is less than 1
     if (this.#scaleWidth < 1) this.#scaleWidth = 1;
 
@@ -242,9 +242,6 @@ class Timeline {
     // clear line date and position arrays
     this.#lineDateArr = [];
     this.#linePosArr = [];
-
-    this.setFocusDate(focusDate);
-    this.#focusX = focusX;
 
     if (this.#scaleWidth <= 10) {
       // increment scale type?
@@ -346,15 +343,15 @@ function setupCanvas() {
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   const timeline = new Timeline(scaleWidth, scaleType, focusDate, focusX);
-  timeline.draw(ctx, canvas, focusDate, focusX);
+  timeline.draw(ctx, canvas);
 
   window.addEventListener("keydown", (event) => {
     if (event.key === "ArrowRight") {
       focusX += horizontalScrollSpeed;
-      timeline.draw(ctx, canvas, focusDate, focusX);
+      timeline.draw(ctx, canvas);
     } else if (event.key === "ArrowLeft") {
       focusX -= horizontalScrollSpeed;
-      timeline.draw(ctx, canvas, focusDate, focusX);
+      timeline.draw(ctx, canvas);
     }
   });
 
@@ -383,7 +380,7 @@ function setupCanvas() {
       }
     }
     console.log("scaleWidth: " + timeline.getScaleWidth());
-    timeline.draw(ctx, canvas, focusDate, focusX);
+    timeline.draw(ctx, canvas);
   });
 
   canvas.addEventListener("mousemove", function (event) {

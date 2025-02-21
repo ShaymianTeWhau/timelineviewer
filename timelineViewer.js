@@ -255,9 +255,9 @@ class Timeline {
     ctx.fillStyle = "black";
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "top";
-    ctx.font = "20px Arial";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.font = "18px Arial";
 
     // draw lines above focusPoint (including focus point)
     let pixelDistanceFromFocus = 0;
@@ -273,8 +273,11 @@ class Timeline {
       let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, linesAboveFocus);
       let curValue = getFocusDateAsValue(curDate, this.#scaleType);
       // temp
-      ctx.fillText(curValue, curGridLineX, 80);
-
+      ctx.translate(curGridLineX, 80);
+      ctx.rotate((90 * Math.PI) / 180);
+      ctx.fillText(curValue + " (" + curDate.toDateString() + ")", 0, 0);
+      ctx.rotate((-90 * Math.PI) / 180);
+      ctx.translate(-curGridLineX, -80);
       // save line date and x position
       this.#lineDateArr.push(curDate);
       this.#linePosArr.push(curGridLineX);
@@ -299,7 +302,11 @@ class Timeline {
       let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, -linesBelowFocus);
       let curValue = getFocusDateAsValue(curDate, this.#scaleType);
       // temp
-      ctx.fillText(curValue, curGridLineX, 80);
+      ctx.translate(curGridLineX, 80);
+      ctx.rotate((90 * Math.PI) / 180);
+      ctx.fillText(curValue + " (" + curDate.toDateString() + ")", 0, 0);
+      ctx.rotate((-90 * Math.PI) / 180);
+      ctx.translate(-curGridLineX, -80);
 
       // save line date and x position
       this.#lineDateArr.push(curDate);

@@ -176,6 +176,17 @@ class Timeline {
     // draw backing for baseline
     ctx.fillStyle = "rgb(197, 197, 197)";
     ctx.fillRect(0, canvas.height - this.#baseLineHeight, canvas.width, this.#baseLineHeight);
+
+    // draw baseline line
+    const baselineY = canvas.height - this.#baseLineHeight + 50;
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, baselineY);
+    ctx.lineTo(canvas.width, baselineY);
+    ctx.stroke();
+
+    // draw tick marks
   }
   draw(ctx, canvas, focusDate, focusX) {
     // temp code prevents crash if scale width is less than 1

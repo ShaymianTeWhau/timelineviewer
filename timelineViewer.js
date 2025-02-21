@@ -367,6 +367,15 @@ function setupCanvas() {
     console.log("scaleWidth: " + timeline.getScaleWidth());
     timeline.draw(ctx, canvas, focusDate, focusX);
   });
+
+  canvas.addEventListener("mousemove", function (event) {
+    // Get mouse coordinate relative to the canvas
+    const rect = canvas.getBoundingClientRect();
+    mouseX = event.clientX - rect.left;
+    mouseY = event.clientY - rect.top;
+
+    console.log("mousexy: " + mouseX + "," + mouseY);
+  });
 }
 
 window.addEventListener("load", setupCanvas);

@@ -134,7 +134,10 @@ class Timeline {
   #scaleType = "year";
   #focusX = 100;
   #scaleWidth = 100; // in pixels
-  constructor() {}
+  constructor(scaleWidth, scaleType) {
+    this.#scaleWidth = scaleWidth;
+    this.setScaleType(scaleType);
+  }
   setFocusDate(focusDate) {
     if (!(focusDate instanceof Date)) {
       throw new Error("focusDate must be an instance of the Date class.");
@@ -256,11 +259,11 @@ function setupCanvas() {
   let horizontalScrollSpeed = 50;
   let rescaleSpeed = 50;
 
-  const timeline = new Timeline();
   let focusDate = new Date(2005, 11, 28, 23, 58, 57, 999);
   let scaleType = "year";
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
+  const timeline = new Timeline(scaleWidth, scaleType);
   timeline.draw(ctx, canvas, focusDate, scaleType, focusX, scaleWidth);
 
   window.addEventListener("keydown", (event) => {

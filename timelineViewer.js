@@ -292,7 +292,7 @@ class Timeline {
       ) {
         if (curDate.getFullYear() == 0) {
           //curDate = incrementDateByScaleType(curDate, "year", 1);
-          curDate.setFullYear(1);
+          //curDate.setFullYear(1);
           //linesAboveFocus++;
           //continue;
         }
@@ -336,7 +336,7 @@ class Timeline {
       ) {
         if (curDate.getFullYear() == 0) {
           //curDate = incrementDateByScaleType(curDate, "year", -1);
-          curDate.setFullYear(-1);
+          //curDate.setFullYear(-1);
           //continue;
         }
       }
@@ -388,8 +388,8 @@ function setupCanvas() {
   let rescaleSpeed = 10;
 
   let focusDate = new Date(-1, 11, 31, 23, 59, 59, 999);
-  //focusDate = new Date(1, 0, 1, 0, 0, 0, 0);
-  //focusDate.setFullYear(1);
+  focusDate = new Date(1, 0, 1, 0, 0, 0, 0);
+  focusDate.setFullYear(2);
   //console.log(focusDate);
   let scaleType = "year";
   let focusX = canvas.width / 2;

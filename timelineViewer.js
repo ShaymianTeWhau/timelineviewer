@@ -282,6 +282,21 @@ class Timeline {
       curGridLineX = this.#focusX + pixelDistanceFromFocus;
 
       let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, linesAboveFocus);
+      // skip year 0
+      if (
+        !(
+          this.#scaleType == "millennium" ||
+          this.#scaleType == "century" ||
+          this.#scaleType == "decade"
+        )
+      ) {
+        if (curDate.getFullYear() == 0) {
+          //curDate = incrementDateByScaleType(curDate, "year", 1);
+          curDate.setFullYear(1);
+          //linesAboveFocus++;
+          //continue;
+        }
+      }
       let curValue = getFocusDateAsValue(curDate, this.#scaleType);
       // temp
       ctx.translate(curGridLineX, 80);
@@ -311,6 +326,20 @@ class Timeline {
       curGridLineX = this.#focusX - pixelDistanceFromFocus;
 
       let curDate = incrementDateByScaleType(this.#focusDate, this.#scaleType, -linesBelowFocus);
+      // skip year 0
+      if (
+        !(
+          this.#scaleType == "millennium" ||
+          this.#scaleType == "century" ||
+          this.#scaleType == "decade"
+        )
+      ) {
+        if (curDate.getFullYear() == 0) {
+          //curDate = incrementDateByScaleType(curDate, "year", -1);
+          curDate.setFullYear(-1);
+          //continue;
+        }
+      }
       let curValue = getFocusDateAsValue(curDate, this.#scaleType);
       // temp
       ctx.translate(curGridLineX, 80);
@@ -331,8 +360,8 @@ class Timeline {
 
       pixelDistanceFromFocus += this.#scaleWidth;
     }
-    //console.log("lines above focus (including center): " + linesAboveFocus);
-    //console.log("lines below focus: " + linesBelowFocus);
+    console.log("lines above focus (including center): " + linesAboveFocus);
+    console.log("lines below focus: " + linesBelowFocus);
     this.drawBaseline(ctx, canvas);
   }
 }
@@ -358,10 +387,11 @@ function setupCanvas() {
   let horizontalScrollSpeed = 50;
   let rescaleSpeed = 10;
 
-  let focusDate = new Date(1, 11, 28, 23, 58, 57, 999);
-  focusDate.setFullYear(1);
+  let focusDate = new Date(-1, 11, 31, 23, 59, 59, 999);
+  //focusDate = new Date(1, 0, 1, 0, 0, 0, 0);
+  //focusDate.setFullYear(1);
   //console.log(focusDate);
-  let scaleType = "decade";
+  let scaleType = "year";
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   const timeline = new Timeline(scaleWidth, scaleType, focusDate, focusX);

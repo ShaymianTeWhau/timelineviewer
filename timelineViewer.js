@@ -211,8 +211,9 @@ class Timeline {
   moveHorizontal(horizontalScrollSpeed) {
     this.#focusX += horizontalScrollSpeed;
   }
-  drawBaseline(ctx, canvas) {
+  drawBaseline(canvas) {
     // draw backing for baseline
+    const ctx = canvas.getContext("2d");
     ctx.fillStyle = "rgb(197, 197, 197)";
     ctx.fillRect(0, canvas.height - this.#baseLineHeight, canvas.width, this.#baseLineHeight);
 
@@ -244,11 +245,12 @@ class Timeline {
       ctx.fillText(baselineLabel, this.#linePosArr[i], baselineY + 10);
     }
   }
-  draw(ctx, canvas) {
+  draw(canvas) {
     // temp code prevents crash if scale width is less than 1
     if (this.#scaleWidth < 1) this.#scaleWidth = 1;
 
     // clear canvas
+    const ctx = canvas.getContext("2d");
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -362,7 +364,7 @@ class Timeline {
     }
     console.log("lines above focus (including center): " + linesAboveFocus);
     console.log("lines below focus: " + linesBelowFocus);
-    this.drawBaseline(ctx, canvas);
+    this.drawBaseline(canvas);
   }
 }
 
@@ -395,15 +397,15 @@ function setupCanvas() {
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   const timeline = new Timeline(scaleWidth, scaleType, focusDate, focusX);
-  timeline.draw(ctx, canvas);
+  timeline.draw(canvas);
 
   window.addEventListener("keydown", (event) => {
     if (event.key === "ArrowRight") {
       focusX += horizontalScrollSpeed;
-      timeline.draw(ctx, canvas);
+      timeline.draw(canvas);
     } else if (event.key === "ArrowLeft") {
       focusX -= horizontalScrollSpeed;
-      timeline.draw(ctx, canvas);
+      timeline.draw(canvas);
     }
   });
 
@@ -434,7 +436,7 @@ function setupCanvas() {
       }
     }
     console.log("scaleWidth: " + timeline.getScaleWidth());
-    timeline.draw(ctx, canvas);
+    timeline.draw(canvas);
   });
 
   canvas.addEventListener("mousemove", function (event) {

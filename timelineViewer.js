@@ -207,6 +207,47 @@ class Timeline {
     // set focusDate to equal index as chosen line position
     this.#focusDate = this.#lineDateArr[closestIndex];
     console.log("closest line: " + closestIndex + " value: " + this.#lineDateArr[closestIndex]);
+    console.log("scale width: " + this.#scaleWidth);
+
+    this.updateScaleTypeByWidth(rescaleSpeed);
+  }
+  updateScaleTypeByWidth(rescaleSpeed){
+    // change scale type based on width
+    if(this.#scaleType == "millennium"){
+      if(this.#scaleWidth > 200){
+        this.#scaleType = "century";
+        this.#scaleWidth = 20 + rescaleSpeed;
+      }
+    }
+
+    if(this.#scaleType == "century"){
+      if(this.#scaleWidth > 200){
+        this.#scaleType = "decade";
+        this.#scaleWidth = 20 + rescaleSpeed;
+      }
+      if(this.#scaleWidth < 20){
+        this.#scaleType = "millennium";
+        this.#scaleWidth = 200 - rescaleSpeed;
+      }
+    }
+
+    if(this.#scaleType == "decade"){
+      if(this.#scaleWidth > 200){
+        this.#scaleType = "year";
+        this.#scaleWidth = 20 + rescaleSpeed;
+      }
+      if(this.#scaleWidth < 20){
+        this.#scaleType = "century";
+        this.#scaleWidth = 200 - rescaleSpeed;
+      }
+    }
+
+    if(this.#scaleType == "year"){
+      if(this.#scaleWidth < 20){
+        this.#scaleType = "decade";
+        this.#scaleWidth = 200 - rescaleSpeed;
+      }
+    }
   }
   moveHorizontal(horizontalScrollSpeed) {
     this.#focusX += horizontalScrollSpeed;
@@ -258,12 +299,12 @@ class Timeline {
     this.#lineDateArr = [];
     this.#linePosArr = [];
 
-    if (this.#scaleWidth <= 10) {
+    /*if (this.#scaleWidth <= 10) {
       // increment scale type?
       this.#scaleType = "decade";
       this.#scaleWidth = 180;
       this.#focusX -= 180 / 2;
-    }
+    }*/
 
     ctx.fillStyle = "black";
     ctx.strokeStyle = "black";
@@ -393,7 +434,7 @@ function setupCanvas() {
   focusDate = new Date(1, 0, 1, 0, 0, 0, 0);
   focusDate.setFullYear(2);
   //console.log(focusDate);
-  let scaleType = "year";
+  let scaleType = "millennium";
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   const timeline = new Timeline(scaleWidth, scaleType, focusDate, focusX);

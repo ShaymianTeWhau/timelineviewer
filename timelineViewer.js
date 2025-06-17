@@ -1,3 +1,5 @@
+const SHOWTEMPMARKERS = true;
+
 function drawCenterAxis(ctx, maxX, maxY, color) {
   ctx.strokeStyle = color;
   ctx.lineWidth = 1;
@@ -178,14 +180,14 @@ class Timeline {
     return this.#scaleWidth;
   }
   #getBaselineLabel(date, scaleType, scaleWidth) {
+    
     let label = getFocusDateAsValue(date, scaleType);
-    if (scaleType == "month") label = date.toLocaleString("default", { month: "long" });
-
+    
     // don't display year 0 - applys only to large scaleType's
     if (scaleType == "millennium" || scaleType == "century" || scaleType == "decade") {
       if (date.getFullYear() == 0) label = "";
     }
-
+    
     // don't display certain years at certain scale lengths, depending on the scate type
     if(scaleType == "millennium"){
       
@@ -199,7 +201,7 @@ class Timeline {
         if(date.getFullYear() % 2000 != 0) label = "";
       }
     }
-
+    
     if(scaleType == "century"){
       
       if(scaleWidth < 20){
@@ -212,7 +214,7 @@ class Timeline {
         if(date.getFullYear() % 200 != 0) label = "";
       }
     }
-
+    
     if(scaleType == "decade"){
       
       if(scaleWidth < 20){
@@ -225,7 +227,7 @@ class Timeline {
         if(date.getFullYear() % 20 != 0) label = "";
       }
     }
-
+    
     if(scaleType == "year"){
       
       if(scaleWidth < 20){
@@ -238,13 +240,37 @@ class Timeline {
         if(date.getFullYear() % 2 != 0) label = "";
       }
     }
+    /*
+    if(scaleType == "month"){
+      if(scaleWidth < 50){
+        if(date.month == 1) label = date.month;
+      }
+      
+    }*/
+    
+    if (scaleType == "month"){
+      label = date.toLocaleString("default", { month: "long" });
+  
+      if(scaleWidth < 50){
+        if(date.getMonth() != 0) label = "";
+        else label = date.getFullYear();
+      }
+    } 
+
+    if(scaleType == "date"){
+      if(scaleWidth < 50){
+        if(date.getDate() % 5 != 0 && date.getDate() != 1 || date.getDate() == 30) label = "";
+      }
+    }
+
+    
 
     return label;
   }
   rescale(rescaleSpeed, mouseX) {
     // -rescaleSpeed to scale zoom out, +rescaleSpeed to scale zoom in
     this.#scaleWidth += rescaleSpeed;
-
+    
     // set focusX to the line position x closest to mouseX
     let closestIndex = 0;
     let diff = Math.abs(this.#linePosArr[0] - mouseX);
@@ -259,8 +285,8 @@ class Timeline {
 
     // set focusDate to equal index as chosen line position
     this.#focusDate = this.#lineDateArr[closestIndex];
-    console.log("closest line: " + closestIndex + " value: " + this.#lineDateArr[closestIndex]);
-    console.log("scale width: " + this.#scaleWidth);
+    //console.log("closest line: " + closestIndex + " value: " + this.#lineDateArr[closestIndex]);
+    //console.log("scale width: " + this.#scaleWidth);
 
     this.updateScaleTypeByWidth(rescaleSpeed);
   }
@@ -299,11 +325,81 @@ class Timeline {
     }
 
     if(this.#scaleType == "year"){
+      if(this.#scaleWidth > 200){
+        this.#scaleType = "month";
+        this.#scaleWidth = 200/12 + rescaleSpeed;
+      }
       if(this.#scaleWidth < 20){
         this.#scaleType = "decade";
         this.#scaleWidth = 200 - rescaleSpeed;
       }
     }
+
+    if(this.#scaleType == "month"){
+      if(this.#scaleWidth > 200){
+        this.#scaleType = "date"
+        this.#scaleWidth = 20;
+      }
+      if(this.#scaleWidth < 20){
+        this.#scaleType = "year";
+        this.#scaleWidth = 200 - rescaleSpeed;
+      }
+    }
+
+    if(this.#scaleType == "date"){
+      if(this.#scaleWidth > 200){
+        this.#scaleType = "hour"
+        this.#scaleWidth = 20;
+      }
+      if(this.#scaleWidth < 20){
+        this.#scaleType = "month";
+        this.#scaleWidth = 200
+      }
+    }
+
+    if(this.#scaleType == "hour"){
+      if(this.#scaleWidth > 200){
+        this.#scaleType = "minute"
+        this.#scaleWidth = 20;
+      }
+      if(this.#scaleWidth < 20){
+        this.#scaleType = "date";
+        this.#scaleWidth = 200
+      }
+    }
+
+    if(this.#scaleType == "minute"){
+      if(this.#scaleWidth > 200){
+        this.#scaleType = "second"
+        this.#scaleWidth = 20;
+      }
+      if(this.#scaleWidth < 20){
+        this.#scaleType = "hour";
+        this.#scaleWidth = 200
+      }
+    }
+
+    if(this.#scaleType == "second"){
+      if(this.#scaleWidth > 200){
+        this.#scaleType = "millisecond"
+        this.#scaleWidth = 20;
+      }
+      if(this.#scaleWidth < 20){
+        this.#scaleType = "minute";
+        this.#scaleWidth = 200
+      }
+    }
+
+    if(this.#scaleType == "millisecond"){
+
+      if(this.#scaleWidth < 20){
+        this.#scaleType = "second";
+        this.#scaleWidth = 200
+      }
+    }
+
+
+
   }
   moveHorizontal(horizontalScrollSpeed) {
     this.#focusX += horizontalScrollSpeed;
@@ -400,7 +496,7 @@ class Timeline {
       // temp
       ctx.translate(curGridLineX, 80);
       ctx.rotate((90 * Math.PI) / 180);
-      //ctx.fillText(curValue + " (" + curDate.toDateString() + ")", 0, 0);
+      if(SHOWTEMPMARKERS) ctx.fillText(curValue + " (" + curDate.toDateString() + ")", 0, 0);
       ctx.rotate((-90 * Math.PI) / 180);
       ctx.translate(-curGridLineX, -80);
       // save line date and x position
@@ -443,7 +539,7 @@ class Timeline {
       // temp
       ctx.translate(curGridLineX, 80);
       ctx.rotate((90 * Math.PI) / 180);
-      //ctx.fillText(curValue + " (" + curDate.toDateString() + ")", 0, 0);
+      if(SHOWTEMPMARKERS) ctx.fillText(curValue + " (" + curDate.toDateString() + ")", 0, 0);
       ctx.rotate((-90 * Math.PI) / 180);
       ctx.translate(-curGridLineX, -80);
 
@@ -459,8 +555,8 @@ class Timeline {
 
       pixelDistanceFromFocus += this.#scaleWidth;
     }
-    console.log("lines above focus (including center): " + linesAboveFocus);
-    console.log("lines below focus: " + linesBelowFocus);
+    //console.log("lines above focus (including center): " + linesAboveFocus);
+    //console.log("lines below focus: " + linesBelowFocus);
     this.drawBaseline(canvas);
   }
 }

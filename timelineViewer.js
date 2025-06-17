@@ -186,6 +186,59 @@ class Timeline {
       if (date.getFullYear() == 0) label = "";
     }
 
+    // don't display certain years at certain scale lengths, depending on the scate type
+    if(scaleType == "millennium"){
+      
+      if(scaleWidth < 20){
+        if(date.getFullYear() % 10000 != 0) label = "";
+      }
+      else if(scaleWidth < 50){
+        if(date.getFullYear() % 5000 != 0) label = "";
+      }
+      else if(scaleWidth < 100){
+        if(date.getFullYear() % 2000 != 0) label = "";
+      }
+    }
+
+    if(scaleType == "century"){
+      
+      if(scaleWidth < 20){
+        if(date.getFullYear() % 1000 != 0) label = "";
+      }
+      else if(scaleWidth < 50){
+        if(date.getFullYear() % 500 != 0) label = "";
+      }
+      else if(scaleWidth < 100){
+        if(date.getFullYear() % 200 != 0) label = "";
+      }
+    }
+
+    if(scaleType == "decade"){
+      
+      if(scaleWidth < 20){
+        if(date.getFullYear() % 100 != 0) label = "";
+      }
+      else if(scaleWidth < 50){
+        if(date.getFullYear() % 50 != 0) label = "";
+      }
+      else if(scaleWidth < 100){
+        if(date.getFullYear() % 20 != 0) label = "";
+      }
+    }
+
+    if(scaleType == "year"){
+      
+      if(scaleWidth < 20){
+        if(date.getFullYear() % 10 != 0) label = "";
+      }
+      else if(scaleWidth < 50){
+        if(date.getFullYear() % 5 != 0) label = "";
+      }
+      else if(scaleWidth < 100){
+        if(date.getFullYear() % 2 != 0) label = "";
+      }
+    }
+
     return label;
   }
   rescale(rescaleSpeed, mouseX) {

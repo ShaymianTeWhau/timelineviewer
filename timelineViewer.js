@@ -271,6 +271,9 @@ class Timeline {
         this.#scaleType = "century";
         this.#scaleWidth = 20 + rescaleSpeed;
       }
+      if(this.#scaleWidth < 20){
+        this.#scaleWidth = 20;
+      }
     }
 
     if(this.#scaleType == "century"){

@@ -397,7 +397,7 @@ class Timeline {
       // temp
       ctx.translate(curGridLineX, 80);
       ctx.rotate((90 * Math.PI) / 180);
-      ctx.fillText(curValue + " (" + curDate.toDateString() + ")", 0, 0);
+      //ctx.fillText(curValue + " (" + curDate.toDateString() + ")", 0, 0);
       ctx.rotate((-90 * Math.PI) / 180);
       ctx.translate(-curGridLineX, -80);
       // save line date and x position
@@ -440,7 +440,7 @@ class Timeline {
       // temp
       ctx.translate(curGridLineX, 80);
       ctx.rotate((90 * Math.PI) / 180);
-      ctx.fillText(curValue + " (" + curDate.toDateString() + ")", 0, 0);
+      //ctx.fillText(curValue + " (" + curDate.toDateString() + ")", 0, 0);
       ctx.rotate((-90 * Math.PI) / 180);
       ctx.translate(-curGridLineX, -80);
 

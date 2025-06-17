@@ -1,4 +1,4 @@
-const SHOWTEMPMARKERS = true;
+const SHOWTEMPMARKERS = false;
 
 function drawCenterAxis(ctx, maxX, maxY, color) {
   ctx.strokeStyle = color;

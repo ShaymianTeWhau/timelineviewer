@@ -136,6 +136,7 @@ function incrementDateByScaleType(oldDate, scaleType, increment) {
 }
 
 class Timeline {
+  #canvasWidth = 0;
   #focusDate = new Date();
   #scaleType = "year";
   #focusX = 100;
@@ -505,9 +506,11 @@ class Timeline {
 
       // resize radius when month width is too narrow
       if(monthWidth < 2*radius +10){
-        radius = (monthWidth-10)/2
+        radius = (monthWidth-10)/2;
+        if(radius < 0) radius = 1; // ensure there is never a negative radius
       }
 
+      
       ctx.lineWidth = 1;
       ctx.font = "15px Arial";
       ctx.beginPath();
@@ -515,11 +518,38 @@ class Timeline {
       ctx.lineTo(endX-radius, y - radius);                        // Straight top
       ctx.arc(endX - radius, y, radius, Math.PI * 1.5, 0);          // Top right curve
       ctx.stroke();
-
+      
       // draw month text
       ctx.lineWidth = 2;
       ctx.textAlign = "center";
       ctx.textBaseline = "bottom";
+
+      // shift label if off screen left
+      let labelWidth = ctx.measureText(monthlabel).width
+      if(startX < 0){
+        labelMiddle = endX/2;
+      }
+      if(labelMiddle < 0){
+        labelMiddle = labelWidth/2;
+        
+      }
+      if(labelWidth>endX){
+        labelMiddle = endX - labelWidth/2;
+      }
+
+      // shift label if off screen right
+      if(endX > this.#canvasWidth){
+        labelMiddle = startX + (this.#canvasWidth - startX)/2;
+      }
+      if((labelMiddle-labelWidth/2)<startX){
+        labelMiddle = startX + labelWidth/2;
+      }
+
+      if(startX < 0 && endX > this.#canvasWidth){
+        labelMiddle = this.#canvasWidth/2;
+      }
+
+
       ctx.fillText(monthlabel, labelMiddle, baselineY - 20)
     }
 
@@ -530,6 +560,7 @@ class Timeline {
 
     // clear canvas
     const ctx = canvas.getContext("2d");
+    this.#canvasWidth = canvas.width;
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 

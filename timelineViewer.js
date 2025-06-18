@@ -249,12 +249,12 @@ class Timeline {
     }*/
     
     if (scaleType == "month"){
-      label = date.toLocaleString("default", { month: "long" });
+      //label = date.toLocaleString("default", { month: "long" });
   
-      if(scaleWidth < 50){
-        if(date.getMonth() != 0) label = "";
-        else label = date.getFullYear();
-      }
+    
+      if(date.getMonth() != 0) label = "";
+      else label = date.getFullYear();
+      
     } 
 
     if(scaleType == "date"){
@@ -420,12 +420,12 @@ class Timeline {
     ctx.stroke();
 
     // draw tick marks and values
-    ctx.lineWidth = 2;
-    ctx.font = "20px Arial";
-    ctx.fillStyle = "black";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "top";
     for (let i = 0; i < this.#linePosArr.length; i++) {
+      ctx.lineWidth = 2;
+      ctx.font = "20px Arial";
+      ctx.fillStyle = "black";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
       // tick mark
       ctx.beginPath();
       ctx.moveTo(this.#linePosArr[i], baselineY - 5);
@@ -436,7 +436,93 @@ class Timeline {
       let curDate = this.#lineDateArr[i];
       let baselineLabel = this.#getBaselineLabel(curDate, this.#scaleType, this.#scaleWidth);
       ctx.fillText(baselineLabel, this.#linePosArr[i], baselineY + 10);
+
     }
+
+    // draw month
+    if(this.#scaleType == "month" || this.#scaleType == "date") this.#drawBaselineMonths(ctx, baselineY);
+    
+  }
+  #drawBaselineMonths(ctx, baselineY){
+    // temp: will have to move this sort function somewhere else
+    this.#lineDateArr.sort((a, b) => a - b);
+    this.#linePosArr.sort((a, b) => a - b);
+
+    let monthPosArr = Array.from(this.#linePosArr);
+    let monthDateArr = Array.from(this.#lineDateArr);
+
+    
+    if(this.#scaleType == "date") {
+      let newPosArr = [];
+      let newDateArr = [];
+      
+      for(let i = 0; i < monthDateArr.length; i++){
+        let curDate = monthDateArr[i];
+        if(curDate.getDate() == 1){
+          newDateArr.push(monthDateArr[i]);
+          newPosArr.push(monthPosArr[i]);
+        }
+      }
+  
+      monthPosArr = newPosArr;
+      monthDateArr = newDateArr;
+    }
+    
+    // create date, a month before for printing the curved line starting off screen
+    let earlyDate = new Date(monthDateArr[0]);
+    earlyDate.setMonth(earlyDate.getMonth() - 1);
+    monthDateArr.unshift(earlyDate);
+    monthPosArr.unshift(this.#scaleWidth * -30);
+    console.log("monthPosArr first: "+monthPosArr[0])
+    console.log("monthDateArr first: "+monthDateArr[0])
+
+    for (let i = 0; i < monthPosArr.length; i++){
+  
+      let curDate = monthDateArr[i];
+      let monthlabel = curDate.getFullYear() + " " + curDate.toLocaleString("default", { month: "long" });
+
+      // don't draw label at certain scale widths
+      if(this.#scaleType == "month"){
+        monthlabel = curDate.toLocaleString("default", { month: "long" });
+
+        if(this.#scaleWidth < 40){
+          if(curDate.getMonth() % 6 !=0) monthlabel = "";
+        } else if(this.#scaleWidth < 80){
+          if(curDate.getMonth() % 2 !=0) monthlabel = "";
+        }
+      }
+
+      // draw curve above and between tick marks
+      let radius = 10;
+      const startX = monthPosArr[i]+5;
+      let endX = monthPosArr[i + 1] - 5;
+      if (isNaN(endX)) {
+        endX = 10000;
+      }
+      let monthWidth = (endX - startX);
+      let labelMiddle = startX + monthWidth/2;
+      const y = baselineY - 5;
+
+      // resize radius when month width is too narrow
+      if(monthWidth < 2*radius +10){
+        radius = (monthWidth-10)/2
+      }
+
+      ctx.lineWidth = 1;
+      ctx.font = "15px Arial";
+      ctx.beginPath();
+      ctx.arc(startX + radius, y, radius, Math.PI, Math.PI * 1.5); // Top left curve
+      ctx.lineTo(endX-radius, y - radius);                        // Straight top
+      ctx.arc(endX - radius, y, radius, Math.PI * 1.5, 0);          // Top right curve
+      ctx.stroke();
+
+      // draw month text
+      ctx.lineWidth = 2;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "bottom";
+      ctx.fillText(monthlabel, labelMiddle, baselineY - 20)
+    }
+
   }
   draw(canvas) {
     // temp code prevents crash if scale width is less than 1

@@ -297,8 +297,7 @@ class Timeline {
       if(this.#scaleWidth > 200){
         this.#scaleType = "century";
         this.#scaleWidth = 20 + rescaleSpeed;
-      }
-      if(this.#scaleWidth < 20){
+      }else if(this.#scaleWidth < 20){
         this.#scaleWidth = 20;
       }
     }
@@ -307,8 +306,7 @@ class Timeline {
       if(this.#scaleWidth > 200){
         this.#scaleType = "decade";
         this.#scaleWidth = 20 + rescaleSpeed;
-      }
-      if(this.#scaleWidth < 20){
+      }else if(this.#scaleWidth < 20){
         this.#scaleType = "millennium";
         this.#scaleWidth = 200 - rescaleSpeed;
       }
@@ -318,8 +316,7 @@ class Timeline {
       if(this.#scaleWidth > 200){
         this.#scaleType = "year";
         this.#scaleWidth = 20 + rescaleSpeed;
-      }
-      if(this.#scaleWidth < 20){
+      } else if(this.#scaleWidth < 20){
         this.#scaleType = "century";
         this.#scaleWidth = 200 - rescaleSpeed;
       }
@@ -329,8 +326,7 @@ class Timeline {
       if(this.#scaleWidth > 200){
         this.#scaleType = "month";
         this.#scaleWidth = 200/12 + rescaleSpeed;
-      }
-      if(this.#scaleWidth < 20){
+      } else if(this.#scaleWidth < 20){
         this.#scaleType = "decade";
         this.#scaleWidth = 200 - rescaleSpeed;
       }
@@ -339,9 +335,8 @@ class Timeline {
     if(this.#scaleType == "month"){
       if(this.#scaleWidth > 200){
         this.#scaleType = "date"
-        this.#scaleWidth = 20;
-      }
-      if(this.#scaleWidth < 20){
+        this.#scaleWidth = 10;
+      } else if(this.#scaleWidth < 20){
         this.#scaleType = "year";
         this.#scaleWidth = 200 - rescaleSpeed;
       }
@@ -350,9 +345,8 @@ class Timeline {
     if(this.#scaleType == "date"){
       if(this.#scaleWidth > 200){
         this.#scaleType = "hour"
-        this.#scaleWidth = 20;
-      }
-      if(this.#scaleWidth < 20){
+        this.#scaleWidth = 10;
+      } else if(this.#scaleWidth < 10){
         this.#scaleType = "month";
         this.#scaleWidth = 200
       }
@@ -361,9 +355,8 @@ class Timeline {
     if(this.#scaleType == "hour"){
       if(this.#scaleWidth > 200){
         this.#scaleType = "minute"
-        this.#scaleWidth = 20;
-      }
-      if(this.#scaleWidth < 20){
+        this.#scaleWidth = 10;
+      } else if(this.#scaleWidth < 10){
         this.#scaleType = "date";
         this.#scaleWidth = 200
       }
@@ -372,9 +365,8 @@ class Timeline {
     if(this.#scaleType == "minute"){
       if(this.#scaleWidth > 200){
         this.#scaleType = "second"
-        this.#scaleWidth = 20;
-      }
-      if(this.#scaleWidth < 20){
+        this.#scaleWidth = 10;
+      } else if(this.#scaleWidth < 10){
         this.#scaleType = "hour";
         this.#scaleWidth = 200
       }
@@ -383,9 +375,8 @@ class Timeline {
     if(this.#scaleType == "second"){
       if(this.#scaleWidth > 200){
         this.#scaleType = "millisecond"
-        this.#scaleWidth = 20;
-      }
-      if(this.#scaleWidth < 20){
+        this.#scaleWidth = 10;
+      } else if(this.#scaleWidth < 5){
         this.#scaleType = "minute";
         this.#scaleWidth = 200
       }
@@ -393,7 +384,7 @@ class Timeline {
 
     if(this.#scaleType == "millisecond"){
 
-      if(this.#scaleWidth < 20){
+      if(this.#scaleWidth < 5){
         this.#scaleType = "second";
         this.#scaleWidth = 200
       }
@@ -441,7 +432,7 @@ class Timeline {
     }
 
     // draw month
-    if(this.#scaleType == "month" || this.#scaleType == "date") this.#drawBaselineMonths(ctx, baselineY);
+    if(this.#scaleType == "month" || this.#scaleType == "date" || this.#scaleType == "hour"|| this.#scaleType == "minute"|| this.#scaleType == "second" || this.#scaleType == "millisecond") this.#drawBaselineMonths(ctx, baselineY);
     
   }
   #drawBaselineMonths(ctx, baselineY){
@@ -453,13 +444,14 @@ class Timeline {
     let monthDateArr = Array.from(this.#lineDateArr);
 
     
-    if(this.#scaleType == "date") {
+    if(this.#scaleType != "month") {
       let newPosArr = [];
       let newDateArr = [];
-      
+
       for(let i = 0; i < monthDateArr.length; i++){
         let curDate = monthDateArr[i];
-        if(curDate.getDate() == 1){
+
+        if((this.#scaleType == "date" && curDate.getDate() == 1) || (this.#scaleType == "hour" && curDate.getHours() == 0) || (this.#scaleType == "minute" && curDate.getMinutes() == 0) || (this.#scaleType == "second" && curDate.getSeconds() == 0)|| (this.#scaleType == "milliseconds" && curDate.getMilliseconds() == 0)){
           newDateArr.push(monthDateArr[i]);
           newPosArr.push(monthPosArr[i]);
         }
@@ -474,8 +466,6 @@ class Timeline {
     earlyDate.setMonth(earlyDate.getMonth() - 1);
     monthDateArr.unshift(earlyDate);
     monthPosArr.unshift(this.#scaleWidth * -30);
-    console.log("monthPosArr first: "+monthPosArr[0])
-    console.log("monthDateArr first: "+monthDateArr[0])
 
     for (let i = 0; i < monthPosArr.length; i++){
   
@@ -745,7 +735,7 @@ function setupCanvas() {
         timeline.rescale(rescaleSpeed, mouseX);
       }
     }
-    console.log("scaleWidth: " + timeline.getScaleWidth());
+    //console.log("scaleWidth: " + timeline.getScaleWidth());
     timeline.draw(canvas);
   });
 

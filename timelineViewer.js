@@ -189,7 +189,7 @@ class Timeline {
       if (date.getFullYear() == 0) label = "";
     }
     
-    // don't display certain years at certain scale lengths, depending on the scate type
+    // suppress certain labels - don't display certain years at certain scale lengths, depending on the scate type
     if(scaleType == "millennium"){
       
       if(scaleWidth < 20){
@@ -261,6 +261,41 @@ class Timeline {
     if(scaleType == "date"){
       if(scaleWidth < 50){
         if(date.getDate() % 5 != 0 && date.getDate() != 1 || date.getDate() == 30) label = "";
+      }
+    }
+
+    // TEMP:
+    console.log("scaleWidth: "+this.#scaleWidth)
+
+    if(scaleType == "hour"){
+      if(scaleWidth < 20){
+        if(date.getHours() % 6 != 0 && date.getHours() != 0) label = "";
+      } else if(scaleWidth < 50){
+        if(date.getHours() % 2 != 0 && date.getHours() != 0) label = "";
+      }
+    }
+
+    if(scaleType == "minute"){
+      if(scaleWidth < 20){
+        if(date.getMinutes() % 10 != 0 && date.getMinutes() != 0) label = "";
+      } else if(scaleWidth < 50){
+        if(date.getMinutes() % 5 != 0 && date.getMinutes() != 0) label = "";
+      }
+    }
+
+    if(scaleType == "second"){
+      if(scaleWidth < 20){
+        if(date.getSeconds() % 10 != 0 && date.getSeconds() != 0) label = "";
+      } else if(scaleWidth < 50){
+        if(date.getSeconds() % 5 != 0 && date.getSeconds() != 0) label = "";
+      }
+    }
+
+    if(scaleType == "millisecond"){
+      if(scaleWidth < 20){
+        if(date.getMilliseconds() % 10 != 0 && date.getMilliseconds() != 0) label = "";
+      } else if(scaleWidth < 50){
+        if(date.getMilliseconds() % 5 != 0 && date.getMilliseconds() != 0) label = "";
       }
     }
 
@@ -355,7 +390,7 @@ class Timeline {
     if(this.#scaleType == "hour"){
       if(this.#scaleWidth > 200){
         this.#scaleType = "minute"
-        this.#scaleWidth = 10;
+        this.#scaleWidth = 5;
       } else if(this.#scaleWidth < 10){
         this.#scaleType = "date";
         this.#scaleWidth = 200
@@ -365,8 +400,8 @@ class Timeline {
     if(this.#scaleType == "minute"){
       if(this.#scaleWidth > 200){
         this.#scaleType = "second"
-        this.#scaleWidth = 10;
-      } else if(this.#scaleWidth < 10){
+        this.#scaleWidth = 5;
+      } else if(this.#scaleWidth < 5){
         this.#scaleType = "hour";
         this.#scaleWidth = 200
       }
@@ -375,7 +410,7 @@ class Timeline {
     if(this.#scaleType == "second"){
       if(this.#scaleWidth > 200){
         this.#scaleType = "millisecond"
-        this.#scaleWidth = 10;
+        this.#scaleWidth = 5;
       } else if(this.#scaleWidth < 5){
         this.#scaleType = "minute";
         this.#scaleWidth = 200

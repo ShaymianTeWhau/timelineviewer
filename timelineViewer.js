@@ -418,7 +418,7 @@ class Timeline {
     }
 
     if(this.#scaleType == "millisecond"){
-
+      this.#scaleWidth = 4; // this is here because I don't want to implement milliseconds
       if(this.#scaleWidth < 5){
         this.#scaleType = "second";
         this.#scaleWidth = 200

@@ -466,11 +466,11 @@ class Timeline {
 
     }
 
-    // draw month
-    if(this.#scaleType == "month" || this.#scaleType == "date" || this.#scaleType == "hour"|| this.#scaleType == "minute"|| this.#scaleType == "second" || this.#scaleType == "millisecond") this.#drawBaselineMonths(ctx, baselineY);
+    // call draw labels above baseline for months and smaller
+    if(this.#scaleType == "month" || this.#scaleType == "date" || this.#scaleType == "hour"|| this.#scaleType == "minute"|| this.#scaleType == "second" || this.#scaleType == "millisecond") this.#drawLabelsAboveBaseline(ctx, baselineY);
     
   }
-  #drawBaselineMonths(ctx, baselineY){
+  #drawLabelsAboveBaseline(ctx, baselineY){
     // temp: will have to move this sort function somewhere else
     this.#lineDateArr.sort((a, b) => a - b);
     this.#linePosArr.sort((a, b) => a - b);
@@ -498,23 +498,50 @@ class Timeline {
     
     // create date, a month before for printing the curved line starting off screen
     let earlyDate = new Date(monthDateArr[0]);
-    earlyDate.setMonth(earlyDate.getMonth() - 1);
+    if(this.#scaleType == "month"){
+      earlyDate.setMonth(earlyDate.getMonth() - 1);
+    }
+    else if(this.#scaleType == "date"){
+      earlyDate.setDate(earlyDate.getDate() - 1)
+    }
+    else if(this.#scaleType == "hour"){
+      earlyDate.setHours(earlyDate.getHours() - 1)
+    }
+    else if(this.#scaleType == "minute"){
+      earlyDate.setMinutes(earlyDate.getMinutes() - 1)
+    }
+    else if(this.#scaleType == "second"){
+      earlyDate.setSeconds(earlyDate.getSeconds() - 1)
+    }
     monthDateArr.unshift(earlyDate);
     monthPosArr.unshift(this.#scaleWidth * -30);
+    
+
 
     for (let i = 0; i < monthPosArr.length; i++){
   
       let curDate = monthDateArr[i];
-      let monthlabel = curDate.getFullYear() + " " + curDate.toLocaleString("default", { month: "long" });
+      let topLabel = curDate.getFullYear() + " " + curDate.toLocaleString("default", { month: "long" });
+
+      // change topLabel format depending on scale type
+      if(this.#scaleType == "hour"){
+        topLabel = curDate.getFullYear() + " " + curDate.toLocaleString("default", { month: "long" }) + " " + curDate.getDate();
+      }else if(this.#scaleType == "minute"){
+        topLabel = curDate.getFullYear() + " " + curDate.toLocaleString("default", { month: "long" }) + " " + curDate.getDate() + " " + curDate.getHours() + ":";
+      }else if(this.#scaleType == "second"){
+        topLabel = curDate.getFullYear() + " " + curDate.toLocaleString("default", { month: "long" }) + " " + curDate.getDate() + " " + curDate.getHours() + ":" + curDate.getMinutes();
+      }else if(this.#scaleType == "millisecond"){
+        topLabel = curDate.getFullYear() + " " + curDate.toLocaleString("default", { month: "long" }) + " " + curDate.getDate() + " " + curDate.getHours() + ":" + curDate.getMinutes() + ":" + curDate.getSeconds();
+      }
 
       // don't draw label at certain scale widths
       if(this.#scaleType == "month"){
-        monthlabel = curDate.toLocaleString("default", { month: "long" });
+        topLabel = curDate.toLocaleString("default", { month: "long" });
 
         if(this.#scaleWidth < 40){
-          if(curDate.getMonth() % 6 !=0) monthlabel = "";
+          if(curDate.getMonth() % 6 !=0) topLabel = "";
         } else if(this.#scaleWidth < 80){
-          if(curDate.getMonth() % 2 !=0) monthlabel = "";
+          if(curDate.getMonth() % 2 !=0) topLabel = "";
         }
       }
 
@@ -550,7 +577,7 @@ class Timeline {
       ctx.textBaseline = "bottom";
 
       // shift label if off screen left
-      let labelWidth = ctx.measureText(monthlabel).width
+      let labelWidth = ctx.measureText(topLabel).width
       if(startX < 0){
         labelMiddle = endX/2;
       }
@@ -575,7 +602,7 @@ class Timeline {
       }
 
 
-      ctx.fillText(monthlabel, labelMiddle, baselineY - 20)
+      ctx.fillText(topLabel, labelMiddle, baselineY - 20)
     }
 
   }

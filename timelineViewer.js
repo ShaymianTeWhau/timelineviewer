@@ -1,4 +1,5 @@
 const SHOWTEMPMARKERS = false;
+const SHOWGRIDLINES = true;
 
 function drawCenterAxis(ctx, maxX, maxY, color) {
   ctx.strokeStyle = color;
@@ -673,10 +674,12 @@ class Timeline {
       this.#linePosArr.push(curGridLineX);
 
       // draw line
-      ctx.beginPath();
-      ctx.moveTo(curGridLineX, 0);
-      ctx.lineTo(curGridLineX, canvas.height);
-      ctx.stroke();
+      if(SHOWGRIDLINES){
+        ctx.beginPath();
+        ctx.moveTo(curGridLineX, 0);
+        ctx.lineTo(curGridLineX, canvas.height);//
+        ctx.stroke();
+      }
       pixelDistanceFromFocus += this.#scaleWidth;
       linesAboveFocus++;
     }
@@ -717,10 +720,12 @@ class Timeline {
       this.#linePosArr.push(curGridLineX);
 
       // draw line
-      ctx.beginPath();
-      ctx.moveTo(curGridLineX, 0);
-      ctx.lineTo(curGridLineX, canvas.height);
-      ctx.stroke();
+      if(SHOWGRIDLINES){
+        ctx.beginPath();
+        ctx.moveTo(curGridLineX, 0);
+        ctx.lineTo(curGridLineX, canvas.height);
+        ctx.stroke();
+      }
 
       pixelDistanceFromFocus += this.#scaleWidth;
     }

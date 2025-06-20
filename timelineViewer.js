@@ -436,6 +436,9 @@ class Timeline {
   moveHorizontal(horizontalScrollSpeed) {
     this.#focusX += horizontalScrollSpeed;
   }
+  moveVertical(verticalScrollSpeed){
+    console.log("move vert: "+verticalScrollSpeed)
+  }
   drawBaseline(canvas) {
     // draw backing for baseline
     const ctx = canvas.getContext("2d");
@@ -821,6 +824,7 @@ function setupCanvas() {
   let mouseX = -1;
   let mouseY = -1;
   let horizontalScrollSpeed = 50;
+  let verticalScrollSpeed = 50;
   let rescaleSpeed = 10;
 
   let focusDate = new Date(-1, 11, 31, 23, 59, 59, 999);
@@ -855,6 +859,15 @@ function setupCanvas() {
         // shift + Scroll up
         //focusX -= horizontalScrollSpeed;
         timeline.moveHorizontal(-horizontalScrollSpeed);
+      }
+    }
+
+    // vertical movement
+    if(!event.shiftKey && !event.altKey){
+      if (event.deltaY > 0) {
+        timeline.moveVertical(verticalScrollSpeed);
+      }else if (event.deltaY < 0){
+        timeline.moveVertical(-verticalScrollSpeed);
       }
     }
 

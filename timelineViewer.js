@@ -759,7 +759,7 @@ class Timeline {
   load(){
     // temp implementation
     this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth));
-    this.#swimLaneArr.push(new SwimLane("lane2",false, this.#canvasWidth));
+    this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth));
     this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth));
   }
 }
@@ -810,6 +810,33 @@ class SwimLane{
 
   drawTimePeriods(ctx){
     if(this.#isHidden) return;
+  }
+}
+
+class TimePeriod{
+  #name;
+  #description;
+  #startDate;
+  #endDate;
+  #x;
+  #y;
+  #width;
+  #height;
+  #textWidth;
+  #boundingWidth;
+  #boundingHeight;
+  #boundingBoxVisible;
+
+  constructor(name, startDate, endDate, description){
+    this.#name = name;
+    this.#description = description;
+    this.#startDate = startDate;
+    this.#endDate = endDate;
+  }
+  setDescription(description){this.#description = description}
+  getDescription(){return this.#description}
+  draw(ctx){
+    
   }
 }
 

@@ -145,6 +145,8 @@ class Timeline {
   #baseLineHeight = 150;
   #linePosArr = []; // currently unordered
   #lineDateArr = []; // currently unordered
+  #swimLaneArr = [];
+
   constructor(scaleWidth, scaleType, focusDate, focusX) {
     this.#scaleWidth = scaleWidth;
     this.setScaleType(scaleType);
@@ -738,6 +740,39 @@ class Timeline {
     //console.log("lines above focus (including center): " + linesAboveFocus);
     //console.log("lines below focus: " + linesBelowFocus);
     this.drawBaseline(canvas);
+  }
+  load(){
+    // temp implementation
+    this.#swimLaneArr.push(new SwimLane("lane1", 0, false, this.#canvasWidth));
+  }
+}
+
+class SwimLane{
+  #name = "";
+  #distanceFromTop = 0;
+  #isHidden = false;
+  #width = 0;
+  #height = 200; // temp, min height
+
+  constructor(name, distanceFromTop, isHidden, width){
+    this.#name = name;
+    this.#distanceFromTop = distanceFromTop;
+    this.#isHidden = isHidden;
+    this.#width = width;
+  }
+
+  draw(ctx) {
+    this.#drawBackground(ctx);
+    this.#drawTimePeriods(ctx);
+  }
+
+  #drawBackground(ctx){
+    ctx.fillStyle = "red";
+    ctx.fillRect(0, this.#distanceFromTop, this.#width, this.#height);
+  }
+
+  #drawTimePeriods(ctx){
+
   }
 }
 

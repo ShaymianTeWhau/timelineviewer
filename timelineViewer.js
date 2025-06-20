@@ -758,14 +758,67 @@ class Timeline {
   }
   load(){
     // temp implementation
-    this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth));
-    this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth));
-    this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth));
     let tempTimePeriodArr = [];
+    
+    let start1 = new Date(1914, 6, 28); // July is month 6 (0-indexed)
+    let end1 = new Date(1918, 10, 11);  // November is month 10
+    tempTimePeriodArr.push(
+      new TimePeriod("World War I", start1, end1, false, false, "A global war centered in Europe that lasted from 28 July 1914 to 11 November 1918.")
+    );
 
-    let start1 = new Date();
-    let end1 = new Date();
-    //tempTimePeriodArr.push()
+    let start2 = new Date(1939, 8, 1);  // September 1, 1939
+    let end2 = new Date(1945, 8, 2);    // September 2, 1945
+    tempTimePeriodArr.push(
+      new TimePeriod("World War II", start2, end2, false, false, "A global war that lasted from 1 September 1939 to 2 September 1945.")
+    );
+    
+    // Russian Revolution (1917)
+    let russianRevStart = new Date(1917, 2); // March 1917
+    let russianRevEnd = new Date(1917, 10);  // November 1917
+    tempTimePeriodArr.push(
+      new TimePeriod("Russian Revolution", russianRevStart, russianRevEnd, false, false, "Political revolution in Russia leading to the fall of the Tsar and rise of the Soviet Union.")
+    );
+    
+    // Armenian Genocide (1915–1917)
+    let armenianGenocideStart = new Date(1915, 3); // April 1915
+    let armenianGenocideEnd = new Date(1917, 11);  // December 1917
+    tempTimePeriodArr.push(
+      new TimePeriod("Armenian Genocide", armenianGenocideStart, armenianGenocideEnd, false, false, "Mass killing and deportation of Armenians by the Ottoman Empire during WWI.")
+    );
+
+    // Holocaust (c. 1941–1945)
+    let holocaustStart = new Date(1941, 5); // June 1941
+    let holocaustEnd = new Date(1945, 4);   // May 1945
+    tempTimePeriodArr.push(
+      new TimePeriod("The Holocaust", holocaustStart, holocaustEnd, true, false, "Systematic genocide of six million Jews and millions of others by Nazi Germany.")
+    );
+    
+    // Second Sino-Japanese War (1937–1945)
+    let sinoJapWarStart = new Date(1937, 6, 7); // July 7, 1937
+    let sinoJapWarEnd = new Date(1945, 8, 9);   // September 9, 1945
+    tempTimePeriodArr.push(
+      new TimePeriod("Second Sino-Japanese War", sinoJapWarStart, sinoJapWarEnd, false, false, "Conflict between China and Japan that became part of WWII.")
+    );
+    
+    // Manhattan Project (1942–1946)
+    let manhattanProjectStart = new Date(1942, 0); // January 1942
+    let manhattanProjectEnd = new Date(1946, 11);  // December 1946
+    tempTimePeriodArr.push(
+      new TimePeriod("Manhattan Project", manhattanProjectStart, manhattanProjectEnd, false, false, "U.S.-led research to develop nuclear weapons during WWII.")
+    );
+    
+    // Interwar Period (1918–1939)
+    let interwarStart = new Date(1918, 10, 11); // November 11, 1918 (end of WWI)
+    let interwarEnd = new Date(1939, 8, 1);     // September 1, 1939 (start of WWII)
+    tempTimePeriodArr.push(
+      new TimePeriod("Interwar Period", interwarStart, interwarEnd, false, false, "Time between WWI and WWII, marked by instability and the rise of totalitarian regimes.")
+    );
+
+    this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth));
+    this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth, tempTimePeriodArr));
+    this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth));
+    
+
   }
 }
 

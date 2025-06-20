@@ -1,5 +1,6 @@
 const SHOWTEMPMARKERS = false;
 const SHOWGRIDLINES = true;
+const SHOWSWIMLANEBORDERS = true;
 
 function drawCenterAxis(ctx, maxX, maxY, color) {
   ctx.strokeStyle = color;
@@ -147,12 +148,13 @@ class Timeline {
   #lineDateArr = []; // currently unordered
   #swimLaneArr = [];
 
-  constructor(scaleWidth, scaleType, focusDate, focusX) {
+  constructor(scaleWidth, scaleType, focusDate, focusX, canvasWidth) {
     this.#scaleWidth = scaleWidth;
     this.setScaleType(scaleType);
     this.#focusDate = focusDate;
     console.log("constructor focus date:" + this.#focusDate);
     this.#focusX = focusX;
+    this.#canvasWidth = canvasWidth;
   }
   setFocusDate(focusDate) {
     if (!(focusDate instanceof Date)) {
@@ -625,6 +627,12 @@ class Timeline {
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // draw swim lane backgrounds
+    for(let i = 0;i<this.#swimLaneArr.length;i++){
+      this.#swimLaneArr[i].drawBackground(ctx);
+    }
+
+
     // clear line date and position arrays
     this.#lineDateArr = [];
     this.#linePosArr = [];
@@ -744,6 +752,8 @@ class Timeline {
   load(){
     // temp implementation
     this.#swimLaneArr.push(new SwimLane("lane1", 0, false, this.#canvasWidth));
+    this.#swimLaneArr.push(new SwimLane("lane2", this.#swimLaneArr[0].getHeight(), false, this.#canvasWidth));
+    this.#swimLaneArr.push(new SwimLane("lane3", this.#swimLaneArr[0].getHeight()+this.#swimLaneArr[1].getHeight(), false, this.#canvasWidth));
   }
 }
 
@@ -761,17 +771,33 @@ class SwimLane{
     this.#width = width;
   }
 
-  draw(ctx) {
-    this.#drawBackground(ctx);
-    this.#drawTimePeriods(ctx);
+  getHeight(){
+    return this.#height;
   }
 
-  #drawBackground(ctx){
-    ctx.fillStyle = "red";
+  drawBackground(ctx){
+    ctx.fillStyle = "rgb(234, 234, 234)";
     ctx.fillRect(0, this.#distanceFromTop, this.#width, this.#height);
+    if(SHOWSWIMLANEBORDERS) this.#drawBorder(ctx);
+    this.#drawTitle(ctx);
+  }
+  #drawBorder(ctx){
+    ctx.strokeStyle = "rgb(255, 255, 255)";
+    ctx.strokeRect(0, this.#distanceFromTop, this.#width, this.#height)
+  }
+  #drawTitle(ctx){
+    // setup draw title
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+      ctx.font = "75px Arial";
+
+      let labelX = 5;
+      let labelY = this.#distanceFromTop + 100;
+      ctx.fillText(this.#name, labelX, labelY);
   }
 
-  #drawTimePeriods(ctx){
+  drawTimePeriods(ctx){
 
   }
 }
@@ -804,7 +830,8 @@ function setupCanvas() {
   let scaleType = "millennium";
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
-  const timeline = new Timeline(scaleWidth, scaleType, focusDate, focusX);
+  const timeline = new Timeline(scaleWidth, scaleType, focusDate, focusX, canvas.width);
+  timeline.load()
   timeline.draw(canvas);
 
   window.addEventListener("keydown", (event) => {

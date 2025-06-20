@@ -142,6 +142,7 @@ class Timeline {
   #focusDate = new Date();
   #scaleType = "year";
   #focusX = 100;
+  #yOffset = 0;
   #scaleWidth = 100; // in pixels
   #baseLineHeight = 150;
   #linePosArr = []; // currently unordered
@@ -438,6 +439,7 @@ class Timeline {
   }
   moveVertical(verticalScrollSpeed){
     console.log("move vert: "+verticalScrollSpeed)
+    this.#yOffset += verticalScrollSpeed;
   }
   drawBaseline(canvas) {
     // draw backing for baseline
@@ -631,8 +633,10 @@ class Timeline {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // draw swim lane backgrounds
-    for(let i = 0;i<this.#swimLaneArr.length;i++){
-      this.#swimLaneArr[i].drawBackground(ctx);
+    let curY = this.#yOffset; // change to y offset
+    for(let i = 0;i < this.#swimLaneArr.length; i++){
+      if(i > 0) curY += this.#swimLaneArr[i-1].getHeight(); // add height of previous swim lane
+      this.#swimLaneArr[i].drawBackground(ctx, curY);
     }
 
 
@@ -754,22 +758,20 @@ class Timeline {
   }
   load(){
     // temp implementation
-    this.#swimLaneArr.push(new SwimLane("lane1", 0, false, this.#canvasWidth));
-    this.#swimLaneArr.push(new SwimLane("lane2", this.#swimLaneArr[0].getHeight(), false, this.#canvasWidth));
-    this.#swimLaneArr.push(new SwimLane("lane3", this.#swimLaneArr[0].getHeight()+this.#swimLaneArr[1].getHeight(), false, this.#canvasWidth));
+    this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth));
+    this.#swimLaneArr.push(new SwimLane("lane2",false, this.#canvasWidth));
+    this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth));
   }
 }
 
 class SwimLane{
   #name = "";
-  #distanceFromTop = 0;
   #isHidden = false;
   #width = 0;
   #height = 200; // temp, min height
 
-  constructor(name, distanceFromTop, isHidden, width){
+  constructor(name, isHidden, width){
     this.#name = name;
-    this.#distanceFromTop = distanceFromTop;
     this.#isHidden = isHidden;
     this.#width = width;
   }
@@ -778,17 +780,17 @@ class SwimLane{
     return this.#height;
   }
 
-  drawBackground(ctx){
+  drawBackground(ctx, y){
     ctx.fillStyle = "rgb(234, 234, 234)";
-    ctx.fillRect(0, this.#distanceFromTop, this.#width, this.#height);
-    if(SHOWSWIMLANEBORDERS) this.#drawBorder(ctx);
-    this.#drawTitle(ctx);
+    ctx.fillRect(0, y, this.#width, this.#height);
+    if(SHOWSWIMLANEBORDERS) this.#drawBorder(ctx, y);
+    this.#drawTitle(ctx, y);
   }
-  #drawBorder(ctx){
+  #drawBorder(ctx, y){
     ctx.strokeStyle = "rgb(255, 255, 255)";
-    ctx.strokeRect(0, this.#distanceFromTop, this.#width, this.#height)
+    ctx.strokeRect(0, y, this.#width, this.#height)
   }
-  #drawTitle(ctx){
+  #drawTitle(ctx, y){
     // setup draw title
       ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
       ctx.textAlign = "left";
@@ -796,7 +798,7 @@ class SwimLane{
       ctx.font = "75px Arial";
 
       let labelX = 5;
-      let labelY = this.#distanceFromTop + 100;
+      let labelY = y + 100;
       ctx.fillText(this.#name, labelX, labelY);
   }
 
@@ -865,9 +867,9 @@ function setupCanvas() {
     // vertical movement
     if(!event.shiftKey && !event.altKey){
       if (event.deltaY > 0) {
-        timeline.moveVertical(verticalScrollSpeed);
-      }else if (event.deltaY < 0){
         timeline.moveVertical(-verticalScrollSpeed);
+      }else if (event.deltaY < 0){
+        timeline.moveVertical(verticalScrollSpeed);
       }
     }
 

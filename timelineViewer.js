@@ -776,11 +776,17 @@ class SwimLane{
     this.#width = width;
   }
 
+  hide = () => this.#isHidden = true;
+  show = () => this.#isHidden = false;
+
   getHeight(){
+    if(this.#isHidden) return 0;
     return this.#height;
   }
 
   drawBackground(ctx, y){
+    if(this.#isHidden) return;
+
     ctx.fillStyle = "rgb(234, 234, 234)";
     ctx.fillRect(0, y, this.#width, this.#height);
     if(SHOWSWIMLANEBORDERS) this.#drawBorder(ctx, y);
@@ -803,7 +809,7 @@ class SwimLane{
   }
 
   drawTimePeriods(ctx){
-
+    if(this.#isHidden) return;
   }
 }
 

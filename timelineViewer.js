@@ -479,25 +479,31 @@ class Timeline {
     let monthPosArr = Array.from(this.#linePosArr);
     let monthDateArr = Array.from(this.#lineDateArr);
 
-    
+    // this will make a date and position array for the top bracket positions
     if(this.#scaleType != "month") {
       let newPosArr = [];
       let newDateArr = [];
 
       for(let i = 0; i < monthDateArr.length; i++){
         let curDate = monthDateArr[i];
-
+        console.log("checking: " + curDate)
+        
         if((this.#scaleType == "date" && curDate.getDate() == 1) || (this.#scaleType == "hour" && curDate.getHours() == 0) || (this.#scaleType == "minute" && curDate.getMinutes() == 0) || (this.#scaleType == "second" && curDate.getSeconds() == 0)|| (this.#scaleType == "milliseconds" && curDate.getMilliseconds() == 0)){
+          console.log("**push: " + monthDateArr[i])
           newDateArr.push(monthDateArr[i]);
           newPosArr.push(monthPosArr[i]);
         }
       }
   
+      if(newDateArr.length == 0){ // when zoomed in, this will ensure the date array has at least one date in it
+        newDateArr.push(monthDateArr[0]);
+      }
+
       monthPosArr = newPosArr;
       monthDateArr = newDateArr;
     }
     
-    // create date, a month before for printing the curved line starting off screen
+    // create date, a month/date/hour/minute/second before the first date - for printing the curved line starting off screen
     let earlyDate = new Date(monthDateArr[0]);
     if(this.#scaleType == "month"){
       earlyDate.setMonth(earlyDate.getMonth() - 1);
@@ -518,7 +524,7 @@ class Timeline {
     monthPosArr.unshift(this.#scaleWidth * -30);
     
 
-
+    // format and print top lables
     for (let i = 0; i < monthPosArr.length; i++){
   
       let curDate = monthDateArr[i];

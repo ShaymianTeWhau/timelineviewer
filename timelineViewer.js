@@ -761,6 +761,11 @@ class Timeline {
     this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth));
     this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth));
     this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth));
+    let tempTimePeriodArr = [];
+
+    let start1 = new Date();
+    let end1 = new Date();
+    //tempTimePeriodArr.push()
   }
 }
 
@@ -769,11 +774,13 @@ class SwimLane{
   #isHidden = false;
   #width = 0;
   #height = 200; // temp, min height
+  #timePeriodArr = [];
 
-  constructor(name, isHidden, width){
+  constructor(name, isHidden, width, timePeriodArr){
     this.#name = name;
     this.#isHidden = isHidden;
     this.#width = width;
+    this.#timePeriodArr = timePeriodArr;
   }
 
   hide = () => this.#isHidden = true;
@@ -817,7 +824,9 @@ class TimePeriod{
   #name;
   #description;
   #startDate;
+  #hasApproxStartDate;
   #endDate;
+  #hasApproxEndDate;
   #x;
   #y;
   #width;
@@ -827,16 +836,18 @@ class TimePeriod{
   #boundingHeight;
   #boundingBoxVisible;
 
-  constructor(name, startDate, endDate, description){
+  constructor(name, startDate, endDate, hasApproxStartDate, hasApproxEndDate, description){
     this.#name = name;
     this.#description = description;
     this.#startDate = startDate;
     this.#endDate = endDate;
+    this.#hasApproxStartDate = hasApproxStartDate;
+    this.#hasApproxEndDate = hasApproxEndDate;
   }
   setDescription(description){this.#description = description}
   getDescription(){return this.#description}
   draw(ctx){
-    
+
   }
 }
 

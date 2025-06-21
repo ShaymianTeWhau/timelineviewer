@@ -943,10 +943,15 @@ class TimePeriod{
     console.log(this.toString())
   }
   #calculateX(timeline){
-    console.log("focus date: " +timeline.getFocusDate().getFullYear())
-    console.log("focus x: " + timeline.getFocusX())
-    this.#x = this.#startDate.getFullYear();
+    let lineDateArr = timeline.getLineDateArray();
+    let linePosArr = timeline.getLinePositionArray();
 
+    for(let i = 0; i<lineDateArr.length;i++){
+      console.log(lineDateArr[i].getFullYear())
+    }
+    console.log(linePosArr)
+
+    this.#x = this.#startDate.getFullYear();
   }
 }
 

@@ -962,19 +962,38 @@ class TimePeriod{
     const timelineStartDate = lineDateArr[0];
     const timelineEndX = linePosArr[linePosArr.length-1];
     const timelineEndDate = lineDateArr[lineDateArr.length-1];
-    const gridWidthUnits = timelineEndDate.getFullYear() - timelineStartDate.getFullYear(); // this would depend on scaleType
+
     const gridWidthPixels = timelineEndX - timelineStartX;
+    const gridWidthUnits = this.#getGridWidthUnits(timeline)
     const pixelsPerUnit = gridWidthPixels / gridWidthUnits;
 
-
-    
     this.#x = timelineStartX + (this.#startDate.getFullYear() - timelineStartDate.getFullYear()) * pixelsPerUnit;
 
-    
     console.log("gridWidthUnits: "+gridWidthUnits)
     console.log("gridWidthPixels: " +gridWidthPixels)
     console.log("pixelsPerUnit: " +pixelsPerUnit)
     console.log(this.#name + " year:" + this.#startDate.getFullYear()+ " x=" +this.#x)
+  }
+  #getGridWidthUnits(timeline){
+    let gridWidthUnits;
+    let scaleType = timeline.getScaleType();
+    console.log(scaleType)
+    if(scaleType == "month"){
+
+    }else if(scaleType == "date"){
+
+    }else if(scaleType == "hour"){
+
+    }else if(scaleType == "minute"){
+      
+    }else if(scaleType == "second"){
+
+    }else{ // if scaleType is any kind of year
+      gridWidthUnits = timelineEndDate.getFullYear() - timelineStartDate.getFullYear();
+    }
+  }
+  #getGridWidthSubunit(timeline){ // not good name
+
   }
 }
 

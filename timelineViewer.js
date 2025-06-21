@@ -270,9 +270,6 @@ class Timeline {
       }
     }
 
-    // TEMP:
-    console.log("scaleWidth: "+this.#scaleWidth)
-
     if(scaleType == "hour"){
       if(scaleWidth < 20){
         if(date.getHours() % 6 != 0 && date.getHours() != 0) label = "";
@@ -438,7 +435,6 @@ class Timeline {
     this.#focusX += horizontalScrollSpeed;
   }
   moveVertical(verticalScrollSpeed){
-    console.log("move vert: "+verticalScrollSpeed)
     this.#yOffset += verticalScrollSpeed;
   }
   drawBaseline(canvas) {
@@ -886,7 +882,7 @@ class SwimLane{
 
   drawTimePeriods(ctx){
     if(this.#isHidden) return;
-
+    console.log(this.#timePeriodArr[0].toString())
     
   }
 }
@@ -914,6 +910,23 @@ class TimePeriod{
     this.#endDate = endDate;
     this.#hasApproxStartDate = hasApproxStartDate;
     this.#hasApproxEndDate = hasApproxEndDate;
+  }
+
+    toString() {
+      return `Name: ${this.#name}
+        Description: ${this.#description}
+        Start Date: ${this.#startDate}
+        Has Approximate Start Date: ${this.#hasApproxStartDate}
+        End Date: ${this.#endDate}
+        Has Approximate End Date: ${this.#hasApproxEndDate}
+        X: ${this.#x}
+        Y: ${this.#y}
+        Width: ${this.#width}
+        Height: ${this.#height}
+        Text Width: ${this.#textWidth}
+        Bounding Width: ${this.#boundingWidth}
+        Bounding Height: ${this.#boundingHeight}
+        Bounding Box Visible: ${this.#boundingBoxVisible}`;
   }
   setDescription(description){this.#description = description}
   getDescription(){return this.#description}

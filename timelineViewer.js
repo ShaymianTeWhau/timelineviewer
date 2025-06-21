@@ -137,6 +137,14 @@ function incrementDateByScaleType(oldDate, scaleType, increment) {
   return newDate;
 }
 
+function getDaysInMonth(date) {
+  const year = date.getFullYear();
+  const month = date.getMonth(); // 0-based (0 = Jan, 11 = Dec)
+  
+  // Set date to the 0th day of the next month → gives last day of current month
+  return new Date(year, month + 1, 0).getDate();
+}
+
 class Timeline {
   #canvasWidth = 0;
   #focusDate = new Date();
@@ -968,11 +976,17 @@ class TimePeriod{
     const gridWidthUnits = this.#getGridWidthUnits(timelineStartDate, timelineEndDate, timeline.getScaleType())
     const pixelsPerUnit = gridWidthPixels / gridWidthUnits;
 
+    // if scaleType is a type of year
     this.#x = timelineStartX + (this.#startDate.getFullYear() - timelineStartDate.getFullYear()) * pixelsPerUnit;
+    this.#x += (this.#startDate.getMonth() * pixelsPerUnit) /12 + (this.#startDate.getDate()*pixelsPerUnit)/365;
+
     if(timeline.getScaleType() == "month"){
       let deltaYear = this.#startDate.getFullYear() - timelineStartDate.getFullYear();
       let deltaMonth = this.#startDate.getMonth() - timelineStartDate.getMonth();
       this.#x= timelineStartX + (deltaYear*12)*timeline.getScaleWidth() + deltaMonth*timeline.getScaleWidth();
+      let daysInMonth = getDaysInMonth(this.#startDate);
+      console.log("days in month: " +daysInMonth)
+      this.#x+= (this.#startDate.getDate()*timeline.getScaleWidth())/daysInMonth + (this.#startDate.getHours()*timeline.getScaleWidth())/24;
     }
 
     console.log("lineDateArr.length: "+lineDateArr.length)

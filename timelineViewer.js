@@ -942,18 +942,39 @@ class TimePeriod{
     this.#boundingHeight = this.#height * 2;
     this.#calculateX(timeline);
     
-    console.log(this.toString())
+    //console.log(this.toString())
+    ctx.fillRect(this.#x, 10, 100, 10)
   }
   #calculateX(timeline){
+    // get timeline grid arrays
     let lineDateArr = timeline.getLineDateArray();
     let linePosArr = timeline.getLinePositionArray();
 
+    // temp: print grid data
     for(let i = 0; i<lineDateArr.length;i++){
-      console.log(lineDateArr[i].getFullYear())
+      console.log(lineDateArr[i].getFullYear() + ": x=" + linePosArr[i])
     }
-    console.log(linePosArr)
 
-    this.#x = this.#startDate.getFullYear();
+    // if date is not in grid -don't print
+    // ???
+
+    const timelineStartX = linePosArr[0];
+    const timelineStartDate = lineDateArr[0];
+    const timelineEndX = linePosArr[linePosArr.length-1];
+    const timelineEndDate = lineDateArr[lineDateArr.length-1];
+    const gridWidthUnits = timelineEndDate.getFullYear() - timelineStartDate.getFullYear(); // this would depend on scaleType
+    const gridWidthPixels = timelineEndX - timelineStartX;
+    const pixelsPerUnit = gridWidthPixels / gridWidthUnits;
+
+
+    
+    this.#x = timelineStartX + (this.#startDate.getFullYear() - timelineStartDate.getFullYear()) * pixelsPerUnit;
+
+    
+    console.log("gridWidthUnits: "+gridWidthUnits)
+    console.log("gridWidthPixels: " +gridWidthPixels)
+    console.log("pixelsPerUnit: " +pixelsPerUnit)
+    console.log(this.#name + " year:" + this.#startDate.getFullYear()+ " x=" +this.#x)
   }
 }
 

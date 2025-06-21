@@ -747,6 +747,8 @@ class Timeline {
 
       pixelDistanceFromFocus += this.#scaleWidth;
     }
+
+    SwimLane.drawForegrounds(ctx, this.#swimLaneArr, this.#yOffset)
     //console.log("lines above focus (including center): " + linesAboveFocus);
     //console.log("lines below focus: " + linesBelowFocus);
     this.drawBaseline(canvas);
@@ -839,6 +841,13 @@ class SwimLane{
     }
   }
 
+  static drawForegrounds(ctx, swimLaneArr, y){
+    // function to draw foregrounds for an array of SwimLanes, beginning at y coordinate
+
+    // temp implementation:
+    swimLaneArr[1].drawTimePeriods(ctx);
+  }
+
   hide = () => this.#isHidden = true;
   show = () => this.#isHidden = false;
 
@@ -873,6 +882,8 @@ class SwimLane{
 
   drawTimePeriods(ctx){
     if(this.#isHidden) return;
+
+    
   }
 }
 

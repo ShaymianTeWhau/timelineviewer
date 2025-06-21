@@ -744,7 +744,7 @@ class Timeline {
       pixelDistanceFromFocus += this.#scaleWidth;
     }
 
-    SwimLane.drawForegrounds(ctx, this.#swimLaneArr, this.#yOffset)
+    SwimLane.drawForegrounds(ctx, this.#swimLaneArr, this.#yOffset, this)
     //console.log("lines above focus (including center): " + linesAboveFocus);
     //console.log("lines below focus: " + linesBelowFocus);
     this.drawBaseline(canvas);
@@ -837,11 +837,11 @@ class SwimLane{
     }
   }
 
-  static drawForegrounds(ctx, swimLaneArr, y){
+  static drawForegrounds(ctx, swimLaneArr, y, timeline){
     // function to draw foregrounds for an array of SwimLanes, beginning at y coordinate
 
     // temp implementation:
-    swimLaneArr[1].drawTimePeriods(ctx);
+    swimLaneArr[1].drawTimePeriods(ctx, timeline);
   }
 
   hide = () => this.#isHidden = true;
@@ -880,10 +880,10 @@ class SwimLane{
     return this.#name + this.#isHidden + this.#width + this.#height;
   }
 
-  drawTimePeriods(ctx){
+  drawTimePeriods(ctx, timeline){
     if(this.#isHidden) return;
-    console.log(this.#timePeriodArr[0].toString())
-    
+    this.#timePeriodArr[0].draw(ctx, timeline);
+
   }
 }
 
@@ -930,7 +930,15 @@ class TimePeriod{
   }
   setDescription(description){this.#description = description}
   getDescription(){return this.#description}
-  draw(ctx){
+  draw(ctx, timeline){
+    this.#height = 20;
+    this.#boundingHeight = this.#height * 2;
+    this.#calculateX();
+    
+    console.log(this.toString())
+  }
+  #calculateX(){
+    this.#x = this.#startDate.getFullYear();
 
   }
 }

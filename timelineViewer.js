@@ -633,12 +633,7 @@ class Timeline {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // draw swim lane backgrounds
-    let curY = this.#yOffset; // change to y offset
-    for(let i = 0;i < this.#swimLaneArr.length; i++){
-      if(i > 0) curY += this.#swimLaneArr[i-1].getHeight(); // add height of previous swim lane
-      this.#swimLaneArr[i].drawBackground(ctx, curY);
-    }
-
+    SwimLane.drawBackgrounds(ctx, this.#swimLaneArr, this.#yOffset);
 
     // clear line date and position arrays
     this.#lineDateArr = [];
@@ -834,6 +829,14 @@ class SwimLane{
     this.#isHidden = isHidden;
     this.#width = width;
     this.#timePeriodArr = timePeriodArr;
+  }
+
+  static drawBackgrounds(ctx, swimLaneArr, y){
+    // function to draw backgrounds for an array of SwimLanes, beginning at y coordinate
+    for(let i = 0;i < swimLaneArr.length; i++){
+      if(i > 0) y += swimLaneArr[i-1].getHeight(); // add height of previous swim lane
+      swimLaneArr[i].drawBackground(ctx, y);
+    }
   }
 
   hide = () => this.#isHidden = true;

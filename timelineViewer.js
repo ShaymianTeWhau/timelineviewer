@@ -880,6 +880,10 @@ class SwimLane{
       ctx.fillText(this.#name, labelX, labelY);
   }
 
+  toString(){
+    return this.#name + this.#isHidden + this.#width + this.#height;
+  }
+
   drawTimePeriods(ctx){
     if(this.#isHidden) return;
 

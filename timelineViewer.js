@@ -482,9 +482,7 @@ class Timeline {
     
   }
   #drawLabelsAboveBaseline(ctx, baselineY){
-    // temp: will have to move this sort function somewhere else
-    this.#lineDateArr.sort((a, b) => a - b);
-    this.#linePosArr.sort((a, b) => a - b);
+    
 
     let monthPosArr = Array.from(this.#linePosArr);
     let monthDateArr = Array.from(this.#lineDateArr);
@@ -748,6 +746,10 @@ class Timeline {
 
       pixelDistanceFromFocus += this.#scaleWidth;
     }
+
+    // temp: will have to move this sort function somewhere else
+    this.#lineDateArr.sort((a, b) => a - b);
+    this.#linePosArr.sort((a, b) => a - b);
 
     SwimLane.drawForegrounds(ctx, this.#swimLaneArr, this.#yOffset, this)
     //console.log("lines above focus (including center): " + linesAboveFocus);

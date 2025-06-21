@@ -157,6 +157,8 @@ class Timeline {
     this.#focusX = focusX;
     this.#canvasWidth = canvasWidth;
   }
+  getLinePositionArray(){return this.#linePosArr}
+  getLineDateArray(){return this.#lineDateArr}
   getYOffset(){return this.#yOffset}
   getFocusX(){return this.#focusX}
   getFocusDate(){return this.#focusDate}
@@ -936,11 +938,13 @@ class TimePeriod{
   draw(ctx, timeline){
     this.#height = 20;
     this.#boundingHeight = this.#height * 2;
-    this.#calculateX();
+    this.#calculateX(timeline);
     
     console.log(this.toString())
   }
-  #calculateX(){
+  #calculateX(timeline){
+    console.log("focus date: " +timeline.getFocusDate().getFullYear())
+    console.log("focus x: " + timeline.getFocusX())
     this.#x = this.#startDate.getFullYear();
 
   }

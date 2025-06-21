@@ -157,6 +157,7 @@ class Timeline {
     this.#focusX = focusX;
     this.#canvasWidth = canvasWidth;
   }
+  getYOffset(){return this.#yOffset}
   setFocusDate(focusDate) {
     if (!(focusDate instanceof Date)) {
       throw new Error("focusDate must be an instance of the Date class.");

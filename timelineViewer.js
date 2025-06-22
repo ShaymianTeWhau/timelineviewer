@@ -1002,15 +1002,28 @@ class TimePeriod{
 
     }else if(timeline.getScaleType() == "date"){
       let deltaDays = getCalendarDayDifference(timelineStartDate, this.#startDate)
-      console.log("deltaDays: "+deltaDays)
       this.#x = timelineStartX + deltaDays*timeline.getScaleWidth();
       this.#x += this.#startDate.getHours() * timeline.getScaleWidth()/24;
+
     }else if(timeline.getScaleType() == "hour"){
-      
+      let deltaDays = getCalendarDayDifference(timelineStartDate, this.#startDate)
+      let deltaHours = this.#startDate.getHours() - timelineStartDate.getHours();
+      console.log("deltaDays: "+deltaDays)
+      this.#x = timelineStartX + deltaDays*24*timeline.getScaleWidth() + deltaHours*timeline.getScaleWidth();
+      this.#x += this.#startDate.getMinutes()*timeline.getScaleWidth()/60
+
     }else if(timeline.getScaleType() == "minute"){
+      let deltaDate = this.#startDate - timelineStartDate; // in ms
+      let deltaMinutes = deltaDate/1000/60; // minutes
+      console.log("deltaMinutes: "+deltaMinutes);
+      this.#x = timelineStartX + deltaMinutes*timeline.getScaleWidth();
       
     }else if(timeline.getScaleType() == "second"){
-      
+      let deltaDate = this.#startDate - timelineStartDate; // in ms
+      let deltaSeconds = deltaDate/1000;
+      console.log("deltaSeconds: "+deltaSeconds);
+      this.#x = timelineStartX + deltaSeconds*timeline.getScaleWidth();
+
     }else{
       // if scaleType is a type of year
       this.#x = timelineStartX + (this.#startDate.getFullYear() - timelineStartDate.getFullYear()) * pixelsPerUnit;

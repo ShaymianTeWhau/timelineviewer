@@ -158,6 +158,7 @@ function getCalendarDayDifference(date1, date2) {
 
 class Timeline {
   #canvasWidth = 0;
+  #canvasHeight = 0;
   #focusDate = new Date();
   #scaleType = "year";
   #focusX = 100;
@@ -644,11 +645,12 @@ class Timeline {
     // clear canvas
     const ctx = canvas.getContext("2d");
     this.#canvasWidth = canvas.width;
+    this.#canvasHeight = canvas.height;
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // draw swim lane backgrounds
-    SwimLane.drawBackgrounds(ctx, this.#swimLaneArr, this.#yOffset);
+    SwimLane.drawBackgrounds(ctx, this.#swimLaneArr, this.#yOffset + this.#canvasHeight - this.#baseLineHeight);
 
     // clear line date and position arrays
     this.#lineDateArr = [];
@@ -859,9 +861,10 @@ class SwimLane{
 
   static drawBackgrounds(ctx, swimLaneArr, y){
     // function to draw backgrounds for an array of SwimLanes (bottom up), beginning at a y coordinate
+    
     for(let i = swimLaneArr.length-1;i>=0;i--){
-      swimLaneArr[i].drawBackground(ctx, y);
       y -= swimLaneArr[i].getHeight();
+      swimLaneArr[i].drawBackground(ctx, y);
     }
   }
 

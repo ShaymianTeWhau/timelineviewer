@@ -1047,12 +1047,6 @@ class TimePeriod{
 
     return x;
   }
-
-
-
-
-
-
   #getGridWidthUnits(startDate, endDate, scaleType){
     let gridWidthUnits;
 
@@ -1077,6 +1071,38 @@ class TimePeriod{
   #getGridWidthSubunit(timeline){ // not good name
 
   }
+  get name() {
+  return this.#name;
+}
+
+  get description() {
+    return this.#description;
+  }
+
+  get startX() {
+    return this.#x;
+  }
+
+  get endX() {
+    return this.#endX;
+  }
+
+  get y() {
+    return this.#y;
+  }
+
+  get boundingWidth() {
+    return this.#boundingWidth;
+  }
+
+  get boundingHeight() {
+    return this.#boundingHeight;
+  }
+
+  get boundingBoxVisible() {
+    return this.#boundingBoxVisible;
+  }
+
 }
 
 function setupCanvas() {

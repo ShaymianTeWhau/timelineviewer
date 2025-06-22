@@ -145,6 +145,18 @@ function getDaysInMonth(date) {
   return new Date(year, month + 1, 0).getDate();
 }
 
+function getCalendarDayDifference(date1, date2) {
+  // Clone and normalize both dates to midnight (00:00:00)
+  const d1 = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate());
+  const d2 = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate());
+
+  const msPerDay = 1000 * 60 * 60 * 24;
+  const diffInMs = d2 - d1;
+
+  return Math.round(diffInMs / msPerDay);
+}
+
+
 class Timeline {
   #canvasWidth = 0;
   #focusDate = new Date();
@@ -503,10 +515,8 @@ class Timeline {
 
       for(let i = 0; i < monthDateArr.length; i++){
         let curDate = monthDateArr[i];
-        console.log("checking: " + curDate)
         
         if((this.#scaleType == "date" && curDate.getDate() == 1) || (this.#scaleType == "hour" && curDate.getHours() == 0) || (this.#scaleType == "minute" && curDate.getMinutes() == 0) || (this.#scaleType == "second" && curDate.getSeconds() == 0)|| (this.#scaleType == "milliseconds" && curDate.getMilliseconds() == 0)){
-          console.log("**push: " + monthDateArr[i])
           newDateArr.push(monthDateArr[i]);
           newPosArr.push(monthPosArr[i]);
         }
@@ -768,6 +778,12 @@ class Timeline {
   load(){
     // temp implementation
     let tempTimePeriodArr = [];
+
+    let start0 = new Date(1914, 1, 2,3,4,5);
+    let end0 = new Date(1918, 1, 2,3,4,5);
+    tempTimePeriodArr.push(
+      new TimePeriod("ExamplePeriod", start0, end0, false, false, "An example time period")
+    );
     
     let start1 = new Date(1914, 6, 28); // July is month 6 (0-indexed)
     let end1 = new Date(1918, 10, 11);  // November is month 10
@@ -976,17 +992,31 @@ class TimePeriod{
     const gridWidthUnits = this.#getGridWidthUnits(timelineStartDate, timelineEndDate, timeline.getScaleType())
     const pixelsPerUnit = gridWidthPixels / gridWidthUnits;
 
-    // if scaleType is a type of year
-    this.#x = timelineStartX + (this.#startDate.getFullYear() - timelineStartDate.getFullYear()) * pixelsPerUnit;
-    this.#x += (this.#startDate.getMonth() * pixelsPerUnit) /12 + (this.#startDate.getDate()*pixelsPerUnit)/365;
-
+    
     if(timeline.getScaleType() == "month"){
       let deltaYear = this.#startDate.getFullYear() - timelineStartDate.getFullYear();
       let deltaMonth = this.#startDate.getMonth() - timelineStartDate.getMonth();
       this.#x= timelineStartX + (deltaYear*12)*timeline.getScaleWidth() + deltaMonth*timeline.getScaleWidth();
       let daysInMonth = getDaysInMonth(this.#startDate);
-      console.log("days in month: " +daysInMonth)
       this.#x+= (this.#startDate.getDate()*timeline.getScaleWidth())/daysInMonth + (this.#startDate.getHours()*timeline.getScaleWidth())/24;
+
+    }else if(timeline.getScaleType() == "date"){
+      // temp implementation - possibly slow
+      if(this.#startDate >= timelineStartDate && this.#startDate <= timelineEndDate){
+        console.log("date is in view")
+        
+
+      }
+    }else if(timeline.getScaleType() == "hour"){
+      
+    }else if(timeline.getScaleType() == "minute"){
+      
+    }else if(timeline.getScaleType() == "second"){
+      
+    }else{
+      // if scaleType is a type of year
+      this.#x = timelineStartX + (this.#startDate.getFullYear() - timelineStartDate.getFullYear()) * pixelsPerUnit;
+      this.#x += (this.#startDate.getMonth() * pixelsPerUnit) /12 + (this.#startDate.getDate()*pixelsPerUnit)/365;
     }
 
     console.log("lineDateArr.length: "+lineDateArr.length)

@@ -777,11 +777,7 @@ class Timeline {
     // temp implementation
     let tempTimePeriodArr = [];
 
-    let start0 = new Date(1914, 1, 2,3,4,5);
-    let end0 = new Date(1915, 1, 2,3,4,5);
-    tempTimePeriodArr.push(
-      new TimePeriod("ExamplePeriod", start0, end0, false, false, "An example time period")
-    );
+    
     
     let start1 = new Date(1914, 6, 28); // July is month 6 (0-indexed)
     let end1 = new Date(1918, 10, 11);  // November is month 10
@@ -800,6 +796,12 @@ class Timeline {
     let russianRevEnd = new Date(1917, 10);  // November 1917
     tempTimePeriodArr.push(
       new TimePeriod("Russian Revolution", russianRevStart, russianRevEnd, false, false, "Political revolution in Russia leading to the fall of the Tsar and rise of the Soviet Union.")
+    );
+
+    let start0 = new Date(1925, 1, 2,3,4,5);
+    let end0 = new Date(1930, 1, 2,3,4,5);
+    tempTimePeriodArr.push(
+      new TimePeriod("ExamplePeriod", start0, end0, false, false, "An example time period")
     );
     
     // Armenian Genocide (1915–1917)
@@ -830,12 +832,7 @@ class Timeline {
       new TimePeriod("Manhattan Project", manhattanProjectStart, manhattanProjectEnd, false, false, "U.S.-led research to develop nuclear weapons during WWII.")
     );
     
-    // Interwar Period (1918–1939)
-    let interwarStart = new Date(1918, 10, 11); // November 11, 1918 (end of WWI)
-    let interwarEnd = new Date(1939, 8, 1);     // September 1, 1939 (start of WWII)
-    tempTimePeriodArr.push(
-      new TimePeriod("Interwar Period", interwarStart, interwarEnd, false, false, "Time between WWI and WWII, marked by instability and the rise of totalitarian regimes.")
-    );
+    
 
     this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth));
     this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth, tempTimePeriodArr));
@@ -851,6 +848,7 @@ class SwimLane{
   #width = 0;
   #height = 200; // temp, min height
   #timePeriodArr = [];
+  #row = [[]]; // each row is an array of int. Each int represents an index in the timePeriodArr
   #bottomY = 0;
 
   constructor(name, isHidden, width, timePeriodArr){
@@ -915,8 +913,45 @@ class SwimLane{
 
   drawTimePeriods(ctx, timeline){
     if(this.#isHidden) return;
-    this.#timePeriodArr[0].draw(ctx, timeline, this.#bottomY);
+    if(this.#timePeriodArr.length==0) return;
 
+    this.#row = [[]];
+    this.#row[0].push(0); // add first time period to row 0
+    
+    this.#timePeriodArr[0].setupCoordinates(ctx, timeline, this.#bottomY); // setup coords for each period
+
+    for(let i = 1;i<this.#timePeriodArr.length;i++){
+      this.#timePeriodArr[i].setupCoordinates(ctx, timeline, this.#bottomY); // setup coords for each period
+      let curStartX = this.#timePeriodArr[i].getStartX();
+      let curRow = 0;
+      
+      let prevPeriodIndexInCurRow = this.#row[curRow][this.#row[curRow].length-1];
+      let prevPeriodInCurRow = this.#timePeriodArr[prevPeriodIndexInCurRow];
+      let prevEndXInCurRow = prevPeriodInCurRow.getBoundingEndX();
+
+      while(curStartX < prevEndXInCurRow){
+        curRow++;
+
+        if(curRow>=this.#row.length){
+          this.#row.push([]); // adds a new empty row
+          break; // row is empty so don't do following calculations
+        }
+        prevPeriodIndexInCurRow = this.#row[curRow][this.#row[curRow].length-1];
+        prevEndXInCurRow = this.#timePeriodArr[prevPeriodIndexInCurRow].getBoundingEndX();
+      }
+      this.#row[curRow].push(i)
+    }
+    
+    // draw time periods in each row
+    for(let i = 0;i<this.#row.length;i++){
+      let rowNum = i;
+      let y = this.#bottomY - rowNum * this.#timePeriodArr[0].getBoundingHeight();
+
+      for(let j = 0;j< this.#row[i].length;j++){
+        let periodIndex = this.#row[i][j];
+        this.#timePeriodArr[periodIndex].draw(ctx, timeline,y);
+      }
+    }
   }
 }
 
@@ -930,6 +965,7 @@ class TimePeriod{
   #x;
   #endX;
   #y;
+  #barY;
   #width;
   #height = 20;
   #textWidth;
@@ -967,26 +1003,15 @@ class TimePeriod{
   setDescription(description){this.#description = description}
   getDescription(){return this.#description}
   draw(ctx, timeline, y){
-    this.#boundingHeight = this.#height * 2; // boundingBox height
     this.#y = y - this.#boundingHeight; // boundingBox top left corner y coordinate
-    let barY = y - this.#height; // time period bar top left corner y coordinate
-
-    // calculate x start, x end and width based on timeline state
-    this.#x = this.#calculateX(timeline, this.#startDate);
-    if(this.#x < -1000) this.#x = -1000; // this ensures the time period width is not absurdly large, and ensures the endX position stays visually accurate when zoomed in to small scaleTypes
-    this.#endX = this.#calculateX(timeline, this.#endDate);
-    this.#width = this.#endX - this.#x;
+    this.#barY = y - this.#height; // time period bar top left corner y coordinate
     
-    // prepare to draw
-    ctx.textBaseline = "top";
-    let label = this.#name;
-    let labelWidth = ctx.measureText(label).width + this.#sideMarginSize*2;
-    this.#boundingWidth = Math.max(this.#width, labelWidth);
-
+    //this.setupCoordinates(ctx, timeline, y)
     // draw
-    ctx.fillText(label, this.#x+this.#sideMarginSize, this.#y+this.#topMarginSize)
+    ctx.textBaseline = "top";
+    ctx.fillText(this.#name, this.#x+this.#sideMarginSize, this.#y+this.#topMarginSize)
     ctx.strokeRect(this.#x, this.#y, this.#boundingWidth, this.#boundingHeight);
-    ctx.fillRect(this.#x, barY, this.#width, this.#height)
+    ctx.fillRect(this.#x, this.#barY, this.#width, this.#height)
   }
   #calculateX(timeline, dateForConversion){
     let x = -1000;
@@ -1071,35 +1096,54 @@ class TimePeriod{
   #getGridWidthSubunit(timeline){ // not good name
 
   }
-  get name() {
-  return this.#name;
-}
+  setupCoordinates(ctx, timeline, y){
+    this.#boundingHeight = this.#height * 2; // boundingBox height
+    this.#y = y - this.#boundingHeight; // boundingBox top left corner y coordinate
+    this.#barY = y - this.#height; // time period bar top left corner y coordinate
 
-  get description() {
+    // calculate x start, x end and width based on timeline state
+    this.#x = this.#calculateX(timeline, this.#startDate);
+    if(this.#x < -1000) this.#x = -1000; // this ensures the time period width is not absurdly large, and ensures the endX position stays visually accurate when zoomed in to small scaleTypes
+    this.#endX = this.#calculateX(timeline, this.#endDate);
+    this.#width = this.#endX - this.#x;
+    
+    // prepare to draw
+    ctx.textBaseline = "top";
+    this.#textWidth = ctx.measureText(this.#name).width + this.#sideMarginSize*2;
+    this.#boundingWidth = Math.max(this.#width, this.#textWidth);
+  }
+  getName() {
+  return this.#name;
+  }
+
+  getDescription() {
     return this.#description;
   }
 
-  get startX() {
+  getStartX() {
     return this.#x;
   }
 
-  get endX() {
+  getEndX() {
     return this.#endX;
   }
 
-  get y() {
+  getY() {
     return this.#y;
   }
 
-  get boundingWidth() {
+  getBoundingWidth() {
     return this.#boundingWidth;
   }
 
-  get boundingHeight() {
+  getBoundingHeight() {
     return this.#boundingHeight;
   }
+  getBoundingEndX(){
+    return this.#x + this.#boundingWidth;
+  }
 
-  get boundingBoxVisible() {
+  getBoundingBoxVisible() {
     return this.#boundingBoxVisible;
   }
 

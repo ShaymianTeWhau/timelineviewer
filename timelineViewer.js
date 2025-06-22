@@ -858,10 +858,10 @@ class SwimLane{
   }
 
   static drawBackgrounds(ctx, swimLaneArr, y){
-    // function to draw backgrounds for an array of SwimLanes, beginning at y coordinate
-    for(let i = 0;i < swimLaneArr.length; i++){
-      if(i > 0) y += swimLaneArr[i-1].getHeight(); // add height of previous swim lane
+    // function to draw backgrounds for an array of SwimLanes (bottom up), beginning at a y coordinate
+    for(let i = swimLaneArr.length-1;i>=0;i--){
       swimLaneArr[i].drawBackground(ctx, y);
+      y -= swimLaneArr[i].getHeight();
     }
   }
 

@@ -133,7 +133,6 @@ function incrementDateByScaleType(oldDate, scaleType, increment) {
       newDate.setMilliseconds(newDate.getMilliseconds() + increment);
       break;
   }
-  //console.log("new date: " + newDate + " millisecond:" + newDate.getMilliseconds());
   return newDate;
 }
 
@@ -173,7 +172,6 @@ class Timeline {
     this.#scaleWidth = scaleWidth;
     this.setScaleType(scaleType);
     this.#focusDate = focusDate;
-    console.log("constructor focus date:" + this.#focusDate);
     this.#focusX = focusX;
     this.#canvasWidth = canvasWidth;
   }
@@ -350,8 +348,7 @@ class Timeline {
 
     // set focusDate to equal index as chosen line position
     this.#focusDate = this.#lineDateArr[closestIndex];
-    //console.log("closest line: " + closestIndex + " value: " + this.#lineDateArr[closestIndex]);
-    //console.log("scale width: " + this.#scaleWidth);
+
 
     this.updateScaleTypeByWidth(rescaleSpeed);
   }
@@ -771,8 +768,7 @@ class Timeline {
     this.#linePosArr.sort((a, b) => a - b);
 
     SwimLane.drawForegrounds(ctx, this.#swimLaneArr, this.#yOffset, this)
-    //console.log("lines above focus (including center): " + linesAboveFocus);
-    //console.log("lines below focus: " + linesBelowFocus);
+
     this.drawBaseline(canvas);
   }
   load(){
@@ -985,11 +981,6 @@ class TimePeriod{
     let lineDateArr = timeline.getLineDateArray();
     let linePosArr = timeline.getLinePositionArray();
 
-    // temp: print grid data
-    for(let i = 0; i<lineDateArr.length;i++){
-      console.log(lineDateArr[i].getFullYear() +" month: " + lineDateArr[i].getMonth() + ": x=" + linePosArr[i])
-    }
-
     // if date is not in grid -don't print
     // ???
 
@@ -1018,20 +1009,20 @@ class TimePeriod{
     }else if(timeline.getScaleType() == "hour"){
       let deltaDays = getCalendarDayDifference(timelineStartDate, dateForConversion)
       let deltaHours = dateForConversion.getHours() - timelineStartDate.getHours();
-      console.log("deltaDays: "+deltaDays)
+
       x = timelineStartX + deltaDays*24*timeline.getScaleWidth() + deltaHours*timeline.getScaleWidth();
       x += dateForConversion.getMinutes()*timeline.getScaleWidth()/60
 
     }else if(timeline.getScaleType() == "minute"){
       let deltaDate = dateForConversion - timelineStartDate; // in ms
       let deltaMinutes = deltaDate/1000/60; // minutes
-      console.log("deltaMinutes: "+deltaMinutes);
+
       x = timelineStartX + deltaMinutes*timeline.getScaleWidth();
       
     }else if(timeline.getScaleType() == "second"){
       let deltaDate = dateForConversion - timelineStartDate; // in ms
       let deltaSeconds = deltaDate/1000;
-      console.log("deltaSeconds: "+deltaSeconds);
+
       x = timelineStartX + deltaSeconds*timeline.getScaleWidth();
 
     }else{
@@ -1040,11 +1031,6 @@ class TimePeriod{
       x += (dateForConversion.getMonth() * pixelsPerUnit) /12 + (dateForConversion.getDate()*pixelsPerUnit)/365;
     }
 
-    console.log("lineDateArr.length: "+lineDateArr.length)
-    console.log("gridWidthUnits: "+gridWidthUnits)
-    console.log("gridWidthPixels: " +gridWidthPixels)
-    console.log("pixelsPerUnit: " +pixelsPerUnit)
-    console.log(this.#name + " year:" + dateForConversion.getFullYear() + " month: " + dateForConversion.getMonth()+ " x=" +x)
     return x;
   }
 
@@ -1055,7 +1041,7 @@ class TimePeriod{
 
   #getGridWidthUnits(startDate, endDate, scaleType){
     let gridWidthUnits;
-    console.log(scaleType)
+
     if(scaleType == "month"){
       gridWidthUnits = (endDate.getFullYear()*12+ endDate.getMonth()) - (startDate.getFullYear()*12 + startDate.getMonth());
     }else if(scaleType == "date"){
@@ -1104,7 +1090,7 @@ function setupCanvas() {
   let focusDate = new Date(-1, 11, 31, 23, 59, 59, 999);
   focusDate = new Date(1, 0, 1, 0, 0, 0, 0);
   focusDate.setFullYear(2);
-  //console.log(focusDate);
+
   let scaleType = "millennium";
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
@@ -1157,7 +1143,6 @@ function setupCanvas() {
         timeline.rescale(rescaleSpeed, mouseX);
       }
     }
-    //console.log("scaleWidth: " + timeline.getScaleWidth());
     timeline.draw(canvas);
   });
 
@@ -1166,8 +1151,6 @@ function setupCanvas() {
     const rect = canvas.getBoundingClientRect();
     mouseX = event.clientX - rect.left;
     mouseY = event.clientY - rect.top;
-
-    //console.log("mouse xy: " + mouseX + "," + mouseY);
   });
 }
 

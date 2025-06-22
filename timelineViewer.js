@@ -1016,9 +1016,19 @@ class TimePeriod{
     this.#barY = y - this.#height; // time period bar top left corner y coordinate
     
     //this.setupCoordinates(ctx, timeline, y)
+
+    // reposition labelX if off left of screen
+    let labelX = this.#x + this.#sideMarginSize;
+    if(labelX<0){
+      labelX = 0 + this.#sideMarginSize;
+      if((this.#textWidth+ this.#sideMarginSize)>this.getBoundingEndX()){
+        labelX = this.getBoundingEndX() - (this.#textWidth+this.#sideMarginSize)
+      }
+    }
+
     // draw
     ctx.textBaseline = "top";
-    ctx.fillText(this.#name, this.#x+this.#sideMarginSize, this.#y+this.#topMarginSize)
+    ctx.fillText(this.#name, labelX, this.#y+this.#topMarginSize)
     ctx.strokeRect(this.#x, this.#y, this.#boundingWidth, this.#boundingHeight);
     ctx.fillRect(this.#x, this.#barY, this.#width, this.#height)
   }

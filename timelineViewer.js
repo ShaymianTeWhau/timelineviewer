@@ -914,7 +914,7 @@ class SwimLane{
 
   drawTimePeriods(ctx, timeline){
     if(this.#isHidden) return;
-    this.#timePeriodArr[0].draw(ctx, timeline);
+    this.#timePeriodArr[0].draw(ctx, timeline, 600);
 
   }
 }
@@ -963,15 +963,19 @@ class TimePeriod{
   }
   setDescription(description){this.#description = description}
   getDescription(){return this.#description}
-  draw(ctx, timeline){
-    this.#height = 20;
-    this.#boundingHeight = this.#height * 2;
+  draw(ctx, timeline, y){
+    this.#y = y;
     this.#x = this.#calculateX(timeline, this.#startDate);
     if(this.#x < -1000) this.#x = -1000; // this ensures the time period width is not absurdly large, and ensures the endX position stays visually accurate when zoomed in to small scaleTypes
     this.#endX = this.#calculateX(timeline, this.#endDate);
     this.#width = this.#endX - this.#x;
-
-    ctx.fillRect(this.#x, 700, this.#width, 10)
+    
+    this.#height = 20;
+    this.#boundingHeight = this.#height * 2;
+    this.#boundingWidth = this.#width; // temp
+    this.#boundingHeight = this.#height; // temp
+    ctx.strokeRect(this.#x, this.#y, this.#boundingWidth, this.#boundingHeight);
+    ctx.fillRect(this.#x, this.#y, this.#width, 10)
 
   }
   #calculateX(timeline, dateForConversion){

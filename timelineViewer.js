@@ -1001,12 +1001,10 @@ class TimePeriod{
       this.#x+= (this.#startDate.getDate()*timeline.getScaleWidth())/daysInMonth + (this.#startDate.getHours()*timeline.getScaleWidth())/24;
 
     }else if(timeline.getScaleType() == "date"){
-      // temp implementation - possibly slow
-      if(this.#startDate >= timelineStartDate && this.#startDate <= timelineEndDate){
-        console.log("date is in view")
-        
-
-      }
+      let deltaDays = getCalendarDayDifference(timelineStartDate, this.#startDate)
+      console.log("deltaDays: "+deltaDays)
+      this.#x = timelineStartX + deltaDays*timeline.getScaleWidth();
+      this.#x += this.#startDate.getHours() * timeline.getScaleWidth()/24;
     }else if(timeline.getScaleType() == "hour"){
       
     }else if(timeline.getScaleType() == "minute"){

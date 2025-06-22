@@ -851,6 +851,7 @@ class SwimLane{
   #width = 0;
   #height = 200; // temp, min height
   #timePeriodArr = [];
+  #bottomY = 0;
 
   constructor(name, isHidden, width, timePeriodArr){
     this.#name = name;
@@ -885,6 +886,7 @@ class SwimLane{
 
   drawBackground(ctx, y){
     if(this.#isHidden) return;
+    this.#bottomY = y + this.#height;
 
     ctx.fillStyle = "rgb(234, 234, 234)";
     ctx.fillRect(0, y, this.#width, this.#height);
@@ -913,7 +915,7 @@ class SwimLane{
 
   drawTimePeriods(ctx, timeline){
     if(this.#isHidden) return;
-    this.#timePeriodArr[0].draw(ctx, timeline, 600);
+    this.#timePeriodArr[0].draw(ctx, timeline, this.#bottomY);
 
   }
 }
@@ -929,11 +931,13 @@ class TimePeriod{
   #endX;
   #y;
   #width;
-  #height;
+  #height = 20;
   #textWidth;
   #boundingWidth;
   #boundingHeight;
   #boundingBoxVisible;
+  #topMarginSize = 2;
+  #sideMarginSize = 2;
 
   constructor(name, startDate, endDate, hasApproxStartDate, hasApproxEndDate, description){
     this.#name = name;
@@ -963,19 +967,26 @@ class TimePeriod{
   setDescription(description){this.#description = description}
   getDescription(){return this.#description}
   draw(ctx, timeline, y){
-    this.#y = y;
+    this.#boundingHeight = this.#height * 2; // boundingBox height
+    this.#y = y - this.#boundingHeight; // boundingBox top left corner y coordinate
+    let barY = y - this.#height; // time period bar top left corner y coordinate
+
+    // calculate x start, x end and width based on timeline state
     this.#x = this.#calculateX(timeline, this.#startDate);
     if(this.#x < -1000) this.#x = -1000; // this ensures the time period width is not absurdly large, and ensures the endX position stays visually accurate when zoomed in to small scaleTypes
     this.#endX = this.#calculateX(timeline, this.#endDate);
     this.#width = this.#endX - this.#x;
     
-    this.#height = 20;
-    this.#boundingHeight = this.#height * 2;
-    this.#boundingWidth = this.#width; // temp
-    this.#boundingHeight = this.#height; // temp
-    ctx.strokeRect(this.#x, this.#y, this.#boundingWidth, this.#boundingHeight);
-    ctx.fillRect(this.#x, this.#y, this.#width, 10)
+    // prepare to draw
+    ctx.textBaseline = "top";
+    let label = this.#name;
+    let labelWidth = ctx.measureText(label).width + this.#sideMarginSize*2;
+    this.#boundingWidth = Math.max(this.#width, labelWidth);
 
+    // draw
+    ctx.fillText(label, this.#x+this.#sideMarginSize, this.#y+this.#topMarginSize)
+    ctx.strokeRect(this.#x, this.#y, this.#boundingWidth, this.#boundingHeight);
+    ctx.fillRect(this.#x, barY, this.#width, this.#height)
   }
   #calculateX(timeline, dateForConversion){
     let x = -1000;

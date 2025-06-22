@@ -1,6 +1,7 @@
 const SHOWTEMPMARKERS = false;
 const SHOWGRIDLINES = true;
 const SHOWSWIMLANEBORDERS = true;
+const PRINTTIMEPERIODS = true;
 
 function drawCenterAxis(ctx, maxX, maxY, color) {
   ctx.strokeStyle = color;
@@ -777,8 +778,6 @@ class Timeline {
     // temp implementation
     let tempTimePeriodArr = [];
 
-    
-    
     let start1 = new Date(1914, 6, 28); // July is month 6 (0-indexed)
     let end1 = new Date(1918, 10, 11);  // November is month 10
     tempTimePeriodArr.push(
@@ -920,8 +919,13 @@ class SwimLane{
     
     this.#timePeriodArr[0].setupCoordinates(ctx, timeline, this.#bottomY); // setup coords for each period
 
+    if(PRINTTIMEPERIODS) console.log(this.#timePeriodArr[0].toStringShort());
+
     for(let i = 1;i<this.#timePeriodArr.length;i++){
       this.#timePeriodArr[i].setupCoordinates(ctx, timeline, this.#bottomY); // setup coords for each period
+
+      if(PRINTTIMEPERIODS) console.log(this.#timePeriodArr[i].toStringShort());
+
       let curStartX = this.#timePeriodArr[i].getStartX();
       let curRow = 0;
       
@@ -984,8 +988,8 @@ class TimePeriod{
     this.#hasApproxEndDate = hasApproxEndDate;
   }
 
-    toString() {
-      return `Name: ${this.#name}
+  toString() {
+    return `Name: ${this.#name}
         Description: ${this.#description}
         Start Date: ${this.#startDate}
         Has Approximate Start Date: ${this.#hasApproxStartDate}
@@ -998,7 +1002,12 @@ class TimePeriod{
         Text Width: ${this.#textWidth}
         Bounding Width: ${this.#boundingWidth}
         Bounding Height: ${this.#boundingHeight}
-        Bounding Box Visible: ${this.#boundingBoxVisible}`;
+      Bounding Box Visible: ${this.#boundingBoxVisible}`;
+  }
+  toStringShort(){
+    let d = this.#startDate;
+    let month = d.getMonth()+1;
+    return this.#name + " " + d.getFullYear()+"/"+month+"/"+d.getDate() + " "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
   }
   setDescription(description){this.#description = description}
   getDescription(){return this.#description}
@@ -1146,6 +1155,7 @@ class TimePeriod{
   getBoundingBoxVisible() {
     return this.#boundingBoxVisible;
   }
+
 
 }
 

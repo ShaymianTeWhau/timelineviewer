@@ -780,7 +780,7 @@ class Timeline {
     let tempTimePeriodArr = [];
 
     let start0 = new Date(1914, 1, 2,3,4,5);
-    let end0 = new Date(1918, 1, 2,3,4,5);
+    let end0 = new Date(1915, 1, 2,3,4,5);
     tempTimePeriodArr.push(
       new TimePeriod("ExamplePeriod", start0, end0, false, false, "An example time period")
     );
@@ -927,6 +927,7 @@ class TimePeriod{
   #endDate;
   #hasApproxEndDate;
   #x;
+  #endX;
   #y;
   #width;
   #height;
@@ -965,12 +966,17 @@ class TimePeriod{
   draw(ctx, timeline){
     this.#height = 20;
     this.#boundingHeight = this.#height * 2;
-    this.#calculateX(timeline);
-    
-    //console.log(this.toString())
-    ctx.fillRect(this.#x, 700, 100, 10)
+    this.#x = this.#calculateX(timeline, this.#startDate);
+    if(this.#x < -1000) this.#x = -1000; // this ensures the time period width is not absurdly large, and ensures the endX position stays visually accurate when zoomed in to small scaleTypes
+    this.#endX = this.#calculateX(timeline, this.#endDate);
+    this.#width = this.#endX - this.#x;
+
+    ctx.fillRect(this.#x, 700, this.#width, 10)
+
   }
-  #calculateX(timeline){
+  #calculateX(timeline, dateForConversion){
+    let x = -1000;
+
     // get timeline grid arrays
     let lineDateArr = timeline.getLineDateArray();
     let linePosArr = timeline.getLinePositionArray();
@@ -994,48 +1000,55 @@ class TimePeriod{
 
     
     if(timeline.getScaleType() == "month"){
-      let deltaYear = this.#startDate.getFullYear() - timelineStartDate.getFullYear();
-      let deltaMonth = this.#startDate.getMonth() - timelineStartDate.getMonth();
-      this.#x= timelineStartX + (deltaYear*12)*timeline.getScaleWidth() + deltaMonth*timeline.getScaleWidth();
-      let daysInMonth = getDaysInMonth(this.#startDate);
-      this.#x+= (this.#startDate.getDate()*timeline.getScaleWidth())/daysInMonth + (this.#startDate.getHours()*timeline.getScaleWidth())/24;
+      let deltaYear = dateForConversion.getFullYear() - timelineStartDate.getFullYear();
+      let deltaMonth = dateForConversion.getMonth() - timelineStartDate.getMonth();
+      x= timelineStartX + (deltaYear*12)*timeline.getScaleWidth() + deltaMonth*timeline.getScaleWidth();
+      let daysInMonth = getDaysInMonth(dateForConversion);
+      x+= (dateForConversion.getDate()*timeline.getScaleWidth())/daysInMonth + (dateForConversion.getHours()*timeline.getScaleWidth())/24;
 
     }else if(timeline.getScaleType() == "date"){
-      let deltaDays = getCalendarDayDifference(timelineStartDate, this.#startDate)
-      this.#x = timelineStartX + deltaDays*timeline.getScaleWidth();
-      this.#x += this.#startDate.getHours() * timeline.getScaleWidth()/24;
+      let deltaDays = getCalendarDayDifference(timelineStartDate, dateForConversion)
+      x = timelineStartX + deltaDays*timeline.getScaleWidth();
+      x += dateForConversion.getHours() * timeline.getScaleWidth()/24;
 
     }else if(timeline.getScaleType() == "hour"){
-      let deltaDays = getCalendarDayDifference(timelineStartDate, this.#startDate)
-      let deltaHours = this.#startDate.getHours() - timelineStartDate.getHours();
+      let deltaDays = getCalendarDayDifference(timelineStartDate, dateForConversion)
+      let deltaHours = dateForConversion.getHours() - timelineStartDate.getHours();
       console.log("deltaDays: "+deltaDays)
-      this.#x = timelineStartX + deltaDays*24*timeline.getScaleWidth() + deltaHours*timeline.getScaleWidth();
-      this.#x += this.#startDate.getMinutes()*timeline.getScaleWidth()/60
+      x = timelineStartX + deltaDays*24*timeline.getScaleWidth() + deltaHours*timeline.getScaleWidth();
+      x += dateForConversion.getMinutes()*timeline.getScaleWidth()/60
 
     }else if(timeline.getScaleType() == "minute"){
-      let deltaDate = this.#startDate - timelineStartDate; // in ms
+      let deltaDate = dateForConversion - timelineStartDate; // in ms
       let deltaMinutes = deltaDate/1000/60; // minutes
       console.log("deltaMinutes: "+deltaMinutes);
-      this.#x = timelineStartX + deltaMinutes*timeline.getScaleWidth();
+      x = timelineStartX + deltaMinutes*timeline.getScaleWidth();
       
     }else if(timeline.getScaleType() == "second"){
-      let deltaDate = this.#startDate - timelineStartDate; // in ms
+      let deltaDate = dateForConversion - timelineStartDate; // in ms
       let deltaSeconds = deltaDate/1000;
       console.log("deltaSeconds: "+deltaSeconds);
-      this.#x = timelineStartX + deltaSeconds*timeline.getScaleWidth();
+      x = timelineStartX + deltaSeconds*timeline.getScaleWidth();
 
     }else{
       // if scaleType is a type of year
-      this.#x = timelineStartX + (this.#startDate.getFullYear() - timelineStartDate.getFullYear()) * pixelsPerUnit;
-      this.#x += (this.#startDate.getMonth() * pixelsPerUnit) /12 + (this.#startDate.getDate()*pixelsPerUnit)/365;
+      x = timelineStartX + (dateForConversion.getFullYear() - timelineStartDate.getFullYear()) * pixelsPerUnit;
+      x += (dateForConversion.getMonth() * pixelsPerUnit) /12 + (dateForConversion.getDate()*pixelsPerUnit)/365;
     }
 
     console.log("lineDateArr.length: "+lineDateArr.length)
     console.log("gridWidthUnits: "+gridWidthUnits)
     console.log("gridWidthPixels: " +gridWidthPixels)
     console.log("pixelsPerUnit: " +pixelsPerUnit)
-    console.log(this.#name + " year:" + this.#startDate.getFullYear() + " month: " + this.#startDate.getMonth()+ " x=" +this.#x)
+    console.log(this.#name + " year:" + dateForConversion.getFullYear() + " month: " + dateForConversion.getMonth()+ " x=" +x)
+    return x;
   }
+
+
+
+
+
+
   #getGridWidthUnits(startDate, endDate, scaleType){
     let gridWidthUnits;
     console.log(scaleType)

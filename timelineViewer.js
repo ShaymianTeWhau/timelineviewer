@@ -676,8 +676,8 @@ class Timeline {
     let linesAboveFocus = 0;
     while (curGridLineX < canvas.width) {
       // temp color focus date and grid line
-      if (linesAboveFocus == 0 && this.#focusX < canvas.width) ctx.strokeStyle = "red";
-      else ctx.strokeStyle = "rgb(183, 183, 183)";
+      //if (linesAboveFocus == 0 && this.#focusX < canvas.width) ctx.strokeStyle = "red";
+      //else ctx.strokeStyle = "rgb(183, 183, 183)";
 
       curGridLineX = this.#focusX + pixelDistanceFromFocus;
 
@@ -708,14 +708,6 @@ class Timeline {
       this.#lineDateArr.push(curDate);
       this.#linePosArr.push(curGridLineX);
 
-      
-      // draw line
-      if(SHOWGRIDLINES){
-        ctx.beginPath();
-        ctx.moveTo(curGridLineX, 0);
-        ctx.lineTo(curGridLineX, canvas.height);//
-        ctx.stroke();
-      }
       pixelDistanceFromFocus += this.#scaleWidth;
       linesAboveFocus++;
     }
@@ -755,14 +747,6 @@ class Timeline {
       this.#lineDateArr.push(curDate);
       this.#linePosArr.push(curGridLineX);
 
-      // draw line
-      if(SHOWGRIDLINES){
-        ctx.beginPath();
-        ctx.moveTo(curGridLineX, 0);
-        ctx.lineTo(curGridLineX, canvas.height);
-        ctx.stroke();
-      }
-
       pixelDistanceFromFocus += this.#scaleWidth;
     }
 
@@ -771,9 +755,24 @@ class Timeline {
     this.#linePosArr.sort((a, b) => a - b);
     // draw swim lane backgrounds
     SwimLane.drawBackgrounds(ctx,this, this.#swimLaneArr, this.#yOffset + this.#canvasHeight - this.#baseLineHeight);
+    if(SHOWGRIDLINES) this.#drawGridLines(ctx);
     SwimLane.drawForegrounds(ctx, this.#swimLaneArr, this.#yOffset, this);
 
     this.drawBaseline(canvas);
+  }
+  #drawGridLines(ctx){
+    ctx.fillStyle = "black";
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "rgb(183, 183, 183)";
+
+    for(let i = 0;i<this.#linePosArr.length;i++){
+      let curGridLineX = this.#linePosArr[i];
+      ctx.beginPath();
+      ctx.moveTo(curGridLineX, 0);
+      ctx.lineTo(curGridLineX,this.#canvasHeight);
+      ctx.stroke();
+    }
   }
   load(){
     // temp implementation

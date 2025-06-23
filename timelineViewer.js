@@ -849,6 +849,7 @@ class SwimLane{
   #timePeriodArr = [];
   #row = [[]]; // each row is an array of int. Each int represents an index in the timePeriodArr
   #bottomY = 0;
+  #margin = 5;
 
   constructor(name, isHidden, width, timePeriodArr){
     this.#name = name;
@@ -913,6 +914,22 @@ class SwimLane{
   drawTimePeriods(ctx, timeline){
     if(this.#isHidden) return;
     if(this.#timePeriodArr.length==0) return;
+    this.#setUpTimePeriods(ctx, timeline);
+    
+    // draw time periods in each row
+    for(let i = 0;i<this.#row.length;i++){
+      let rowNum = i;
+      let y = this.#bottomY - rowNum * this.#timePeriodArr[0].getBoundingHeight();
+
+      for(let j = 0;j< this.#row[i].length;j++){
+        let periodIndex = this.#row[i][j];
+        this.#timePeriodArr[periodIndex].draw(ctx, timeline,y);
+      }
+    }
+  }
+  #setUpTimePeriods(ctx, timeline){
+    if(this.#isHidden) return;
+    if(this.#timePeriodArr.length==0) return;
 
     this.#row = [[]];
     this.#row[0].push(0); // add first time period to row 0
@@ -946,16 +963,6 @@ class SwimLane{
       this.#row[curRow].push(i)
     }
     
-    // draw time periods in each row
-    for(let i = 0;i<this.#row.length;i++){
-      let rowNum = i;
-      let y = this.#bottomY - rowNum * this.#timePeriodArr[0].getBoundingHeight();
-
-      for(let j = 0;j< this.#row[i].length;j++){
-        let periodIndex = this.#row[i][j];
-        this.#timePeriodArr[periodIndex].draw(ctx, timeline,y);
-      }
-    }
   }
 }
 

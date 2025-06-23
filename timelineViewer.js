@@ -846,11 +846,13 @@ class SwimLane{
   #name = "";
   #isHidden = false;
   #width = 0;
-  #height = 200; // temp, min height
+  #minHeight = 200;
+  #height = this.#minHeight; // temp, min height
   #timePeriodArr = [];
   #row = [[]]; // each row is an array of int. Each int represents an index in the timePeriodArr
   #bottomY = 0;
   #margin = 5;
+  #rowHeight;
 
   constructor(name, isHidden, width, timePeriodArr){
     this.#name = name;
@@ -863,6 +865,7 @@ class SwimLane{
     // function to draw backgrounds for an array of SwimLanes (bottom up), beginning at a y coordinate
     
     for(let i = swimLaneArr.length-1;i>=0;i--){
+      swimLaneArr[i].setUpTimePeriods(ctx, timeline);
       y -= swimLaneArr[i].getHeight();
       swimLaneArr[i].drawBackground(ctx,timeline, y);
     }
@@ -887,7 +890,7 @@ class SwimLane{
     if(this.#isHidden) return;
     this.#bottomY = y + this.#height;
 
-    this.#setUpTimePeriods(ctx,timeline);
+    //this.setUpTimePeriods(ctx,timeline);
 
     ctx.fillStyle = "rgb(234, 234, 234)";
     ctx.fillRect(0, y, this.#width, this.#height);
@@ -922,7 +925,7 @@ class SwimLane{
     // draw time periods in each row
     for(let i = 0;i<this.#row.length;i++){
       let rowNum = i;
-      let y = this.#bottomY - rowNum * this.#timePeriodArr[0].getBoundingHeight();
+      let y = this.#bottomY - rowNum * this.#rowHeight;
 
       for(let j = 0;j< this.#row[i].length;j++){
         let periodIndex = this.#row[i][j];
@@ -930,16 +933,19 @@ class SwimLane{
       }
     }
   }
-  #setUpTimePeriods(ctx, timeline){
+  setUpTimePeriods(ctx, timeline){
     if(this.#isHidden) return;
     console.log("setupTimePeriods: "+this.#name)
     if(!this.#timePeriodArr) return;
     if(this.#timePeriodArr.length==0) return;
 
+    
     this.#row = [[]];
     this.#row[0].push(0); // add first time period to row 0
     
     this.#timePeriodArr[0].setupCoordinates(ctx, timeline, this.#bottomY); // setup coords for each period
+    this.#rowHeight = this.#timePeriodArr[0].getBoundingHeight();
+    console.log("row height: "+this.#rowHeight)
 
     if(PRINTTIMEPERIODS) console.log(this.#timePeriodArr[0].toStringShort());
 
@@ -967,7 +973,8 @@ class SwimLane{
       }
       this.#row[curRow].push(i)
     }
-    
+    this.#height = Math.max(this.#minHeight,this.#margin*2+this.#row.length*this.#rowHeight);
+    console.log("height: "+this.#height)
   }
 }
 

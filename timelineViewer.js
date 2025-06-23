@@ -831,13 +831,9 @@ class Timeline {
       new TimePeriod("Manhattan Project", manhattanProjectStart, manhattanProjectEnd, false, false, "U.S.-led research to develop nuclear weapons during WWII.")
     );
     
-    
-
-    this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth, tempTimePeriodArr));
-    this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth, Array.from(tempTimePeriodArr)));
-    this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth, Array.from(tempTimePeriodArr)));
-    
-
+    this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth, [0,1,3].map(i=>tempTimePeriodArr[i])));
+    this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth, tempTimePeriodArr));
+    this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth, [2,4,5].map(i=>tempTimePeriodArr[i])));
   }
 }
 

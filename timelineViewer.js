@@ -924,7 +924,7 @@ class SwimLane{
     // draw time periods in each row
     for(let i = 0;i<this.#row.length;i++){
       let rowNum = i;
-      let y = this.#bottomY - rowNum * this.#rowHeight;
+      let y = this.#bottomY - this.#margin - rowNum * this.#rowHeight;
 
       for(let j = 0;j< this.#row[i].length;j++){
         let periodIndex = this.#row[i][j];

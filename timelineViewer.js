@@ -899,7 +899,7 @@ class SwimLane{
       ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
       ctx.textAlign = "left";
       ctx.textBaseline = "middle";
-      ctx.font = "75px Arial";
+      ctx.font = "80px Arial";
 
       let labelX = 5;
       let labelY = y + 100;

@@ -797,10 +797,21 @@ class Timeline {
       new TimePeriod("Russian Revolution", russianRevStart, russianRevEnd, false, false, "Political revolution in Russia leading to the fall of the Tsar and rise of the Soviet Union.")
     );
 
+    // approx start example
     let start0 = new Date(1925, 1, 2,3,4,5);
     let end0 = new Date(1930, 1, 2,3,4,5);
     tempTimePeriodArr.push(
-      new TimePeriod("ExamplePeriod", start0, end0, false, false, "An example time period")
+      new TimePeriod("approxStartExample", start0, end0, true, false, "An example time period")
+    );
+
+    // approx end example
+    tempTimePeriodArr.push(
+      new TimePeriod("approxEndExample", start0, end0, false, true, "An example time period")
+    );
+
+    // approx start and end example
+    tempTimePeriodArr.push(
+      new TimePeriod("approxStartAndEndExample", start0, end0, true, true, "An example time period")
     );
     
     // Armenian Genocide (1915–1917)
@@ -1049,8 +1060,51 @@ class TimePeriod{
     ctx.font = "18px Arial";
     ctx.fillText(this.#name, labelX, this.#y+this.#topMarginSize)
     ctx.strokeRect(this.#x, this.#y, this.#boundingWidth, this.#boundingHeight);
-    ctx.fillRect(this.#x, this.#barY, this.#width, this.#height)
+    this.#drawBar(ctx, this.#x, this.#barY, this.#width, this.#height)
+    //ctx.fillRect(this.#x, this.#barY, this.#width, this.#height)
   }
+  #drawBar(ctx, x, y, width, height) {
+  const fadeWidthInPixels = 30;
+  let gradient;
+  let gradientProportionMaximum = 0.2;
+
+  let gradientProportion = Math.min(gradientProportionMaximum, fadeWidthInPixels / this.#width);
+  if(this.#name.startsWith("approx")) console.log(this.#name + " barWidth: "+this.#width+ " gradient proportion: "+gradientProportion)
+
+  // Case: both ends are approximate
+  if (this.#hasApproxStartDate && this.#hasApproxEndDate) {
+    gradient = ctx.createLinearGradient(x, 0, x + width, 0);
+    gradient.addColorStop(0.0, "rgba(0, 0, 0, 0)");
+    gradient.addColorStop(gradientProportion, "rgba(0, 0, 0, 1)");
+    gradient.addColorStop(1-gradientProportion, "rgba(0, 0, 0, 1)");
+    gradient.addColorStop(1.0, "rgba(0, 0, 0, 0)");
+  }
+
+  // Case: only start is approximate
+  else if (this.#hasApproxStartDate) {
+    gradient = ctx.createLinearGradient(x, 0, x + width, 0);
+    gradient.addColorStop(0.0, "rgba(0, 0, 0, 0)");
+    gradient.addColorStop(gradientProportion, "rgba(0, 0, 0, 1)");
+    gradient.addColorStop(1.0, "rgba(0, 0, 0, 1)");
+  }
+
+  // Case: only end is approximate
+  else if (this.#hasApproxEndDate) {
+    gradient = ctx.createLinearGradient(x + width, 0, x, 0);
+    gradient.addColorStop(0.0, "rgba(0, 0, 0, 0)");
+    gradient.addColorStop(gradientProportion, "rgba(0, 0, 0, 1)");
+    gradient.addColorStop(1.0, "rgba(0, 0, 0, 1)");
+  }
+
+  // Case: no approximation
+  else {
+    gradient = "rgb(0, 0, 0)";
+  }
+
+  ctx.fillStyle = gradient;
+  ctx.fillRect(x, y, width, height);
+}
+
   #calculateX(timeline, dateForConversion){
     let x = -1000;
 

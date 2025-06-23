@@ -908,7 +908,7 @@ class SwimLane{
       ctx.font = "80px Arial";
 
       let labelX = 5;
-      let labelY = y + 100;
+      let labelY = y + this.#height - this.#minHeight/2;
       ctx.fillText(this.#name, labelX, labelY);
   }
 

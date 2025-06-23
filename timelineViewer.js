@@ -1,7 +1,7 @@
 const SHOWTEMPMARKERS = false;
 const SHOWGRIDLINES = true;
 const SHOWSWIMLANEBORDERS = true;
-const PRINTTIMEPERIODS = true;
+const PRINTTIMEPERIODS = false;
 
 function drawCenterAxis(ctx, maxX, maxY, color) {
   ctx.strokeStyle = color;
@@ -182,6 +182,7 @@ class Timeline {
   getYOffset(){return this.#yOffset}
   getFocusX(){return this.#focusX}
   getFocusDate(){return this.#focusDate}
+  getCanvasWidth(){return this.#canvasWidth}
   setFocusDate(focusDate) {
     if (!(focusDate instanceof Date)) {
       throw new Error("focusDate must be an instance of the Date class.");
@@ -1069,7 +1070,7 @@ class TimePeriod{
   let gradientProportionMaximum = 0.2;
 
   let gradientProportion = Math.min(gradientProportionMaximum, fadeWidthInPixels / this.#width);
-  if(this.#name.startsWith("approx")) console.log(this.#name + " barWidth: "+this.#width+ " gradient proportion: "+gradientProportion)
+  
 
   // Case: both ends are approximate
   if (this.#hasApproxStartDate && this.#hasApproxEndDate) {
@@ -1195,9 +1196,20 @@ class TimePeriod{
 
     // calculate x start, x end and width based on timeline state
     this.#x = this.#calculateX(timeline, this.#startDate);
-    if(this.#x < -1000) this.#x = -1000; // this ensures the time period width is not absurdly large, and ensures the endX position stays visually accurate when zoomed in to small scaleTypes
+
+    // this ensures the time period width is not absurdly large off the left side of screen, 
+    // and ensures the endX position stays visually accurate when zoomed in to small scaleTypes
+    if(this.#x < -1000) this.#x = -1000; 
+
     this.#endX = this.#calculateX(timeline, this.#endDate);
     this.#width = this.#endX - this.#x;
+
+    // this ensures the time period width is not absurdly large off the right side of screen,
+    // and ensures the approximate date fade still works at small scaleTypes
+    let maxEndX = timeline.getCanvasWidth()+1000;
+    if(this.#x > 0 && this.#x < timeline.getCanvasWidth() && this.#endX > maxEndX){
+      this.#width = timeline.getCanvasWidth() - this.#x + 1000;
+    }
     
     // prepare to draw
     ctx.textBaseline = "top";

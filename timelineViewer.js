@@ -833,9 +833,9 @@ class Timeline {
     
     
 
-    this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth));
-    this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth, tempTimePeriodArr));
-    this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth));
+    this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth, tempTimePeriodArr));
+    this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth, Array.from(tempTimePeriodArr)));
+    this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth, Array.from(tempTimePeriodArr)));
     
 
   }
@@ -872,9 +872,9 @@ class SwimLane{
 
   static drawForegrounds(ctx, swimLaneArr, y, timeline){
     // function to draw foregrounds for an array of SwimLanes, beginning at y coordinate
-
-    // temp implementation:
-    swimLaneArr[1].drawTimePeriods(ctx, timeline);
+    for(let i = 0;i<swimLaneArr.length;i++){
+      swimLaneArr[i].drawTimePeriods(ctx, timeline);
+    }
   }
 
   hide = () => this.#isHidden = true;

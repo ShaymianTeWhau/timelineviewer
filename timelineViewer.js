@@ -650,8 +650,7 @@ class Timeline {
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // draw swim lane backgrounds
-    SwimLane.drawBackgrounds(ctx, this.#swimLaneArr, this.#yOffset + this.#canvasHeight - this.#baseLineHeight);
+    
 
     // clear line date and position arrays
     this.#lineDateArr = [];
@@ -709,6 +708,7 @@ class Timeline {
       this.#lineDateArr.push(curDate);
       this.#linePosArr.push(curGridLineX);
 
+      
       // draw line
       if(SHOWGRIDLINES){
         ctx.beginPath();
@@ -769,7 +769,8 @@ class Timeline {
     // temp: will have to move this sort function somewhere else
     this.#lineDateArr.sort((a, b) => a - b);
     this.#linePosArr.sort((a, b) => a - b);
-
+    // draw swim lane backgrounds
+    SwimLane.drawBackgrounds(ctx, this.#swimLaneArr, this.#yOffset + this.#canvasHeight - this.#baseLineHeight);
     SwimLane.drawForegrounds(ctx, this.#swimLaneArr, this.#yOffset, this)
 
     this.drawBaseline(canvas);
@@ -1035,6 +1036,11 @@ class TimePeriod{
 
     // draw
     ctx.textBaseline = "top";
+    ctx.fillStyle = "black";
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1;
+    ctx.textAlign = "left";
+    ctx.font = "18px Arial";
     ctx.fillText(this.#name, labelX, this.#y+this.#topMarginSize)
     ctx.strokeRect(this.#x, this.#y, this.#boundingWidth, this.#boundingHeight);
     ctx.fillRect(this.#x, this.#barY, this.#width, this.#height)
@@ -1135,6 +1141,9 @@ class TimePeriod{
     
     // prepare to draw
     ctx.textBaseline = "top";
+    ctx.lineWidth = 1;
+    ctx.textAlign = "left";
+    ctx.font = "18px Arial";
     this.#textWidth = ctx.measureText(this.#name).width + this.#sideMarginSize*2;
     this.#boundingWidth = Math.max(this.#width, this.#textWidth);
   }

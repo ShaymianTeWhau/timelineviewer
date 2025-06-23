@@ -771,7 +771,7 @@ class Timeline {
     this.#linePosArr.sort((a, b) => a - b);
     // draw swim lane backgrounds
     SwimLane.drawBackgrounds(ctx,this, this.#swimLaneArr, this.#yOffset + this.#canvasHeight - this.#baseLineHeight);
-    SwimLane.drawForegrounds(ctx, this.#swimLaneArr, this.#yOffset, this)
+    SwimLane.drawForegrounds(ctx, this.#swimLaneArr, this.#yOffset, this);
 
     this.drawBaseline(canvas);
   }
@@ -887,6 +887,8 @@ class SwimLane{
     if(this.#isHidden) return;
     this.#bottomY = y + this.#height;
 
+    this.#setUpTimePeriods(ctx,timeline);
+
     ctx.fillStyle = "rgb(234, 234, 234)";
     ctx.fillRect(0, y, this.#width, this.#height);
     if(SHOWSWIMLANEBORDERS) this.#drawBorder(ctx, y);
@@ -915,7 +917,7 @@ class SwimLane{
   drawTimePeriods(ctx, timeline){
     if(this.#isHidden) return;
     if(this.#timePeriodArr.length==0) return;
-    this.#setUpTimePeriods(ctx, timeline);
+    //this.#setUpTimePeriods(ctx, timeline);
     
     // draw time periods in each row
     for(let i = 0;i<this.#row.length;i++){
@@ -930,6 +932,8 @@ class SwimLane{
   }
   #setUpTimePeriods(ctx, timeline){
     if(this.#isHidden) return;
+    console.log("setupTimePeriods: "+this.#name)
+    if(!this.#timePeriodArr) return;
     if(this.#timePeriodArr.length==0) return;
 
     this.#row = [[]];

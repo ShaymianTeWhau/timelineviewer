@@ -770,7 +770,7 @@ class Timeline {
     this.#lineDateArr.sort((a, b) => a - b);
     this.#linePosArr.sort((a, b) => a - b);
     // draw swim lane backgrounds
-    SwimLane.drawBackgrounds(ctx, this.#swimLaneArr, this.#yOffset + this.#canvasHeight - this.#baseLineHeight);
+    SwimLane.drawBackgrounds(ctx,this, this.#swimLaneArr, this.#yOffset + this.#canvasHeight - this.#baseLineHeight);
     SwimLane.drawForegrounds(ctx, this.#swimLaneArr, this.#yOffset, this)
 
     this.drawBaseline(canvas);
@@ -859,12 +859,12 @@ class SwimLane{
     this.#timePeriodArr = timePeriodArr;
   }
 
-  static drawBackgrounds(ctx, swimLaneArr, y){
+  static drawBackgrounds(ctx,timeline, swimLaneArr, y){
     // function to draw backgrounds for an array of SwimLanes (bottom up), beginning at a y coordinate
     
     for(let i = swimLaneArr.length-1;i>=0;i--){
       y -= swimLaneArr[i].getHeight();
-      swimLaneArr[i].drawBackground(ctx, y);
+      swimLaneArr[i].drawBackground(ctx,timeline, y);
     }
   }
 
@@ -883,7 +883,7 @@ class SwimLane{
     return this.#height;
   }
 
-  drawBackground(ctx, y){
+  drawBackground(ctx,timeline, y){
     if(this.#isHidden) return;
     this.#bottomY = y + this.#height;
 

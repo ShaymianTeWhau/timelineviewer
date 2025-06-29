@@ -942,7 +942,6 @@ class SwimLane{
   }
   setUpTimePeriods(ctx, timeline){
     if(this.#isHidden) return;
-    console.log("setupTimePeriods: "+this.#name)
     if(!this.#timePeriodArr) return;
     if(this.#timePeriodArr.length==0) return;
 
@@ -952,7 +951,6 @@ class SwimLane{
     
     this.#timePeriodArr[0].setupCoordinates(ctx, timeline, this.#bottomY); // setup coords for each period
     this.#rowHeight = this.#timePeriodArr[0].getBoundingHeight();
-    console.log("row height: "+this.#rowHeight)
 
     if(PRINTTIMEPERIODS) console.log(this.#timePeriodArr[0].toStringShort());
 
@@ -981,7 +979,6 @@ class SwimLane{
       this.#row[curRow].push(i)
     }
     this.#height = Math.max(this.#minHeight,this.#margin*2+this.#row.length*this.#rowHeight);
-    console.log("height: "+this.#height)
   }
 }
 

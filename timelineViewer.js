@@ -1291,13 +1291,33 @@ function setupCanvas() {
   timeline.draw(canvas);
 
   window.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowRight") {
-      focusX += horizontalScrollSpeed;
-      timeline.draw(canvas);
-    } else if (event.key === "ArrowLeft") {
-      focusX -= horizontalScrollSpeed;
-      timeline.draw(canvas);
+    // rescale
+    if (event.altKey){
+      if (event.key === "ArrowUp") {
+        // scale zoom in
+        timeline.rescale(rescaleSpeed, canvas.width/2);
+      } else if (event.key === "ArrowDown") {
+        // scale zoom out
+        timeline.rescale(-rescaleSpeed, canvas.width/2);
+      }
     }
+    
+    // horizontal movement
+    if (event.key === "ArrowRight") {
+      timeline.moveHorizontal(-horizontalScrollSpeed);
+    } else if (event.key === "ArrowLeft") {
+      timeline.moveHorizontal(horizontalScrollSpeed);
+    }
+
+    // vertical movement
+    if(!event.altKey){
+      if (event.key === "ArrowUp") {
+        timeline.moveVertical(verticalScrollSpeed);
+      } else if (event.key === "ArrowDown") {
+        timeline.moveVertical(-verticalScrollSpeed);
+      }
+    }
+    timeline.draw(canvas);
   });
 
   window.addEventListener("wheel", (event) => {

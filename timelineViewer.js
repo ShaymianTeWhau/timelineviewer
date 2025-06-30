@@ -775,6 +775,21 @@ class Timeline {
       ctx.stroke();
     }
   }
+  updateMousePosition(mouseX, mouseY){
+    //console.log("("+mouseX+", "+mouseY+")");
+    // loop swimlanes
+    for(let i = 0;i<this.#swimLaneArr.length;i++){
+      let curSwimlane = this.#swimLaneArr[i];
+      let curTimePeriodArr = curSwimlane.getTimePeriods();
+      
+      // loop time periods in this swimlane
+      for(let j = 0;j<curTimePeriodArr.length;j++){
+        // check if cursor is in time period
+        curTimePeriodArr[j].updateMousePosition(mouseX, mouseY);
+      }
+
+    }
+  }
   load(){
     // temp implementation
     let tempTimePeriodArr = [];
@@ -782,7 +797,7 @@ class Timeline {
     let start1 = new Date(1914, 6, 28); // July is month 6 (0-indexed)
     let end1 = new Date(1918, 10, 11);  // November is month 10
     tempTimePeriodArr.push(
-      new TimePeriod("World War I", start1, end1, false, false, "A global war centered in Europe that lasted from 28 July 1914 to 11 November 1918.","rgb(255, 3, 3)", "rgb(255, 211, 211)")
+      new TimePeriod("World War I", start1, end1, false, false, "A global war centered in Europe that lasted from 28 July 1914 to 11 November 1918.","rgb(255, 3, 3)", "rgb(255, 0, 0)")
     );
 
     let start2 = new Date(1939, 8, 1);  // September 1, 1939
@@ -802,17 +817,17 @@ class Timeline {
     let start0 = new Date(1925, 1, 2,3,4,5);
     let end0 = new Date(1930, 1, 2,3,4,5);
     tempTimePeriodArr.push(
-      new TimePeriod("approxStartExample", start0, end0, true, false, "An example time period", "rgb(77, 255, 53)", "rgb(255, 211, 211)")
+      new TimePeriod("approxStartExample", start0, end0, true, false, "An example time period", "rgb(77, 255, 53)", "rgb(64, 255, 0)")
     );
 
     // approx end example
     tempTimePeriodArr.push(
-      new TimePeriod("approxEndExample", start0, end0, false, true, "An example time period", "rgb(77, 255, 53)", "rgb(255, 211, 211)")
+      new TimePeriod("approxEndExample", start0, end0, false, true, "An example time period", "rgb(77, 255, 53)", "rgb(255, 0, 0)")
     );
 
     // approx start and end example
     tempTimePeriodArr.push(
-      new TimePeriod("approxStartAndEndExample", start0, end0, true, true, "An example time period", "rgb(77, 255, 53)", "rgb(255, 211, 211)")
+      new TimePeriod("approxStartAndEndExample", start0, end0, true, true, "An example time period", "rgb(77, 255, 53)", "rgb(255, 0, 0)")
     );
     
     // Armenian Genocide (1915–1917)
@@ -844,8 +859,8 @@ class Timeline {
     );
     
     this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth, [0,1,3].map(i=>tempTimePeriodArr[i]), "rgb(255, 211, 211)"));
-    this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth, tempTimePeriodArr, "rgb(255, 250, 211)"));
-    this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth, [2,4,5].map(i=>tempTimePeriodArr[i]), "rgb(211, 255, 250)"));
+    this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth, [2,4,5,9].map(i=>tempTimePeriodArr[i]), "rgb(255, 250, 211)"));
+    this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth, [6,7,8].map(i=>tempTimePeriodArr[i]), "rgb(211, 255, 250)"));
   }
 }
 
@@ -890,11 +905,16 @@ class SwimLane{
   hide = () => this.#isHidden = true;
   show = () => this.#isHidden = false;
 
+  getName(){
+    return this.#name;
+  }
   getHeight(){
     if(this.#isHidden) return 0;
     return this.#height;
   }
-
+  getTimePeriods(){
+    return this.#timePeriodArr;
+  }
   drawBackground(ctx,timeline, y){
     if(this.#isHidden) return;
     this.#bottomY = y + this.#height;
@@ -1000,7 +1020,7 @@ class TimePeriod{
   #textWidth;
   #boundingWidth;
   #boundingHeight;
-  #boundingBoxVisible;
+  #boundingBoxVisible = false;
   #topMarginSize = 2;
   #sideMarginSize = 2;
   #color1;
@@ -1015,6 +1035,20 @@ class TimePeriod{
     this.#hasApproxEndDate = hasApproxEndDate;
     this.#color1 = color1;
     this.#color2 = color2;
+  }
+  updateMousePosition(mouseX, mouseY){
+    
+    let boundingStartX = this.#x;
+    let boundingEndX = this.#x + this.#boundingWidth;
+    let boundingStartY = this.#y;
+    let boundingEndY = this.#y + this.#boundingHeight;
+    
+    // if mouse is in bounding box
+    if(boundingStartX < mouseX && mouseX < boundingEndX && boundingStartY < mouseY && mouseY < boundingEndY){
+      this.#boundingBoxVisible = true;
+    }else{
+      this.#boundingBoxVisible = false;
+    }
   }
 
   toString() {
@@ -1063,7 +1097,7 @@ class TimePeriod{
     ctx.textAlign = "left";
     ctx.font = "18px Arial";
     ctx.fillText(this.#name, labelX, this.#y+this.#topMarginSize)
-    ctx.strokeRect(this.#x, this.#y, this.#boundingWidth, this.#boundingHeight);
+    if(this.#boundingBoxVisible) ctx.strokeRect(this.#x, this.#y, this.#boundingWidth, this.#boundingHeight);
     this.#drawBar(ctx, this.#x, this.#barY, this.#width, this.#height)
     //ctx.fillRect(this.#x, this.#barY, this.#width, this.#height)
   }
@@ -1121,7 +1155,7 @@ class TimePeriod{
 
   // Case: no approximation
   else {
-    gradient = "rgb(0, 0, 0)";
+    gradient = this.#color1;
   }
 
   ctx.fillStyle = gradient;
@@ -1303,9 +1337,9 @@ function setupCanvas() {
 
   let focusDate = new Date(-1, 11, 31, 23, 59, 59, 999);
   focusDate = new Date(1, 0, 1, 0, 0, 0, 0);
-  focusDate.setFullYear(2);
+  focusDate.setFullYear(1920);
 
-  let scaleType = "millennium";
+  let scaleType = "decade";
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   const timeline = new Timeline(scaleWidth, scaleType, focusDate, focusX, canvas.width);
@@ -1401,6 +1435,8 @@ function setupCanvas() {
     const rect = canvas.getBoundingClientRect();
     mouseX = event.clientX - rect.left;
     mouseY = event.clientY - rect.top;
+    timeline.updateMousePosition(mouseX,mouseY)
+    timeline.draw(canvas);
 
     if(isDragging){
       offset.x = mouseX - dragStart.x;

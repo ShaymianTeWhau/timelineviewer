@@ -843,9 +843,9 @@ class Timeline {
       new TimePeriod("Manhattan Project", manhattanProjectStart, manhattanProjectEnd, false, false, "U.S.-led research to develop nuclear weapons during WWII.")
     );
     
-    this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth, [0,1,3].map(i=>tempTimePeriodArr[i])));
-    this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth, tempTimePeriodArr));
-    this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth, [2,4,5].map(i=>tempTimePeriodArr[i])));
+    this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth, [0,1,3].map(i=>tempTimePeriodArr[i]), "rgb(255, 211, 211)"));
+    this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth, tempTimePeriodArr, "rgb(255, 250, 211)"));
+    this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth, [2,4,5].map(i=>tempTimePeriodArr[i]), "rgb(211, 255, 250)"));
   }
 }
 
@@ -860,12 +860,14 @@ class SwimLane{
   #bottomY = 0;
   #margin = 5;
   #rowHeight;
+  #color;
 
-  constructor(name, isHidden, width, timePeriodArr){
+  constructor(name, isHidden, width, timePeriodArr, color="rgb(234,234,234)"){
     this.#name = name;
     this.#isHidden = isHidden;
     this.#width = width;
     this.#timePeriodArr = timePeriodArr;
+    this.#color = color;
   }
 
   static drawBackgrounds(ctx,timeline, swimLaneArr, y){
@@ -899,7 +901,7 @@ class SwimLane{
 
     //this.setUpTimePeriods(ctx,timeline);
 
-    ctx.fillStyle = "rgb(234, 234, 234)";
+    ctx.fillStyle = this.#color;
     ctx.fillRect(0, y, this.#width, this.#height);
     if(SHOWSWIMLANEBORDERS) this.#drawBorder(ctx, y);
     this.#drawTitle(ctx, y);

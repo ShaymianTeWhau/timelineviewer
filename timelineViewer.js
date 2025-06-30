@@ -1468,14 +1468,46 @@ function setupCanvas() {
     }
   });
 
-  zoomInButton.addEventListener("click", () => {
-    timeline.rescale(rescaleSpeed, canvas.width/2);
+
+  let zoomInterval = null;
+  let zoomTimeout = null;
+  const zoomSpeedMs = 75;
+  const firstZoomDelay = 250;
+
+  function startZooming(direction) {
+    // prevent multiple intervals
+    if (zoomInterval || zoomTimeout) return;
+
+    // initial zoom
+    timeline.rescale(direction * rescaleSpeed, canvas.width / 2);
     timeline.draw(canvas);
-  })
-  zoomOutButton.addEventListener("click", () => {
-    timeline.rescale(-rescaleSpeed, canvas.width/2);
-    timeline.draw(canvas);
-  })
+
+    // Timeout after first zoom
+    zoomTimeout = setTimeout(() => {
+
+      // After first zoom, start regular interval
+      zoomInterval = setInterval(() => {
+        timeline.rescale(direction * rescaleSpeed, canvas.width / 2);
+        timeline.draw(canvas);
+      }, zoomSpeedMs);
+    }, firstZoomDelay);
+  }
+
+  function stopZooming() {
+    clearTimeout(zoomTimeout);
+    clearInterval(zoomInterval);
+    zoomTimeout = null;
+    zoomInterval = null;
+  }
+
+  zoomInButton.addEventListener("mousedown", () => startZooming(1));
+  zoomOutButton.addEventListener("mousedown", () => startZooming(-1));
+
+  zoomInButton.addEventListener("mouseup", stopZooming);
+  zoomOutButton.addEventListener("mouseup", stopZooming);
+
+  zoomInButton.addEventListener("mouseleave", stopZooming);
+  zoomOutButton.addEventListener("mouseleave", stopZooming);
 }
 
 window.addEventListener("load", setupCanvas);

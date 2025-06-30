@@ -782,7 +782,7 @@ class Timeline {
     let start1 = new Date(1914, 6, 28); // July is month 6 (0-indexed)
     let end1 = new Date(1918, 10, 11);  // November is month 10
     tempTimePeriodArr.push(
-      new TimePeriod("World War I", start1, end1, false, false, "A global war centered in Europe that lasted from 28 July 1914 to 11 November 1918.")
+      new TimePeriod("World War I", start1, end1, false, false, "A global war centered in Europe that lasted from 28 July 1914 to 11 November 1918.","rgb(255, 3, 3)", "rgb(255, 211, 211)")
     );
 
     let start2 = new Date(1939, 8, 1);  // September 1, 1939
@@ -802,17 +802,17 @@ class Timeline {
     let start0 = new Date(1925, 1, 2,3,4,5);
     let end0 = new Date(1930, 1, 2,3,4,5);
     tempTimePeriodArr.push(
-      new TimePeriod("approxStartExample", start0, end0, true, false, "An example time period")
+      new TimePeriod("approxStartExample", start0, end0, true, false, "An example time period", "rgb(77, 255, 53)", "rgb(255, 211, 211)")
     );
 
     // approx end example
     tempTimePeriodArr.push(
-      new TimePeriod("approxEndExample", start0, end0, false, true, "An example time period")
+      new TimePeriod("approxEndExample", start0, end0, false, true, "An example time period", "rgb(77, 255, 53)", "rgb(255, 211, 211)")
     );
 
     // approx start and end example
     tempTimePeriodArr.push(
-      new TimePeriod("approxStartAndEndExample", start0, end0, true, true, "An example time period")
+      new TimePeriod("approxStartAndEndExample", start0, end0, true, true, "An example time period", "rgb(77, 255, 53)", "rgb(255, 211, 211)")
     );
     
     // Armenian Genocide (1915–1917)
@@ -1003,14 +1003,18 @@ class TimePeriod{
   #boundingBoxVisible;
   #topMarginSize = 2;
   #sideMarginSize = 2;
+  #color1;
+  #color2;
 
-  constructor(name, startDate, endDate, hasApproxStartDate, hasApproxEndDate, description){
+  constructor(name, startDate, endDate, hasApproxStartDate, hasApproxEndDate, description, color1="black", color2="black"){
     this.#name = name;
     this.#description = description;
     this.#startDate = startDate;
     this.#endDate = endDate;
     this.#hasApproxStartDate = hasApproxStartDate;
     this.#hasApproxEndDate = hasApproxEndDate;
+    this.#color1 = color1;
+    this.#color2 = color2;
   }
 
   toString() {
@@ -1053,8 +1057,8 @@ class TimePeriod{
 
     // draw
     ctx.textBaseline = "top";
-    ctx.fillStyle = "black";
-    ctx.strokeStyle = "black";
+    ctx.fillStyle = this.#color1;
+    ctx.strokeStyle = this.#color2;
     ctx.lineWidth = 1;
     ctx.textAlign = "left";
     ctx.font = "18px Arial";
@@ -1063,37 +1067,56 @@ class TimePeriod{
     this.#drawBar(ctx, this.#x, this.#barY, this.#width, this.#height)
     //ctx.fillRect(this.#x, this.#barY, this.#width, this.#height)
   }
+  #extractRGB(colorStr){
+    // extract r,g,b values of a color string
+    if(colorStr == "black") colorStr = "rgb(0,0,0)";
+
+    const match = colorStr.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (!match) {
+      throw new Error("Invalid color format for " + this.#name + " : " +this.#color1);
+    }
+    return {
+      r: parseInt(match[1]),
+      g: parseInt(match[2]),
+      b: parseInt(match[3])
+    };
+  }
+  #getTransparent(colorStr){
+    // return transparent version of a color
+    const rgb = this.#extractRGB(colorStr);
+    return "rgba("+ rgb.r + ", " + rgb.g + ", " + rgb.b + ", 0)";
+  }
   #drawBar(ctx, x, y, width, height) {
   const fadeWidthInPixels = 30;
   let gradient;
   let gradientProportionMaximum = 0.2;
 
   let gradientProportion = Math.min(gradientProportionMaximum, fadeWidthInPixels / this.#width);
-  
+  let transparentColor = this.#getTransparent(this.#color1);
 
   // Case: both ends are approximate
   if (this.#hasApproxStartDate && this.#hasApproxEndDate) {
     gradient = ctx.createLinearGradient(x, 0, x + width, 0);
-    gradient.addColorStop(0.0, "rgba(0, 0, 0, 0)");
-    gradient.addColorStop(gradientProportion, "rgba(0, 0, 0, 1)");
-    gradient.addColorStop(1-gradientProportion, "rgba(0, 0, 0, 1)");
-    gradient.addColorStop(1.0, "rgba(0, 0, 0, 0)");
+    gradient.addColorStop(0.0, transparentColor);
+    gradient.addColorStop(gradientProportion, this.#color1);
+    gradient.addColorStop(1-gradientProportion, this.#color1);
+    gradient.addColorStop(1.0, transparentColor);
   }
 
   // Case: only start is approximate
   else if (this.#hasApproxStartDate) {
     gradient = ctx.createLinearGradient(x, 0, x + width, 0);
-    gradient.addColorStop(0.0, "rgba(0, 0, 0, 0)");
-    gradient.addColorStop(gradientProportion, "rgba(0, 0, 0, 1)");
-    gradient.addColorStop(1.0, "rgba(0, 0, 0, 1)");
+    gradient.addColorStop(0.0, transparentColor);
+    gradient.addColorStop(gradientProportion, this.#color1);
+    gradient.addColorStop(1.0, this.#color1);
   }
 
   // Case: only end is approximate
   else if (this.#hasApproxEndDate) {
     gradient = ctx.createLinearGradient(x + width, 0, x, 0);
-    gradient.addColorStop(0.0, "rgba(0, 0, 0, 0)");
-    gradient.addColorStop(gradientProportion, "rgba(0, 0, 0, 1)");
-    gradient.addColorStop(1.0, "rgba(0, 0, 0, 1)");
+    gradient.addColorStop(0.0, transparentColor);
+    gradient.addColorStop(gradientProportion, this.#color1);
+    gradient.addColorStop(1.0, this.#color1);
   }
 
   // Case: no approximation

@@ -162,7 +162,7 @@ class Timeline {
   #canvasHeight = 0;
   #focusDate = new Date();
   #scaleType = "year";
-  #focusX = 100;
+  #focusX = 100; // x position of the gridline that the timeline is being built around
   #yOffset = 0;
   #scaleWidth = 100; // in pixels
   #baseLineHeight = 150;
@@ -1286,6 +1286,11 @@ function setupCanvas() {
   const timeline = new Timeline(scaleWidth, scaleType, focusDate, focusX, canvas.width);
   timeline.load()
   timeline.draw(canvas);
+  
+  // variables for dragging the screen
+  let isDragging = false;
+  let dragStart = { x: 0, y: 0}
+  let offset = { x: 0, y: 0 }
 
   window.addEventListener("keydown", (event) => {
     // rescale
@@ -1354,13 +1359,35 @@ function setupCanvas() {
     }
     timeline.draw(canvas);
   });
+  
+  canvas.addEventListener("mousedown", (e) => {
+    // assign drag start for moving the screen
+    isDragging = true;
+    dragStart.x = mouseX;
+    dragStart.y = mouseY;
+  })
+
+  canvas.addEventListener("mouseup", (e) => {
+    isDragging = false;
+  })
 
   canvas.addEventListener("mousemove", function (event) {
     // Get mouse coordinate relative to the canvas
     const rect = canvas.getBoundingClientRect();
     mouseX = event.clientX - rect.left;
     mouseY = event.clientY - rect.top;
+
+    if(isDragging){
+      offset.x = mouseX - dragStart.x;
+      offset.y = mouseY - dragStart.y;
+      timeline.moveHorizontal(offset.x);
+      timeline.moveVertical(offset.y);
+      timeline.draw(canvas)
+      dragStart.x = mouseX;
+      dragStart.y = mouseY;
+    }
   });
+
 }
 
 window.addEventListener("load", setupCanvas);

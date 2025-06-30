@@ -1330,6 +1330,9 @@ class TimePeriod{
 function setupCanvas() {
   const canvas = document.getElementById("timeline-canvas");
   infoPanel = document.getElementById("info-panel")
+  const zoomInButton = document.getElementById("zoom-in");
+  const zoomOutButton = document.getElementById("zoom-out");
+  
 
   if (!canvas) {
     console.error("Element with ID 'timeline-canvas' not found!");
@@ -1465,6 +1468,14 @@ function setupCanvas() {
     }
   });
 
+  zoomInButton.addEventListener("click", () => {
+    timeline.rescale(rescaleSpeed, canvas.width/2);
+    timeline.draw(canvas);
+  })
+  zoomOutButton.addEventListener("click", () => {
+    timeline.rescale(-rescaleSpeed, canvas.width/2);
+    timeline.draw(canvas);
+  })
 }
 
 window.addEventListener("load", setupCanvas);

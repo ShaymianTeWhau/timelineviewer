@@ -1,18 +1,44 @@
 body {
   background: black;
+  font-family: sans-serif;
 }
 #timeline-canvas {
   background: white;
 }
 #info-panel {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    z-index: 9999;
-    background-color: rgba(0, 0, 0, 0.8); /* dark semi-transparent background */
-    color: white;
-    padding: 10px 15px;
-    border-radius: 8px;
-    font-family: sans-serif;
-    pointer-events: none; /* optional: makes the panel non-interactive */
-  }
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.8); /* dark semi-transparent background */
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+#zoom-controls {
+  position: fixed;
+  top: 60px; /* adjust if you change info-panel height */
+  right: 10px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#zoom-controls button {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-family: sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#zoom-controls button:hover {
+  background-color: rgba(50, 50, 50, 0.9);
+}
+

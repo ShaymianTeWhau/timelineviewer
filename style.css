@@ -18,7 +18,7 @@ body {
 
 #zoom-controls {
   position: fixed;
-  top: 60px; /* adjust if you change info-panel height */
+  top: 110px; /* adjust if you change info-panel height */
   right: 10px;
   z-index: 9999;
   display: flex;

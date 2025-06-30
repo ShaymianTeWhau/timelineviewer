@@ -1071,6 +1071,14 @@ class TimePeriod{
     this.#color1 = color1;
     this.#color2 = color2;
   }
+  #formatDateDMY(date, approx = false) {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    let str = `${day}/${month}/${year}`;
+    if(approx) str = "circa " + str;
+    return str;
+  }
   updateMouseState(mouseX, mouseY, isMouseDown=false){
     let cursorIsInBoundingBox = false;
 
@@ -1085,7 +1093,11 @@ class TimePeriod{
       cursorIsInBoundingBox = true;
 
       if(isMouseDown){
-        infoPanel.innerHTML = this.#name + "<p>"+this.#description+"</p>";
+        let startDate = this.#formatDateDMY(this.#startDate, this.#hasApproxStartDate);
+        let endDate = this.#formatDateDMY(this.#endDate, this.#hasApproxEndDate);
+        infoPanel.innerHTML = this.#name 
+        infoPanel.innerHTML += ",  <span> " + startDate +" - "+endDate + "</span>";
+        infoPanel.innerHTML += "<p>"+this.#description+"</p>";
       }
     }else{
       this.#boundingBoxVisible = false;

@@ -2,6 +2,7 @@ const SHOWTEMPMARKERS = false;
 const SHOWGRIDLINES = true;
 const SHOWSWIMLANEBORDERS = true;
 const PRINTTIMEPERIODS = false;
+let infoPanel;
 
 function drawCenterAxis(ctx, maxX, maxY, color) {
   ctx.strokeStyle = color;
@@ -775,8 +776,8 @@ class Timeline {
       ctx.stroke();
     }
   }
-  updateMousePosition(mouseX, mouseY){
-    //console.log("("+mouseX+", "+mouseY+")");
+  updateMouseState(mouseX, mouseY, isMouseDown=false){
+    let matchFound = false;
     // loop swimlanes
     for(let i = 0;i<this.#swimLaneArr.length;i++){
       let curSwimlane = this.#swimLaneArr[i];
@@ -785,9 +786,14 @@ class Timeline {
       // loop time periods in this swimlane
       for(let j = 0;j<curTimePeriodArr.length;j++){
         // check if cursor is in time period
-        curTimePeriodArr[j].updateMousePosition(mouseX, mouseY);
+        if(curTimePeriodArr[j].updateMouseState(mouseX, mouseY, isMouseDown)) matchFound = true;
       }
 
+    }
+
+    if(!matchFound && isMouseDown){
+      // click is in empty space
+      infoPanel.innerHTML = "Select Time Period";
     }
   }
   load(){
@@ -1036,8 +1042,9 @@ class TimePeriod{
     this.#color1 = color1;
     this.#color2 = color2;
   }
-  updateMousePosition(mouseX, mouseY){
-    
+  updateMouseState(mouseX, mouseY, isMouseDown=false){
+    let cursorIsInBoundingBox = false;
+
     let boundingStartX = this.#x;
     let boundingEndX = this.#x + this.#boundingWidth;
     let boundingStartY = this.#y;
@@ -1046,9 +1053,16 @@ class TimePeriod{
     // if mouse is in bounding box
     if(boundingStartX < mouseX && mouseX < boundingEndX && boundingStartY < mouseY && mouseY < boundingEndY){
       this.#boundingBoxVisible = true;
+      cursorIsInBoundingBox = true;
+
+      if(isMouseDown){
+        infoPanel.innerHTML = this.#name + "<p>"+this.#description+"</p>";
+      }
     }else{
       this.#boundingBoxVisible = false;
     }
+
+    return cursorIsInBoundingBox;
   }
 
   toString() {
@@ -1315,6 +1329,7 @@ class TimePeriod{
 
 function setupCanvas() {
   const canvas = document.getElementById("timeline-canvas");
+  infoPanel = document.getElementById("info-panel")
 
   if (!canvas) {
     console.error("Element with ID 'timeline-canvas' not found!");
@@ -1328,7 +1343,7 @@ function setupCanvas() {
 
   const ctx = canvas.getContext("2d");
   canvas.width = window.innerWidth - 10;
-  canvas.height = 1000;
+  canvas.height = 800;
   let mouseX = -1;
   let mouseY = -1;
   let horizontalScrollSpeed = 50;
@@ -1424,6 +1439,7 @@ function setupCanvas() {
     isDragging = true;
     dragStart.x = mouseX;
     dragStart.y = mouseY;
+    timeline.updateMouseState(mouseX, mouseY, true)
   })
 
   canvas.addEventListener("mouseup", (e) => {
@@ -1435,7 +1451,7 @@ function setupCanvas() {
     const rect = canvas.getBoundingClientRect();
     mouseX = event.clientX - rect.left;
     mouseY = event.clientY - rect.top;
-    timeline.updateMousePosition(mouseX,mouseY)
+    timeline.updateMouseState(mouseX,mouseY)
     timeline.draw(canvas);
 
     if(isDragging){

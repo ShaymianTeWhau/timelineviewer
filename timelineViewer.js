@@ -2,7 +2,7 @@ const SHOWTEMPMARKERS = false;
 const SHOWGRIDLINES = true;
 const SHOWSWIMLANEBORDERS = true;
 const PRINTTIMEPERIODS = false;
-let infoPanel;
+let infoPanel, lanePanel;
 
 function drawCenterAxis(ctx, maxX, maxY, color) {
   ctx.strokeStyle = color;
@@ -159,6 +159,7 @@ function getCalendarDayDifference(date1, date2) {
 
 
 class Timeline {
+  #canvas;
   #canvasWidth = 0;
   #canvasHeight = 0;
   #focusDate = new Date();
@@ -642,6 +643,7 @@ class Timeline {
 
   }
   draw(canvas) {
+    this.#canvas = canvas;
     // temp code prevents crash if scale width is less than 1
     if (this.#scaleWidth < 1) this.#scaleWidth = 1;
 
@@ -796,6 +798,23 @@ class Timeline {
       infoPanel.innerHTML = "Select Time Period";
     }
   }
+  #setupLanePanel(){
+    lanePanel.innerHTML = "";
+    for(let i = 0;i<this.#swimLaneArr.length;i++){
+      const newButton = document.createElement("button");
+      newButton.classList.add("swim-lane-hide-button");
+      newButton.textContent = this.#swimLaneArr[i].getName();
+
+      newButton.addEventListener("click", () =>{
+        // hide/show
+        this.#swimLaneArr[i].toggleVisibility();
+        this.draw(this.#canvas);
+      })
+
+      lanePanel.appendChild(newButton);
+    }
+    
+  }
   load(){
     // temp implementation
     let tempTimePeriodArr = [];
@@ -867,6 +886,7 @@ class Timeline {
     this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth, [0,1,3].map(i=>tempTimePeriodArr[i]), "rgb(255, 211, 211)"));
     this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth, [2,4,5,9].map(i=>tempTimePeriodArr[i]), "rgb(255, 250, 211)"));
     this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth, [6,7,8].map(i=>tempTimePeriodArr[i]), "rgb(211, 255, 250)"));
+    this.#setupLanePanel();
   }
 }
 
@@ -895,6 +915,7 @@ class SwimLane{
     // function to draw backgrounds for an array of SwimLanes (bottom up), beginning at a y coordinate
     
     for(let i = swimLaneArr.length-1;i>=0;i--){
+      if(!swimLaneArr[i].getVisibility()) continue;
       swimLaneArr[i].setUpTimePeriods(ctx, timeline);
       y -= swimLaneArr[i].getHeight();
       swimLaneArr[i].drawBackground(ctx,timeline, y);
@@ -904,12 +925,20 @@ class SwimLane{
   static drawForegrounds(ctx, swimLaneArr, y, timeline){
     // function to draw foregrounds for an array of SwimLanes, beginning at y coordinate
     for(let i = 0;i<swimLaneArr.length;i++){
+      if(!swimLaneArr[i].getVisibility()) continue;
       swimLaneArr[i].drawTimePeriods(ctx, timeline);
     }
   }
 
   hide = () => this.#isHidden = true;
   show = () => this.#isHidden = false;
+  toggleVisibility(){
+    this.#isHidden = !this.#isHidden;
+    console.log(this.#name + " isHidden="+this.#isHidden)
+  }
+  getVisibility(){
+    return !this.#isHidden;
+  }
 
   getName(){
     return this.#name;
@@ -1332,6 +1361,8 @@ function setupCanvas() {
   infoPanel = document.getElementById("info-panel")
   const zoomInButton = document.getElementById("zoom-in");
   const zoomOutButton = document.getElementById("zoom-out");
+  lanePanel = document.getElementById("lane-panel");
+
   
 
   if (!canvas) {

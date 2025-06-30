@@ -42,3 +42,29 @@ body {
   background-color: rgba(50, 50, 50, 0.9);
 }
 
+#lane-panel {
+  position: fixed;
+  bottom: 500px;
+  right: 10px;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.8); /* dark semi-transparent background */
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#lane-panel button{
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+#lane-panel button:hover{
+  background-color: rgba(255, 255, 255, 0.9);
+}

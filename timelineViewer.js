@@ -1095,7 +1095,7 @@ class TimePeriod{
       if(isMouseDown){
         let startDate = this.#formatDateDMY(this.#startDate, this.#hasApproxStartDate);
         let endDate = this.#formatDateDMY(this.#endDate, this.#hasApproxEndDate);
-        infoPanel.innerHTML = this.#name 
+        infoPanel.innerHTML = "<b>"+this.#name+"</b>"; 
         infoPanel.innerHTML += ",  <span> " + startDate +" - "+endDate + "</span>";
         infoPanel.innerHTML += "<p>"+this.#description+"</p>";
       }

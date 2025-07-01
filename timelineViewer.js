@@ -159,6 +159,7 @@ function getCalendarDayDifference(date1, date2) {
 
 
 class Timeline {
+  #title;
   #canvas;
   #canvasWidth = 0;
   #canvasHeight = 0;
@@ -815,7 +816,11 @@ class Timeline {
     }
     
   }
+  getTitle(){
+    return this.#title;
+  }
   load(){
+    this.#title = "Example Timeline";
     // temp implementation
     let tempTimePeriodArr = [];
 
@@ -934,7 +939,6 @@ class SwimLane{
   show = () => this.#isHidden = false;
   toggleVisibility(){
     this.#isHidden = !this.#isHidden;
-    console.log(this.#name + " isHidden="+this.#isHidden)
   }
   getVisibility(){
     return !this.#isHidden;
@@ -1389,7 +1393,7 @@ function setupCanvas() {
 
   const ctx = canvas.getContext("2d");
   canvas.width = window.innerWidth - 10;
-  canvas.height = 800;
+  canvas.height = 1000;
   let mouseX = -1;
   let mouseY = -1;
   let horizontalScrollSpeed = 50;

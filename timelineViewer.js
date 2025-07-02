@@ -3,6 +3,7 @@ const SHOWGRIDLINES = true;
 const SHOWSWIMLANEBORDERS = true;
 const PRINTTIMEPERIODS = false;
 let infoPanel, lanePanel;
+let instructionPanel;
 
 function drawCenterAxis(ctx, maxX, maxY, color) {
   ctx.strokeStyle = color;
@@ -1372,12 +1373,31 @@ class TimePeriod{
 
 }
 
+function hideInstructions(){
+  instructionPanel.innerHTML = "";
+}
+function showInstructions(){
+  instructionPanel.innerHTML = 
+  `
+    <div id="instruction-panel">
+      <p>Drag timeline to move view</p>
+      <p>Use buttons to zoom, or alt+scroll</p>
+      <button id="instruction-hide-button">Hide</button>
+    </div>
+  `
+  const instructionHideButton = document.getElementById("instruction-hide-button");
+  instructionHideButton.addEventListener("click", () => hideInstructions())
+}
+
+
+
 function setupCanvas() {
   const canvas = document.getElementById("timeline-canvas");
   infoPanel = document.getElementById("info-panel")
   const zoomInButton = document.getElementById("zoom-in");
   const zoomOutButton = document.getElementById("zoom-out");
   lanePanel = document.getElementById("lane-panel");
+  instructionPanel = document.getElementById("instruction-panel-container");
 
   
 
@@ -1555,6 +1575,8 @@ function setupCanvas() {
 
   zoomInButton.addEventListener("mouseleave", stopZooming);
   zoomOutButton.addEventListener("mouseleave", stopZooming);
+
+  showInstructions();
 }
 
 window.addEventListener("load", setupCanvas);

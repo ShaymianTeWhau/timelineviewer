@@ -820,7 +820,14 @@ class Timeline {
   getTitle(){
     return this.#title;
   }
-  load(){
+  load(json){
+
+    this.#title = json.title;
+
+    console.log("loading... " + this.#title)
+
+
+    /*
     this.#title = "Example Timeline";
     // temp implementation
     let tempTimePeriodArr = [];
@@ -892,7 +899,7 @@ class Timeline {
     this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth, [0,1,3].map(i=>tempTimePeriodArr[i]), "rgb(255, 211, 211)"));
     this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth, [2,4,5,9].map(i=>tempTimePeriodArr[i]), "rgb(255, 250, 211)"));
     this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth, [6,7,8].map(i=>tempTimePeriodArr[i]), "rgb(211, 255, 250)"));
-    this.#setupLanePanel();
+    this.#setupLanePanel();*/
   }
 }
 
@@ -1389,17 +1396,22 @@ function showInstructions(){
   instructionHideButton.addEventListener("click", () => hideInstructions())
 }
 
+function startApp(){
+  fetch('timeline.json')
+  .then(res => res.json())
+  .then(data => {
+    setupCanvas(data)
+  })
+  .catch(err => console.error("Error loading timeline:", err));
+}
 
-
-function setupCanvas() {
+function setupCanvas(timeLineJSON) {
   const canvas = document.getElementById("timeline-canvas");
   infoPanel = document.getElementById("info-panel")
   const zoomInButton = document.getElementById("zoom-in");
   const zoomOutButton = document.getElementById("zoom-out");
   lanePanel = document.getElementById("lane-panel");
   instructionPanel = document.getElementById("instruction-panel-container");
-
-  
 
   if (!canvas) {
     console.error("Element with ID 'timeline-canvas' not found!");
@@ -1428,7 +1440,7 @@ function setupCanvas() {
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   const timeline = new Timeline(scaleWidth, scaleType, focusDate, focusX, canvas.width);
-  timeline.load()
+  timeline.load(timeLineJSON)
   timeline.draw(canvas);
   
   // variables for dragging the screen
@@ -1579,5 +1591,5 @@ function setupCanvas() {
   showInstructions();
 }
 
-window.addEventListener("load", setupCanvas);
-window.addEventListener("resize", setupCanvas);
+window.addEventListener("load", startApp);
+window.addEventListener("resize", startApp);

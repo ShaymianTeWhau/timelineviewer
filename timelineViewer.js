@@ -1119,7 +1119,7 @@ class TimePeriod{
   #y;
   #barY;
   #width;
-  #height = 20;
+  #height = 15;
   #textWidth;
   #boundingWidth;
   #boundingHeight;
@@ -1128,6 +1128,7 @@ class TimePeriod{
   #sideMarginSize = 2;
   #color1;
   #color2;
+  #font = "14px Arial";
 
   constructor(name, startDate, endDate, hasApproxStartDate, hasApproxEndDate, description, color1="black", color2="black"){
     this.#name = name;
@@ -1232,7 +1233,7 @@ class TimePeriod{
     ctx.strokeStyle = this.#color2;
     ctx.lineWidth = 1;
     ctx.textAlign = "left";
-    ctx.font = "18px Arial";
+    ctx.font = this.#font;
     ctx.fillText(this.#name, labelX, this.#y+this.#topMarginSize)
     if(this.#boundingBoxVisible) ctx.strokeRect(this.#x, this.#y, this.#boundingWidth, this.#boundingHeight);
     this.#drawBar(ctx, this.#x, this.#barY, this.#width, this.#height)
@@ -1390,7 +1391,7 @@ class TimePeriod{
 
   }
   setupCoordinates(ctx, timeline, y){
-    this.#boundingHeight = this.#height * 2; // boundingBox height
+    this.#boundingHeight = this.#height * 2 + this.#topMarginSize *2; // boundingBox height
     this.#y = y - this.#boundingHeight; // boundingBox top left corner y coordinate
     this.#barY = y - this.#height; // time period bar top left corner y coordinate
 
@@ -1415,7 +1416,7 @@ class TimePeriod{
     ctx.textBaseline = "top";
     ctx.lineWidth = 1;
     ctx.textAlign = "left";
-    ctx.font = "18px Arial";
+    ctx.font = this.#font;
     this.#textWidth = ctx.measureText(this.#name).width + this.#sideMarginSize*2;
     this.#boundingWidth = Math.max(this.#width, this.#textWidth);
   }

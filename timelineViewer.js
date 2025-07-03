@@ -1555,43 +1555,56 @@ function setupCanvas(timeLineJSON) {
     timeline.draw(canvas);
   });
 
+  let drawScheduled = false; // for throttling draw() on wheel events, using requestAnimationFrame()
   window.addEventListener("wheel", (event) => {
+    let didChange = false;
+
     // horizontal movement
     if (event.shiftKey) {
       if (event.deltaY > 0) {
         // shift + Scroll down
         //focusX += horizontalScrollSpeed;
         timeline.moveHorizontal(horizontalScrollSpeed);
+        didChange = true;
       } else if (event.deltaY < 0) {
         // shift + Scroll up
         //focusX -= horizontalScrollSpeed;
         timeline.moveHorizontal(-horizontalScrollSpeed);
+        didChange = true;
       }
-    }
-
-    // vertical movement
-    if(!event.shiftKey && !event.altKey){
-      if (event.deltaY > 0) {
-        timeline.moveVertical(-verticalScrollSpeed);
-      }else if (event.deltaY < 0){
-        timeline.moveVertical(verticalScrollSpeed);
-      }
-    }
-
-    // rescale
-    if (event.altKey) {
+    } else if (event.altKey) {// rescale
       if (event.deltaY > 0) {
         // scale zoom out
         // alt + Scroll down
         timeline.rescale(-rescaleSpeed, mouseX);
+        didChange = true;
       } else if (event.deltaY < 0) {
         // scale zoom in
         // alt + Scroll down
         timeline.rescale(rescaleSpeed, mouseX);
+        didChange = true;
+      }
+    } else if(!event.shiftKey && !event.altKey){ // vertical movement
+      if (event.deltaY > 0) {
+        timeline.moveVertical(-verticalScrollSpeed);
+        didChange = true;
+      }else if (event.deltaY < 0){
+        timeline.moveVertical(verticalScrollSpeed);
+        didChange = true;
       }
     }
-    timeline.draw(canvas);
-  });
+
+    if(didChange && !drawScheduled){
+      drawScheduled = true;
+      requestAnimationFrame(() => {
+        timeline.draw(canvas);
+        drawScheduled = false;
+      })
+    }
+
+    // prevent the browser's default scroll behavior
+    event.preventDefault();
+  }, { passive: false });
   
   canvas.addEventListener("mousedown", (e) => {
     // assign drag start for moving the screen

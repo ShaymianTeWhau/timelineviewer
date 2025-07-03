@@ -17,7 +17,9 @@
             "endDate": "-2153-0-01",
             "hasApproxStartDate": true,
             "hasApproxEndDate": true,
-            "description": "The first ancient empire of Mesopotamia, founded by Sargon of Akkad."
+            "description": "The first ancient empire of Mesopotamia, founded by Sargon of Akkad.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
           },
           {
             "name": "Egyptian Empire (New Kingdom)",
@@ -25,7 +27,9 @@
             "endDate": "-1069-0-01",
             "hasApproxStartDate": true,
             "hasApproxEndDate": true,
-            "description": "The period of Egypt's greatest power and prosperity, including the reigns of Tutankhamun and Ramses II."
+            "description": "The period of Egypt's greatest power and prosperity, including the reigns of Tutankhamun and Ramses II.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
           },
           {
             "name": "Persian Empire (Achaemenid)",
@@ -33,7 +37,9 @@
             "endDate": "-0329-0-01",
             "hasApproxStartDate": false,
             "hasApproxEndDate": false,
-            "description": "An ancient empire founded by Cyrus the Great, known for its tolerance and efficient administration."
+            "description": "An ancient empire founded by Cyrus the Great, known for its tolerance and efficient administration.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
           },
           {
             "name": "Macedonian Empire",
@@ -41,7 +47,9 @@
             "endDate": "-0322-5-10",
             "hasApproxStartDate": false,
             "hasApproxEndDate": false,
-            "description": "Empire founded by Alexander the Great, stretching from Greece to India."
+            "description": "Empire founded by Alexander the Great, stretching from Greece to India.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
           },
           {
             "name": "Roman Empire",
@@ -49,7 +57,9 @@
             "endDate": "0476-8-04",
             "hasApproxStartDate": false,
             "hasApproxEndDate": false,
-            "description": "The dominant power in Europe and the Mediterranean for centuries; transitioned from Republic to Empire under Augustus."
+            "description": "The dominant power in Europe and the Mediterranean for centuries; transitioned from Republic to Empire under Augustus.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
           },
           {
             "name": "Byzantine Empire",
@@ -57,7 +67,9 @@
             "endDate": "1453-4-29",
             "hasApproxStartDate": false,
             "hasApproxEndDate": false,
-            "description": "The Eastern Roman Empire, lasting over a thousand years after the fall of Rome."
+            "description": "The Eastern Roman Empire, lasting over a thousand years after the fall of Rome.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
           },
           {
             "name": "Mongol Empire",
@@ -65,7 +77,9 @@
             "endDate": "1368-0-01",
             "hasApproxStartDate": true,
             "hasApproxEndDate": true,
-            "description": "The largest contiguous empire in history, founded by Genghis Khan."
+            "description": "The largest contiguous empire in history, founded by Genghis Khan.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
           },
           {
             "name": "Ottoman Empire",
@@ -73,7 +87,9 @@
             "endDate": "1922-10-01",
             "hasApproxStartDate": true,
             "hasApproxEndDate": false,
-            "description": "A powerful Islamic empire that controlled much of Southeast Europe, Western Asia, and North Africa."
+            "description": "A powerful Islamic empire that controlled much of Southeast Europe, Western Asia, and North Africa.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
           },
           {
             "name": "British Empire",
@@ -81,7 +97,9 @@
             "endDate": "1997-6-01",
             "hasApproxStartDate": true,
             "hasApproxEndDate": false,
-            "description": "The largest empire in history, with colonies and territories on every continent."
+            "description": "The largest empire in history, with colonies and territories on every continent.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
           },
           {
             "name": "Holy Roman Empire",
@@ -89,10 +107,12 @@
             "endDate": "1806-7-06",
             "hasApproxStartDate": false,
             "hasApproxEndDate": false,
-            "description": "A multi-ethnic complex of territories in central Europe that developed during the early Middle Ages."
+            "description": "A multi-ethnic complex of territories in central Europe that developed during the early Middle Ages.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
           }
         ],
-        "color": "rgb(255,255,255)"
+        "color": "rgb(255,227,209)"
     },
     {
         "title": "World Conflicts",
@@ -105,7 +125,9 @@
             "endDate": "-0449-0-01",
             "hasApproxStartDate": true,
             "hasApproxEndDate": true,
-            "description": "A series of conflicts between the Persian Empire and various Greek city-states including Athens and Sparta."
+            "description": "A series of conflicts between the Persian Empire and various Greek city-states including Athens and Sparta.",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
           },
           {
             "name": "Peloponnesian War",
@@ -113,7 +135,9 @@
             "endDate": "-0404-0-01",
             "hasApproxStartDate": false,
             "hasApproxEndDate": false,
-            "description": "A war fought between Athens and Sparta that shifted the balance of power in ancient Greece."
+            "description": "A war fought between Athens and Sparta that shifted the balance of power in ancient Greece.",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
           },
           {
             "name": "Punic Wars",
@@ -121,7 +145,9 @@
             "endDate": "-0146-0-01",
             "hasApproxStartDate": false,
             "hasApproxEndDate": false,
-            "description": "A series of three wars fought between Rome and Carthage, culminating in the destruction of Carthage."
+            "description": "A series of three wars fought between Rome and Carthage, culminating in the destruction of Carthage.",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
           },
           {
             "name": "Hundred Years' War",
@@ -129,7 +155,9 @@
             "endDate": "1453-0-01",
             "hasApproxStartDate": true,
             "hasApproxEndDate": true,
-            "description": "A prolonged conflict between England and France over the French throne and territorial claims."
+            "description": "A prolonged conflict between England and France over the French throne and territorial claims.",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
           },
           {
             "name": "Thirty Years' War",
@@ -137,7 +165,9 @@
             "endDate": "1648-9-24",
             "hasApproxStartDate": false,
             "hasApproxEndDate": false,
-            "description": "A religious and political conflict primarily fought in Central Europe, devastating the Holy Roman Empire."
+            "description": "A religious and political conflict primarily fought in Central Europe, devastating the Holy Roman Empire.",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
           },
           {
             "name": "Napoleonic Wars",
@@ -145,7 +175,9 @@
             "endDate": "1815-5-18",
             "hasApproxStartDate": false,
             "hasApproxEndDate": false,
-            "description": "A series of wars involving Napoleon's French Empire against various European coalitions."
+            "description": "A series of wars involving Napoleon's French Empire against various European coalitions.",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
           },
           {
             "name": "American Civil War",
@@ -153,7 +185,9 @@
             "endDate": "1865-3-09",
             "hasApproxStartDate": false,
             "hasApproxEndDate": false,
-            "description": "A civil war in the United States between the Union and Confederate states primarily over slavery."
+            "description": "A civil war in the United States between the Union and Confederate states primarily over slavery.",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
           },
           {
             "name": "World War I",
@@ -161,7 +195,9 @@
             "endDate": "1918-10-11",
             "hasApproxStartDate": false,
             "hasApproxEndDate": false,
-            "description": "A global war centered in Europe, triggered by the assassination of Archduke Franz Ferdinand."
+            "description": "A global war centered in Europe, triggered by the assassination of Archduke Franz Ferdinand.",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
           },
           {
             "name": "World War II",
@@ -169,7 +205,9 @@
             "endDate": "1945-8-02",
             "hasApproxStartDate": false,
             "hasApproxEndDate": false,
-            "description": "A global war involving most of the world's nations, resulting in an Allied victory and the foundation of the UN."
+            "description": "A global war involving most of the world's nations, resulting in an Allied victory and the foundation of the UN.",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
           },
           {
             "name": "Cold War",
@@ -177,10 +215,12 @@
             "endDate": "1991-11-26",
             "hasApproxStartDate": true,
             "hasApproxEndDate": false,
-            "description": "A prolonged geopolitical and ideological conflict between the United States and the Soviet Union."
+            "description": "A prolonged geopolitical and ideological conflict between the United States and the Soviet Union.",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
           }
         ],
-        "color": "rgb(255,255,255)"
+        "color": "rgb(255,213,213)"
     },
     {
         "title": "Historical Period",
@@ -193,7 +233,9 @@
             "endDate": "-3300-0-01",
             "hasApproxStartDate": true,
             "hasApproxEndDate": true,
-            "description": "The prehistoric period characterized by the use of stone tools before the development of metalworking."
+            "description": "The prehistoric period characterized by the use of stone tools before the development of metalworking.",
+            "color1": "rgb(88,126,255)",
+            "color2": "rgb(141,0,255)"
           },
           {
             "name": "Bronze Age",
@@ -201,7 +243,9 @@
             "endDate": "-1200-0-01",
             "hasApproxStartDate": true,
             "hasApproxEndDate": true,
-            "description": "A period marked by the use of bronze for tools and weapons, and the rise of early civilizations like Mesopotamia and Egypt."
+            "description": "A period marked by the use of bronze for tools and weapons, and the rise of early civilizations like Mesopotamia and Egypt.",
+            "color1": "rgb(88,126,255)",
+            "color2": "rgb(141,0,255)"
           },
           {
             "name": "Iron Age",
@@ -209,7 +253,9 @@
             "endDate": "-0550-0-01",
             "hasApproxStartDate": true,
             "hasApproxEndDate": true,
-            "description": "Characterized by the widespread use of iron tools and weapons, and the development of complex societies."
+            "description": "Characterized by the widespread use of iron tools and weapons, and the development of complex societies.",
+            "color1": "rgb(88,126,255)",
+            "color2": "rgb(141,0,255)"
           },
           {
             "name": "Classical Antiquity",
@@ -217,7 +263,9 @@
             "endDate": "0476-0-01",
             "hasApproxStartDate": true,
             "hasApproxEndDate": false,
-            "description": "An era of Greek and Roman cultural dominance in the Mediterranean and Europe."
+            "description": "An era of Greek and Roman cultural dominance in the Mediterranean and Europe.",
+            "color1": "rgb(88,126,255)",
+            "color2": "rgb(141,0,255)"
           },
           {
             "name": "Middle Ages",
@@ -225,7 +273,9 @@
             "endDate": "1492-0-01",
             "hasApproxStartDate": false,
             "hasApproxEndDate": false,
-            "description": "The period from the fall of the Western Roman Empire to the beginning of the Renaissance and Age of Exploration."
+            "description": "The period from the fall of the Western Roman Empire to the beginning of the Renaissance and Age of Exploration.",
+            "color1": "rgb(88,126,255)",
+            "color2": "rgb(141,0,255)"
           },
           {
             "name": "Renaissance",
@@ -233,7 +283,9 @@
             "endDate": "1600-0-01",
             "hasApproxStartDate": true,
             "hasApproxEndDate": true,
-            "description": "A cultural movement centered in Europe, marked by revival in art, science, and classical learning."
+            "description": "A cultural movement centered in Europe, marked by revival in art, science, and classical learning.",
+            "color1": "rgb(88,126,255)",
+            "color2": "rgb(141,0,255)"
           },
           {
             "name": "Early Modern Period",
@@ -241,7 +293,9 @@
             "endDate": "1789-0-01",
             "hasApproxStartDate": false,
             "hasApproxEndDate": false,
-            "description": "The period marked by exploration, colonization, and the rise of early nation-states."
+            "description": "The period marked by exploration, colonization, and the rise of early nation-states.",
+            "color1": "rgb(88,126,255)",
+            "color2": "rgb(141,0,255)"
           },
           {
             "name": "Modern Era",
@@ -249,7 +303,9 @@
             "endDate": "1945-0-01",
             "hasApproxStartDate": false,
             "hasApproxEndDate": false,
-            "description": "A time of revolutions, industrialization, and major global conflicts including the World Wars."
+            "description": "A time of revolutions, industrialization, and major global conflicts including the World Wars.",
+            "color1": "rgb(88,126,255)",
+            "color2": "rgb(141,0,255)"
           },
           {
             "name": "Contemporary Period",
@@ -257,10 +313,12 @@
             "endDate": "2025-0-01",
             "hasApproxStartDate": false,
             "hasApproxEndDate": true,
-            "description": "The post-World War II era, characterized by rapid technological advancement, globalization, and geopolitical tension."
+            "description": "The post-World War II era, characterized by rapid technological advancement, globalization, and geopolitical tension.",
+            "color1": "rgb(88,126,255)",
+            "color2": "rgb(141,0,255)"
           }
         ],
-        "color": "rgb(255,255,255)"
+        "color": "rgb(230,230,230)"
     }
   ]
 }

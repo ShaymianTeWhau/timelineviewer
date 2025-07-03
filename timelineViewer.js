@@ -866,7 +866,9 @@ class Timeline {
           endDate,
           periodJson.hasApproxStartDate,
           periodJson.hasApproxEndDate,
-          periodJson.description
+          periodJson.description,
+          periodJson.color1,
+          periodJson.color2
         )
         timePeriodArr.push(timePeriod)
       })
@@ -875,7 +877,8 @@ class Timeline {
         swimlaneJson.title, 
         swimlaneJson.isHidden,
         this.#canvasWidth,
-        timePeriodArr
+        timePeriodArr,
+        swimlaneJson.color
       )
       this.#swimLaneArr.push(swimLane)
     })

@@ -155,7 +155,7 @@ class Timeline {
   #focusX = 100; // x position of the gridline that the timeline is being built around
   #yOffset = 0;
   #scaleWidth = 100; // in pixels
-  #baseLineHeight = 150;
+  #baseLineHeight = 120;
   #linePosArr = []; // currently unordered
   #lineDateArr = []; // currently unordered
   #swimLaneArr = [];
@@ -454,9 +454,16 @@ class Timeline {
     this.#yOffset += verticalScrollSpeed;
   }
   drawBaseline(canvas) {
-    // draw backing for baseline
     const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "rgb(197, 197, 197)";
+
+    // draw backing for baseline
+    let baselineColor1 = "rgba(208, 220, 231, 0.9)";
+    let baselineColor2 = "rgb(208, 220, 231)";
+
+    const baselineGrad = ctx.createLinearGradient(0,canvas.height - this.#baseLineHeight,0,canvas.height)
+    baselineGrad.addColorStop(0,baselineColor1)
+    baselineGrad.addColorStop(0.6, baselineColor2)
+    ctx.fillStyle = baselineGrad;
     ctx.fillRect(0, canvas.height - this.#baseLineHeight, canvas.width, this.#baseLineHeight);
 
     // draw baseline line

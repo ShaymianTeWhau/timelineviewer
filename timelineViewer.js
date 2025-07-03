@@ -784,6 +784,8 @@ class Timeline {
     let matchFound = false;
     // loop swimlanes
     for(let i = 0;i<this.#swimLaneArr.length;i++){
+      if(!this.#swimLaneArr[i].getVisibility()) continue; // skip swimlanes that aren't visible
+
       let curSwimlane = this.#swimLaneArr[i];
       let curTimePeriodArr = curSwimlane.getTimePeriods();
       

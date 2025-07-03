@@ -159,6 +159,7 @@ class Timeline {
   #linePosArr = []; // currently unordered
   #lineDateArr = []; // currently unordered
   #swimLaneArr = [];
+  #baseLineFontColor = "rgb(64, 64, 64)";
 
   constructor(scaleWidth, scaleType, focusDate, focusX, canvasWidth) {
     this.#scaleWidth = scaleWidth;
@@ -468,7 +469,7 @@ class Timeline {
 
     // draw baseline line
     const baselineY = canvas.height - this.#baseLineHeight + 50;
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = this.#baseLineFontColor;
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(0, baselineY);
@@ -478,8 +479,8 @@ class Timeline {
     // draw tick marks and values
     for (let i = 0; i < this.#linePosArr.length; i++) {
       ctx.lineWidth = 2;
-      ctx.font = "20px Arial";
-      ctx.fillStyle = "black";
+      ctx.font = "16px Arial";
+      ctx.fillStyle = this.#baseLineFontColor;
       ctx.textAlign = "center";
       ctx.textBaseline = "top";
       // tick mark

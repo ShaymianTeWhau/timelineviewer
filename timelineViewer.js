@@ -1502,7 +1502,7 @@ function setupCanvas(timeLineJSON) {
 
   const ctx = canvas.getContext("2d");
   canvas.width = window.innerWidth - 10;
-  canvas.height = 1000;
+  canvas.height = window.innerHeight;
   let mouseX = -1;
   let mouseY = -1;
   let horizontalScrollSpeed = 50;

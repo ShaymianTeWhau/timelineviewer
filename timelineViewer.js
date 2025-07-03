@@ -1136,8 +1136,13 @@ class TimePeriod{
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
-    let str = `${day}/${month}/${year}`;
-    if(approx) str = "circa " + str;
+
+    let yearStr;
+    if(year < 0) yearStr = (year * -1) + " BC";
+    else yearStr = year + " AD";
+
+    let str = `${day}/${month}/${yearStr}`;
+    if(approx) str = `c. ${yearStr}`;
     return str;
   }
   updateMouseState(mouseX, mouseY, isMouseDown=false){
@@ -1156,9 +1161,18 @@ class TimePeriod{
       if(isMouseDown){
         let startDate = this.#formatDateDMY(this.#startDate, this.#hasApproxStartDate);
         let endDate = this.#formatDateDMY(this.#endDate, this.#hasApproxEndDate);
-        infoPanel.innerHTML = "<b>"+this.#name+"</b>"; 
-        infoPanel.innerHTML += ",  <span> " + startDate +" - "+endDate + "</span>";
-        infoPanel.innerHTML += "<p>"+this.#description+"</p>";
+        // clear panel
+        infoPanel.innerHTML = 
+        `
+        <div class="info-panel-header">
+          <b>${this.#name}</b>
+          <p class="info-panel-dates">${startDate} to ${endDate}</p> 
+        </div>
+        <p>${this.#description}</p>
+        `;
+        // append name
+        // append start and end date
+        // append description
       }
     }else{
       this.#boundingBoxVisible = false;

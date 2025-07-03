@@ -29,7 +29,6 @@ body {
   border-radius: 8px;
 }
 
-
 #zoom-controls {
   position: fixed;
   top: 110px; /* adjust if you change info-panel height */
@@ -68,6 +67,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  text-align: center;
 }
 
 #lane-panel button{

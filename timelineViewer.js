@@ -789,7 +789,13 @@ class Timeline {
     }
   }
   #setupLanePanel(){
+    // setup div for toggling swimlane visibility
+
     lanePanel.innerHTML = "";
+    const lanePanelTitle = document.createElement("b");
+    lanePanelTitle.textContent = "Hide/Show";
+    lanePanel.appendChild(lanePanelTitle);
+
     for(let i = 0;i<this.#swimLaneArr.length;i++){
       const newButton = document.createElement("button");
       newButton.classList.add("swim-lane-hide-button");

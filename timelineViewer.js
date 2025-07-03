@@ -5,20 +5,6 @@ const PRINTTIMEPERIODS = false;
 let infoPanel, lanePanel;
 let instructionPanel;
 
-function drawCenterAxis(ctx, maxX, maxY, color) {
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1;
-
-  ctx.beginPath();
-  ctx.moveTo(maxX / 2, 0);
-  ctx.lineTo(maxX / 2, maxY);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(0, maxY / 2);
-  ctx.lineTo(maxX, maxY / 2);
-  ctx.stroke();
-}
 
 function getFocusDateAsValue(date, scaleType) {
   let value;

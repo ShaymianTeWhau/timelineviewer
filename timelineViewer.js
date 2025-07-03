@@ -1,5 +1,5 @@
 const SHOWTEMPMARKERS = false;
-const SHOWGRIDLINES = true;
+const SHOWGRIDLINES = false;
 const SHOWSWIMLANEBORDERS = true;
 const PRINTTIMEPERIODS = false;
 let infoPanel, lanePanel;
@@ -820,12 +820,63 @@ class Timeline {
   getTitle(){
     return this.#title;
   }
+  #parseDate(dateStr){
+    // parse date string to date object
+    let yearMultiplier = 1;
+    if(dateStr[0] === '-'){
+      // is bc
+      dateStr = dateStr.slice(1);
+      yearMultiplier = -1;
+    }
+
+    const [year, month, day, hour, minute, second, ms] = dateStr.split("-").map(Number);
+    const date = new Date(0,0,0);
+    date.setFullYear(year * yearMultiplier)
+    date.setMonth(month)
+    date.setDate(day)
+    if(hour) date.setHours(hour)
+    if(minute) date.setMinutes(minute)
+    if(second) date.setSeconds(second)
+    if(ms) date.setMilliseconds(ms)
+    return date;
+  }
   load(json){
 
+    // load timeline properties
     this.#title = json.title;
+    this.#scaleWidth = json.scaleWidth;
+    this.#scaleType = json.scaleType;
+    this.#focusDate = this.#parseDate(json.focusDate)
+    this.#focusX = json.focusX;
 
-    console.log("loading... " + this.#title)
+    // load swimlanes
+    json.swimlanes.forEach(swimlaneJson => {
+      let timePeriodArr = [];
 
+      // load timeperiods
+      swimlaneJson.timePeriods.forEach(periodJson => {
+        const startDate = this.#parseDate(periodJson.startDate);
+        const endDate = this.#parseDate(periodJson.endDate)
+
+        const timePeriod = new TimePeriod(
+          periodJson.name,
+          startDate,
+          endDate,
+          periodJson.hasApproxStartDate,
+          periodJson.hasApproxEndDate,
+          periodJson.description
+        )
+        timePeriodArr.push(timePeriod)
+      })
+
+      const swimLane = new SwimLane(
+        swimlaneJson.title, 
+        swimlaneJson.isHidden,
+        this.#canvasWidth,
+        timePeriodArr
+      )
+      this.#swimLaneArr.push(swimLane)
+    })
 
     /*
     this.#title = "Example Timeline";
@@ -899,7 +950,8 @@ class Timeline {
     this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth, [0,1,3].map(i=>tempTimePeriodArr[i]), "rgb(255, 211, 211)"));
     this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth, [2,4,5,9].map(i=>tempTimePeriodArr[i]), "rgb(255, 250, 211)"));
     this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth, [6,7,8].map(i=>tempTimePeriodArr[i]), "rgb(211, 255, 250)"));
-    this.#setupLanePanel();*/
+    */
+   this.#setupLanePanel();
   }
 }
 
@@ -1188,46 +1240,53 @@ class TimePeriod{
     return "rgba("+ rgb.r + ", " + rgb.g + ", " + rgb.b + ", 0)";
   }
   #drawBar(ctx, x, y, width, height) {
-  const fadeWidthInPixels = 30;
-  let gradient;
-  let gradientProportionMaximum = 0.2;
+    if (this.#width <= 1) {
+      // Skip gradient rendering if width is too small
+      ctx.fillStyle = this.#color1;
+      ctx.fillRect(x, y, width, height);
+      return;
+    }
+    const fadeWidthInPixels = 30;
+    let gradient;
+    let gradientProportionMaximum = 0.2;
 
-  let gradientProportion = Math.min(gradientProportionMaximum, fadeWidthInPixels / this.#width);
-  let transparentColor = this.#getTransparent(this.#color1);
+    let gradientProportion = Math.min(gradientProportionMaximum, Math.max(0, fadeWidthInPixels / this.#width)); // clamp between 0 and 1
 
-  // Case: both ends are approximate
-  if (this.#hasApproxStartDate && this.#hasApproxEndDate) {
-    gradient = ctx.createLinearGradient(x, 0, x + width, 0);
-    gradient.addColorStop(0.0, transparentColor);
-    gradient.addColorStop(gradientProportion, this.#color1);
-    gradient.addColorStop(1-gradientProportion, this.#color1);
-    gradient.addColorStop(1.0, transparentColor);
+    let transparentColor = this.#getTransparent(this.#color1);
+
+    // Case: both ends are approximate
+    if (this.#hasApproxStartDate && this.#hasApproxEndDate) {
+      gradient = ctx.createLinearGradient(x, 0, x + width, 0);
+      gradient.addColorStop(0.0, transparentColor);
+      gradient.addColorStop(gradientProportion, this.#color1);
+      gradient.addColorStop(1-gradientProportion, this.#color1);
+      gradient.addColorStop(1.0, transparentColor);
+    }
+
+    // Case: only start is approximate
+    else if (this.#hasApproxStartDate) {
+      gradient = ctx.createLinearGradient(x, 0, x + width, 0);
+      gradient.addColorStop(0.0, transparentColor);
+      gradient.addColorStop(gradientProportion, this.#color1);
+      gradient.addColorStop(1.0, this.#color1);
+    }
+
+    // Case: only end is approximate
+    else if (this.#hasApproxEndDate) {
+      gradient = ctx.createLinearGradient(x + width, 0, x, 0);
+      gradient.addColorStop(0.0, transparentColor);
+      gradient.addColorStop(gradientProportion, this.#color1);
+      gradient.addColorStop(1.0, this.#color1);
+    }
+
+    // Case: no approximation
+    else {
+      gradient = this.#color1;
+    }
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(x, y, width, height);
   }
-
-  // Case: only start is approximate
-  else if (this.#hasApproxStartDate) {
-    gradient = ctx.createLinearGradient(x, 0, x + width, 0);
-    gradient.addColorStop(0.0, transparentColor);
-    gradient.addColorStop(gradientProportion, this.#color1);
-    gradient.addColorStop(1.0, this.#color1);
-  }
-
-  // Case: only end is approximate
-  else if (this.#hasApproxEndDate) {
-    gradient = ctx.createLinearGradient(x + width, 0, x, 0);
-    gradient.addColorStop(0.0, transparentColor);
-    gradient.addColorStop(gradientProportion, this.#color1);
-    gradient.addColorStop(1.0, this.#color1);
-  }
-
-  // Case: no approximation
-  else {
-    gradient = this.#color1;
-  }
-
-  ctx.fillStyle = gradient;
-  ctx.fillRect(x, y, width, height);
-}
 
   #calculateX(timeline, dateForConversion){
     let x = -1000;

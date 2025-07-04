@@ -1304,6 +1304,7 @@ class TimePeriod{
       gradient = this.#color1;
     }
 
+    
     ctx.fillStyle = gradient;
     ctx.fillRect(x, y, width, height);
   }
@@ -1412,6 +1413,13 @@ class TimePeriod{
     if(this.#x > 0 && this.#x < timeline.getCanvasWidth() && this.#endX > maxEndX){
       this.#width = timeline.getCanvasWidth() - this.#x + 1000;
     }
+
+    // this ensures the time period is not absurdly large when it spans the entire width of screen
+    if(this.#x<0 && this.#endX > timeline.getCanvasWidth()){
+      this.#width = timeline.getCanvasWidth()+1000;
+    }
+
+    if(this.#name === "Classical Antiquity") console.log(this.#name + " drawBar() width="+this.#width)
     
     // prepare to draw
     ctx.textBaseline = "top";

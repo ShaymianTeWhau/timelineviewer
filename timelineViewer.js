@@ -1634,16 +1634,22 @@ function setupCanvas(timeLineJSON) {
     mouseX = event.clientX - rect.left;
     mouseY = event.clientY - rect.top;
     timeline.updateMouseState(mouseX,mouseY)
-    timeline.draw(canvas);
 
     if(isDragging){
       offset.x = mouseX - dragStart.x;
       offset.y = mouseY - dragStart.y;
       timeline.moveHorizontal(offset.x);
       timeline.moveVertical(offset.y);
-      timeline.draw(canvas)
       dragStart.x = mouseX;
       dragStart.y = mouseY;
+    }
+
+    if(!drawScheduled){
+      drawScheduled = true;
+      requestAnimationFrame(() => {
+        timeline.draw(canvas);
+        drawScheduled = false;
+      })
     }
   });
 

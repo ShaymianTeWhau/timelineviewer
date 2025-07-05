@@ -1,3 +1,27 @@
+/**
+ * Timeline Viewer Application
+ * 
+ * This script implements a scalable, scrollable timeline visualization using HTML5 Canvas.
+ * 
+ * Features:
+ * - Interactive zooming and panning through millennia to milliseconds
+ * - Visual representation of historical or custom time periods ("swim lanes")
+ * - Approximate date rendering with gradient fades
+ * - Event information display on hover and click
+ * - Configurable rendering options (grid lines, lane borders, etc.)
+ * 
+ * Key Components:
+ * - Timeline: Manages drawing of gridlines, scales, and positioning
+ * - SwimLane: Represents a horizontal track containing time periods
+ * - TimePeriod: A labeled bar indicating a date range with optional approximation
+ * 
+ * Entry point: `startApp()` sets up the canvas and attaches event listeners
+ * Dependencies: Assumes existence of HTML elements with specific IDs (`timeline-canvas`, `info-panel`, `lane-panel`, etc.)
+ * 
+ * @file timeline.js
+ */
+
+
 const SHOWTEMPMARKERS = false;
 const SHOWGRIDLINES = false;
 const SHOWSWIMLANEBORDERS = true;
@@ -6,7 +30,20 @@ let infoPanel, lanePanel;
 let instructionPanel;
 
 
+/**
+ * Extracts a specific component of a Date object based on the provided scale type.
+ *
+ * For large-scale types like "millennium", "century", and "decade", this function returns the full year.
+ * For smaller-scale types, it returns the corresponding part of the date (e.g., month, day, hour, etc.).
+ *
+ * @param {Date} date - The Date object to extract a value from.
+ * @param {string} scaleType - The unit of time to extract. Must be one of:
+ *   "millennium", "century", "decade", "year", "month", "date", "hour", "minute", "second", "millisecond".
+ * @returns {number} The extracted value corresponding to the given scaleType.
+ * @throws {Error} If the scaleType is not one of the valid options.
+ */
 function getFocusDateAsValue(date, scaleType) {
+
   let value;
   const validScaleTypes = [
     "millennium",
@@ -60,7 +97,24 @@ function getFocusDateAsValue(date, scaleType) {
   return value;
 }
 
+/**
+ * Returns a new Date object incremented by a specified amount, based on the given scaleType.
+ * 
+ * The scaleType determines which part of the date to increment (e.g., year, month, day).
+ * The function also resets smaller time units to ensure consistency at larger scales.
+ * 
+ * Examples:
+ * - "millennium", "century", "decade": Adjusts year to nearest appropriate boundary (e.g., 2000 for a millennium).
+ * - "month": Adds months and resets date to the 1st, time to 00:00:00.000.
+ * - "date", "hour", etc.: Increments the respective unit and zeroes out smaller units.
+ * 
+ * @param {Date} oldDate - The base date to increment from.
+ * @param {string} scaleType - The unit of time to increment (e.g., "year", "month", "hour").
+ * @param {number} increment - The number of units to add (can be negative).
+ * @returns {Date} A new Date object with the increment applied.
+ */
 function incrementDateByScaleType(oldDate, scaleType, increment) {
+
   let newDate = new Date(oldDate);
   let year;
 
@@ -125,14 +179,31 @@ function incrementDateByScaleType(oldDate, scaleType, increment) {
   return newDate;
 }
 
+/**
+ * Returns the number of days in the month of the given Date.
+ *
+ * @param {Date} date - A JavaScript Date object representing any day in the target month.
+ * @returns {number} The number of days in that month (e.g., 28, 30, or 31).
+ */
 function getDaysInMonth(date) {
   const year = date.getFullYear();
-  const month = date.getMonth(); // 0-based (0 = Jan, 11 = Dec)
+  const month = date.getMonth(); // 0-based
   
-  // Set date to the 0th day of the next month → gives last day of current month
+  // Set date to the 0th day of the next month, gives last day of current month
   return new Date(year, month + 1, 0).getDate();
 }
 
+/**
+ * Calculates the difference in calendar days between two dates.
+ *
+ * Normalizes both dates to midnight to ensure the result reflects full calendar days,
+ * regardless of time components.
+ *
+ * @param {Date} date1 - The starting date.
+ * @param {Date} date2 - The ending date.
+ * @returns {number} The number of calendar days between date1 and date2.
+ *   Positive if date2 is after date1, negative if before.
+ */
 function getCalendarDayDifference(date1, date2) {
   // Clone and normalize both dates to midnight (00:00:00)
   const d1 = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate());
@@ -168,7 +239,7 @@ class Timeline {
     this.#focusX = focusX;
     this.#canvasWidth = canvasWidth;
   }
-  
+
   getLinePositionArray(){
     return this.#linePosArr
   }
@@ -1533,9 +1604,18 @@ class TimePeriod{
 
 }
 
+/**
+ * Hide instruction panel.
+ * Appends to instructionPanel.
+ */
 function hideInstructions(){
   instructionPanel.innerHTML = "";
 }
+
+/**
+ * Show instruction panel.
+ * Appends to instructionPanel.
+ */
 function showInstructions(){
   instructionPanel.innerHTML = 
   `
@@ -1549,6 +1629,14 @@ function showInstructions(){
   instructionHideButton.addEventListener("click", () => hideInstructions())
 }
 
+/**
+ * Initializes the timeline application by loading timeline data from a JSON file.
+ * 
+ * Fetches `timeline.json`, parses the response, and passes the data to `setupCanvas()` 
+ * to initialize the canvas and event listeners. Logs an error if the fetch fails.
+ *
+ * @function
+ */
 function startApp(){
   fetch('timeline.json')
   .then(res => res.json())

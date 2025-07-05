@@ -168,18 +168,38 @@ class Timeline {
     this.#focusX = focusX;
     this.#canvasWidth = canvasWidth;
   }
-  getLinePositionArray(){return this.#linePosArr}
-  getLineDateArray(){return this.#lineDateArr}
-  getYOffset(){return this.#yOffset}
-  getFocusX(){return this.#focusX}
-  getFocusDate(){return this.#focusDate}
-  getCanvasWidth(){return this.#canvasWidth}
+  
+  getLinePositionArray(){
+    return this.#linePosArr
+  }
+  
+  getLineDateArray(){
+    return this.#lineDateArr
+  }
+
+  getYOffset(){
+    return this.#yOffset
+  }
+
+  getFocusX(){
+    return this.#focusX
+  }
+
+  getFocusDate(){
+    return this.#focusDate
+  }
+
+  getCanvasWidth(){
+    return this.#canvasWidth
+  }
+
   setFocusDate(focusDate) {
     if (!(focusDate instanceof Date)) {
       throw new Error("focusDate must be an instance of the Date class.");
     }
     this.#focusDate = focusDate;
   }
+
   setScaleType(scaleType) {
     const validScaleTypes = [
       "millennium",
@@ -200,10 +220,15 @@ class Timeline {
     }
     this.#scaleType = scaleType;
   }
-  getScaleType(){return this.#scaleType}
+
+  getScaleType(){
+    return this.#scaleType
+  }
+
   getScaleWidth() {
     return this.#scaleWidth;
   }
+  
   #getBaselineLabel(date, scaleType, scaleWidth) {
     
     let label = getFocusDateAsValue(date, scaleType);
@@ -324,6 +349,7 @@ class Timeline {
 
     return label;
   }
+
   rescale(rescaleSpeed, mouseX) {
     // -rescaleSpeed to scale zoom out, +rescaleSpeed to scale zoom in
     this.#scaleWidth += rescaleSpeed;
@@ -346,6 +372,7 @@ class Timeline {
 
     this.updateScaleTypeByWidth(rescaleSpeed);
   }
+
   updateScaleTypeByWidth(rescaleSpeed){
     // change scale type based on width
     if(this.#scaleType == "millennium"){
@@ -448,12 +475,15 @@ class Timeline {
 
 
   }
+
   moveHorizontal(horizontalScrollSpeed) {
     this.#focusX += horizontalScrollSpeed;
   }
+
   moveVertical(verticalScrollSpeed){
     this.#yOffset += verticalScrollSpeed;
   }
+
   drawBaseline(canvas) {
     const ctx = canvas.getContext("2d");
 
@@ -500,6 +530,7 @@ class Timeline {
     if(this.#scaleType == "month" || this.#scaleType == "date" || this.#scaleType == "hour"|| this.#scaleType == "minute"|| this.#scaleType == "second" || this.#scaleType == "millisecond") this.#drawLabelsAboveBaseline(ctx, baselineY);
     
   }
+
   #drawLabelsAboveBaseline(ctx, baselineY){
     
 
@@ -638,6 +669,7 @@ class Timeline {
     }
 
   }
+
   draw(canvas) {
     this.#canvas = canvas;
     // temp code prevents crash if scale width is less than 1
@@ -760,6 +792,7 @@ class Timeline {
 
     this.drawBaseline(canvas);
   }
+
   #drawGridLines(ctx){
     ctx.fillStyle = "black";
     ctx.strokeStyle = "black";
@@ -774,6 +807,7 @@ class Timeline {
       ctx.stroke();
     }
   }
+
   updateMouseState(mouseX, mouseY, isMouseDown=false){
     // returns name of timeperiod cursor is hovering over
 
@@ -803,6 +837,7 @@ class Timeline {
 
     return hoverSelection;
   }
+
   #setupLanePanel(){
     // setup div for toggling swimlane visibility
 
@@ -826,9 +861,11 @@ class Timeline {
     }
     
   }
+
   getTitle(){
     return this.#title;
   }
+
   #parseDate(dateStr){
     // parse date string to date object
     let yearMultiplier = 1;
@@ -849,6 +886,7 @@ class Timeline {
     if(ms) date.setMilliseconds(ms)
     return date;
   }
+
   load(json){
 
     // load timeline properties
@@ -965,6 +1003,7 @@ class Timeline {
     */
    this.#setupLanePanel();
   }
+
 }
 
 class SwimLane{
@@ -1009,9 +1048,11 @@ class SwimLane{
 
   hide = () => this.#isHidden = true;
   show = () => this.#isHidden = false;
+
   toggleVisibility(){
     this.#isHidden = !this.#isHidden;
   }
+
   getVisibility(){
     return !this.#isHidden;
   }
@@ -1019,13 +1060,16 @@ class SwimLane{
   getName(){
     return this.#name;
   }
+
   getHeight(){
     if(this.#isHidden) return 0;
     return this.#height;
   }
+
   getTimePeriods(){
     return this.#timePeriodArr;
   }
+
   drawBackground(ctx,timeline, y){
     if(this.#isHidden) return;
     this.#bottomY = y + this.#height;
@@ -1037,10 +1081,12 @@ class SwimLane{
     if(SHOWSWIMLANEBORDERS) this.#drawBorder(ctx, y);
     this.#drawTitle(ctx, y);
   }
+
   #drawBorder(ctx, y){
     ctx.strokeStyle = "rgb(255, 255, 255)";
     ctx.strokeRect(0, y, this.#width, this.#height)
   }
+
   #drawTitle(ctx, y){
     // setup draw title
       ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
@@ -1073,6 +1119,7 @@ class SwimLane{
       }
     }
   }
+
   setUpTimePeriods(ctx, timeline){
     if(this.#isHidden) return;
     if(!this.#timePeriodArr) return;
@@ -1113,6 +1160,7 @@ class SwimLane{
     }
     this.#height = Math.max(this.#minHeight,this.#margin*2+this.#row.length*this.#rowHeight);
   }
+
 }
 
 class TimePeriod{
@@ -1148,6 +1196,7 @@ class TimePeriod{
     this.#color1 = color1;
     this.#color2 = color2;
   }
+
   #formatDateDMY(date, approx = false) {
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -1161,6 +1210,7 @@ class TimePeriod{
     if(approx) str = `c. ${yearStr}`;
     return str;
   }
+
   updateMouseState(mouseX, mouseY, isMouseDown=false){
     let cursorIsInBoundingBox = false;
 
@@ -1213,13 +1263,21 @@ class TimePeriod{
         Bounding Height: ${this.#boundingHeight}
       Bounding Box Visible: ${this.#boundingBoxVisible}`;
   }
+
   toStringShort(){
     let d = this.#startDate;
     let month = d.getMonth()+1;
     return this.#name + " " + d.getFullYear()+"/"+month+"/"+d.getDate() + " "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
   }
-  setDescription(description){this.#description = description}
-  getDescription(){return this.#description}
+
+  setDescription(description){
+    this.#description = description
+  }
+
+  getDescription(){
+    return this.#description
+  }
+
   draw(ctx, timeline, y){
     this.#y = y - this.#boundingHeight; // boundingBox top left corner y coordinate
     this.#barY = y - this.#height; // time period bar top left corner y coordinate
@@ -1247,6 +1305,7 @@ class TimePeriod{
     this.#drawBar(ctx, this.#x, this.#barY, this.#width, this.#height)
     //ctx.fillRect(this.#x, this.#barY, this.#width, this.#height)
   }
+
   #extractRGB(colorStr){
     // extract r,g,b values of a color string
     if(colorStr == "black") colorStr = "rgb(0,0,0)";
@@ -1261,11 +1320,13 @@ class TimePeriod{
       b: parseInt(match[3])
     };
   }
+
   #getTransparent(colorStr){
     // return transparent version of a color
     const rgb = this.#extractRGB(colorStr);
     return "rgba("+ rgb.r + ", " + rgb.g + ", " + rgb.b + ", 0)";
   }
+
   #drawBar(ctx, x, y, width, height) {
     if (this.#width <= 1) {
       // Skip gradient rendering if width is too small
@@ -1375,6 +1436,7 @@ class TimePeriod{
 
     return x;
   }
+
   #getGridWidthUnits(startDate, endDate, scaleType){
     let gridWidthUnits;
 
@@ -1396,9 +1458,7 @@ class TimePeriod{
 //    gridWidthUnits = endDate.getFullYear() - startDate.getFullYear();
     return gridWidthUnits;
   }
-  #getGridWidthSubunit(timeline){ // not good name
 
-  }
   setupCoordinates(ctx, timeline, y){
     this.#boundingHeight = this.#height * 2 + this.#topMarginSize *2; // boundingBox height
     this.#y = y - this.#boundingHeight; // boundingBox top left corner y coordinate
@@ -1434,6 +1494,7 @@ class TimePeriod{
     this.#textWidth = ctx.measureText(this.#name).width + this.#sideMarginSize*2;
     this.#boundingWidth = Math.max(this.#width, this.#textWidth);
   }
+
   getName() {
   return this.#name;
   }
@@ -1461,6 +1522,7 @@ class TimePeriod{
   getBoundingHeight() {
     return this.#boundingHeight;
   }
+
   getBoundingEndX(){
     return this.#x + this.#boundingWidth;
   }
@@ -1468,7 +1530,6 @@ class TimePeriod{
   getBoundingBoxVisible() {
     return this.#boundingBoxVisible;
   }
-
 
 }
 

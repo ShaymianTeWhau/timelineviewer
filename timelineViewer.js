@@ -1315,6 +1315,7 @@ class TimePeriod{
     
     ctx.fillStyle = gradient;
     ctx.fillRect(x, y, width, height);
+    console.log(`${this.#name} drawBar() at (${x},${y}) width: ${width}`)
   }
 
   #calculateX(timeline, dateForConversion){
@@ -1423,10 +1424,10 @@ class TimePeriod{
     }
 
     // this ensures the time period is not absurdly large when it spans the entire width of screen
-    if(this.#x<0 && this.#endX > timeline.getCanvasWidth()){
-      this.#width = timeline.getCanvasWidth()+1000;
+    if(this.#width > (timeline.getCanvasWidth()*2)){
+      this.#width = timeline.getCanvasWidth() *2;
     }
-    
+  
     // prepare to draw
     ctx.textBaseline = "top";
     ctx.lineWidth = 1;

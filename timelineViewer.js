@@ -639,7 +639,6 @@ class Timeline {
 
   }
   draw(canvas) {
-    console.log("called draw()...")
     this.#canvas = canvas;
     // temp code prevents crash if scale width is less than 1
     if (this.#scaleWidth < 1) this.#scaleWidth = 1;
@@ -1315,7 +1314,6 @@ class TimePeriod{
     
     ctx.fillStyle = gradient;
     ctx.fillRect(x, y, width, height);
-    console.log(`${this.#name} drawBar() at (${x},${y}) width: ${width}`)
   }
 
   #calculateX(timeline, dateForConversion){

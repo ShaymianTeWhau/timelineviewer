@@ -26,8 +26,7 @@ const SHOWTEMPMARKERS = false;
 const SHOWGRIDLINES = false;
 const SHOWSWIMLANEBORDERS = true;
 const PRINTTIMEPERIODS = false;
-let infoPanel, lanePanel;
-let instructionPanel;
+let canvas, ctx, infoPanel, lanePanel, instructionPanel, zoomInButton, zoomOutButton;
 
 
 /**
@@ -1646,49 +1645,81 @@ function startApp(){
   .catch(err => console.error("Error loading timeline:", err));
 }
 
-function setupCanvas(timeLineJSON) {
-  const canvas = document.getElementById("timeline-canvas");
+/**
+ * Initializes and validates DOM elements required for the timeline application.
+ * 
+ * Retrieves key UI elements by their IDs, assigns them to global variables,
+ * and sets up the canvas dimensions and rendering context. Logs errors and exits 
+ * early if the canvas is missing or invalid.
+ * 
+ * @function
+ * @returns {void}
+ */
+function initializeDOMElements(){
+  canvas = document.getElementById("timeline-canvas");
   infoPanel = document.getElementById("info-panel")
-  const zoomInButton = document.getElementById("zoom-in");
-  const zoomOutButton = document.getElementById("zoom-out");
+  zoomInButton = document.getElementById("zoom-in");
+  zoomOutButton = document.getElementById("zoom-out");
   lanePanel = document.getElementById("lane-panel");
   instructionPanel = document.getElementById("instruction-panel-container");
-
+  
   if (!canvas) {
     console.error("Element with ID 'timeline-canvas' not found!");
     return;
   }
-
+  
   if (!(canvas instanceof HTMLCanvasElement)) {
     console.error("Element with ID 'timeline-canvas' is not a valid <canvas> element.");
     return;
   }
+  
+  ctx = canvas.getContext("2d");
 
-  const ctx = canvas.getContext("2d");
   canvas.width = window.innerWidth - 10;
   canvas.height = window.innerHeight;
-  let mouseX = -1;
-  let mouseY = -1;
-  let horizontalScrollSpeed = 50;
-  let verticalScrollSpeed = 50;
-  let rescaleSpeed = 10;
+}
 
+/**
+ * Creates and initializes a Timeline instance with default parameters.
+ * 
+ * Sets a default focus date, scale type, and scale width (This will be overridden by timeline.load(json)).
+ * The timeline is centered horizontally and loaded with data from the provided JSON.
+ * 
+ * @function
+ * @param {Object} json - The timeline data in JSON format, expected to include title,
+ *   focusDate, scaleType, focusX, and an array of swim lanes and time periods.
+ * @returns {Timeline} A fully initialized Timeline instance ready for drawing.
+ */
+function initializeTimeline(json){
+  
   let focusDate = new Date(-1, 11, 31, 23, 59, 59, 999);
   focusDate = new Date(1, 0, 1, 0, 0, 0, 0);
-  focusDate.setFullYear(1920);
-
+  focusDate.setFullYear(2000);
+  
   let scaleType = "decade";
   let focusX = canvas.width / 2;
   let scaleWidth = 200;
   const timeline = new Timeline(scaleWidth, scaleType, focusDate, focusX, canvas.width);
-  timeline.load(timeLineJSON)
-  timeline.draw(canvas);
-  
-  // variables for dragging the screen
-  let isDragging = false;
-  let dragStart = { x: 0, y: 0}
-  let offset = { x: 0, y: 0 }
+  timeline.load(json)
+  return timeline;
+}
 
+/**
+ * Attaches keyboard controls for interacting with the timeline.
+ * 
+ * - Arrow keys move the timeline horizontally or vertically.
+ * - Alt + ArrowUp/ArrowDown zooms in or out on the timeline.
+ * 
+ * Note: Uses the global `canvas` to determine center for zooming.
+ *
+ * @function
+ * @param {Timeline} timeline - The timeline instance to control.
+ * @param {number} verticalScrollSpeed - The amount of vertical movement in pixels per key press.
+ * @param {number} horizontalScrollSpeed - The amount of horizontal movement in pixels per key press.
+ * @param {number} rescaleSpeed - The amount of zoom applied per zoom action.
+ * @returns {void}
+ */
+function setupKeyboardControls(timeline, verticalScrollSpeed, horizontalScrollSpeed, rescaleSpeed){
   window.addEventListener("keydown", (event) => {
     // rescale
     if (event.altKey){
@@ -1718,6 +1749,38 @@ function setupCanvas(timeLineJSON) {
     }
     timeline.draw(canvas);
   });
+}
+
+/**
+ * Sets up mouse interaction events for the timeline canvas.
+ * 
+ * Handles the following:
+ * - Mouse wheel scrolling:
+ *   - Shift + scroll = horizontal pan
+ *   - Alt + scroll = zoom in/out at mouse position
+ *   - Plain scroll = vertical pan
+ * - Mouse drag:
+ *   - Click and drag to pan both horizontally and vertically
+ * - Mouse hover:
+ *   - Updates selection and highlights elements under the cursor
+ * 
+ * Uses global `canvas` and `requestAnimationFrame` for efficient redrawing.
+ * 
+ * @function
+ * @param {Timeline} timeline - The timeline instance to control.
+ * @param {number} verticalScrollSpeed - Pixels to scroll vertically per wheel tick.
+ * @param {number} horizontalScrollSpeed - Pixels to scroll horizontally per wheel tick.
+ * @param {number} rescaleSpeed - Pixels to scale timeline per zoom step.
+ * @returns {void}
+ */
+function setupMouseEvents(timeline, verticalScrollSpeed, horizontalScrollSpeed, rescaleSpeed){
+  let mouseX = -1;
+  let mouseY = -1;
+
+  // variables for dragging the screen
+  let isDragging = false;
+  let dragStart = { x: 0, y: 0}
+  let offset = { x: 0, y: 0 }
 
   let drawScheduled = false; // for throttling draw() on wheel events, using requestAnimationFrame()
   window.addEventListener("wheel", (event) => {
@@ -1813,8 +1876,22 @@ function setupCanvas(timeLineJSON) {
       })
     }
   });
+}
 
-
+/**
+ * Attaches event listeners to zoom-in and zoom-out buttons for continuous zooming.
+ * 
+ * - On `mousedown`: initiates an immediate zoom and then repeats zooming at intervals after a short delay.
+ * - On `mouseup` or `mouseleave`: stops the zooming action.
+ * 
+ * Uses global `canvas`, `zoomInButton`, and `zoomOutButton` elements.
+ * 
+ * @function
+ * @param {Timeline} timeline - The timeline instance to zoom.
+ * @param {number} rescaleSpeed - The amount to zoom in or out per step.
+ * @returns {void}
+ */
+function setupZoomButtons(timeline, rescaleSpeed){
   let zoomInterval = null;
   let zoomTimeout = null;
   const zoomSpeedMs = 75;
@@ -1854,7 +1931,37 @@ function setupCanvas(timeLineJSON) {
 
   zoomInButton.addEventListener("mouseleave", stopZooming);
   zoomOutButton.addEventListener("mouseleave", stopZooming);
+}
 
+/**
+ * Initializes the timeline application and sets up all canvas-related interactions.
+ * 
+ * Performs the following:
+ * - Initializes and validates DOM elements
+ * - Creates and loads a Timeline instance from provided JSON
+ * - Sets up keyboard and mouse controls for navigation and zooming
+ * - Configures zoom button behavior
+ * - Draws the initial timeline and displays usage instructions
+ * 
+ * Relies on global DOM elements (`canvas`, `zoomInButton`, `zoomOutButton`, etc.) initialized in `initializeDOMElements`.
+ *
+ * @function
+ * @param {Object} timeLineJSON - The timeline data in JSON format, including timeline properties and swim lanes.
+ * @returns {void}
+ */
+function setupCanvas(timeLineJSON) {
+  initializeDOMElements();
+
+  const timeline = initializeTimeline(timeLineJSON)
+  timeline.draw(canvas);
+
+  let horizontalScrollSpeed = 50;
+  let verticalScrollSpeed = 50;
+  let rescaleSpeed = 10;
+  
+  setupKeyboardControls(timeline, verticalScrollSpeed, horizontalScrollSpeed, rescaleSpeed)
+  setupMouseEvents(timeline, verticalScrollSpeed, horizontalScrollSpeed, rescaleSpeed);
+  setupZoomButtons(timeline, rescaleSpeed)
   showInstructions();
 }
 

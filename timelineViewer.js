@@ -639,6 +639,7 @@ class Timeline {
 
   }
   draw(canvas) {
+    console.log("called draw()...")
     this.#canvas = canvas;
     // temp code prevents crash if scale width is less than 1
     if (this.#scaleWidth < 1) this.#scaleWidth = 1;
@@ -775,6 +776,9 @@ class Timeline {
     }
   }
   updateMouseState(mouseX, mouseY, isMouseDown=false){
+    // returns name of timeperiod cursor is hovering over
+
+    let hoverSelection = "";
     let matchFound = false;
     // loop swimlanes
     for(let i = 0;i<this.#swimLaneArr.length;i++){
@@ -786,15 +790,19 @@ class Timeline {
       // loop time periods in this swimlane
       for(let j = 0;j<curTimePeriodArr.length;j++){
         // check if cursor is in time period
-        if(curTimePeriodArr[j].updateMouseState(mouseX, mouseY, isMouseDown)) matchFound = true;
+        if(curTimePeriodArr[j].updateMouseState(mouseX, mouseY, isMouseDown)){
+          matchFound = true;
+          hoverSelection = curTimePeriodArr[j].getName();
+        } 
       }
-
     }
 
     if(!matchFound && isMouseDown){
       // click is in empty space
       infoPanel.innerHTML = "Select Time Period";
     }
+
+    return hoverSelection;
   }
   #setupLanePanel(){
     // setup div for toggling swimlane visibility
@@ -1418,8 +1426,6 @@ class TimePeriod{
     if(this.#x<0 && this.#endX > timeline.getCanvasWidth()){
       this.#width = timeline.getCanvasWidth()+1000;
     }
-
-    if(this.#name === "Classical Antiquity") console.log(this.#name + " drawBar() width="+this.#width)
     
     // prepare to draw
     ctx.textBaseline = "top";
@@ -1628,12 +1634,18 @@ function setupCanvas(timeLineJSON) {
     isDragging = false;
   })
 
+  let lastHover = "";
   canvas.addEventListener("mousemove", function (event) {
+    let didChange = false;
     // Get mouse coordinate relative to the canvas
     const rect = canvas.getBoundingClientRect();
     mouseX = event.clientX - rect.left;
     mouseY = event.clientY - rect.top;
-    timeline.updateMouseState(mouseX,mouseY)
+    let hoverSelection = timeline.updateMouseState(mouseX,mouseY)
+    if(lastHover != hoverSelection){
+      didChange = true;
+      lastHover = hoverSelection;
+    }
 
     if(isDragging){
       offset.x = mouseX - dragStart.x;
@@ -1642,9 +1654,10 @@ function setupCanvas(timeLineJSON) {
       timeline.moveVertical(offset.y);
       dragStart.x = mouseX;
       dragStart.y = mouseY;
+      didChange = true;
     }
 
-    if(!drawScheduled){
+    if(didChange && !drawScheduled){
       drawScheduled = true;
       requestAnimationFrame(() => {
         timeline.draw(canvas);

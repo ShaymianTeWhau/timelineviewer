@@ -256,22 +256,57 @@ class Timeline {
     this.#canvasWidth = canvasWidth;
   }
 
+  /**
+   * Returns the array of x-coordinate positions (in pixels) of the timeline grid lines.
+   *
+   * Each position corresponds to a date in the timeline, aligned with `getLineDateArray()`.
+   *
+   * @returns {number[]} An array of x-coordinates for the timeline grid lines.
+   */
   getLinePositionArray(){
     return this.#linePosArr
   }
   
+  /**
+   * Returns the array of `Date` objects corresponding to each timeline grid line.
+   *
+   * Each date aligns with the positions returned by `getLinePositionArray()`.
+   *
+   * @returns {Date[]} An array of `Date` objects for the timeline grid lines.
+   */
   getLineDateArray(){
     return this.#lineDateArr
   }
 
+  /**
+   * Returns the vertical scroll offset applied to the timeline drawing.
+   *
+   * This offset shifts all swim lanes and content vertically on the canvas.
+   *
+   * @returns {number} The vertical offset in pixels.
+   */
   getYOffset(){
     return this.#yOffset
   }
 
+  /**
+   * Returns the x-coordinate (in pixels) on the canvas where the focus date is centered.
+   *
+   * This value determines the horizontal reference point for building the timeline grid.
+   *
+   * @returns {number} The x-position of the focus date.
+   */
   getFocusX(){
     return this.#focusX
   }
 
+  /**
+   * Returns the focus date at the center of the timeline.
+   *
+   * The timeline grid is constructed around this date.
+   *
+   * @returns {Date} The current focus date.
+   */
   getFocusDate(){
     return this.#focusDate
   }

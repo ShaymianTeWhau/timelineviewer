@@ -26,7 +26,9 @@ const SHOWTEMPMARKERS = false;
 const SHOWGRIDLINES = false;
 const SHOWSWIMLANEBORDERS = true;
 const PRINTTIMEPERIODS = false;
-let canvas, ctx, infoPanel, lanePanel, instructionPanel, zoomInButton, zoomOutButton;
+let canvas, ctx, infoPanel, lanePanel, instructionPanel, zoomInButton, zoomOutButton
+let isDragging = false;
+let timeline = null;
 
 
 /**
@@ -1256,8 +1258,8 @@ class Timeline {
     })
 
    this.#setupLanePanel();
-  }
 
+  }
 }
 
 /**
@@ -2179,7 +2181,7 @@ function setupMouseEvents(timeline, verticalScrollSpeed, horizontalScrollSpeed, 
   let mouseY = -1;
 
   // variables for dragging the screen
-  let isDragging = false;
+  isDragging = false;
   let dragStart = { x: 0, y: 0}
   let offset = { x: 0, y: 0 }
 
@@ -2355,7 +2357,7 @@ function setupZoomButtons(timeline, rescaleSpeed){
 function setupCanvas(timeLineJSON) {
   initializeDOMElements();
 
-  const timeline = initializeTimeline(timeLineJSON)
+  timeline = initializeTimeline(timeLineJSON);
   timeline.draw(canvas);
 
   let horizontalScrollSpeed = 50;
@@ -2365,8 +2367,29 @@ function setupCanvas(timeLineJSON) {
   setupKeyboardControls(timeline, verticalScrollSpeed, horizontalScrollSpeed, rescaleSpeed)
   setupMouseEvents(timeline, verticalScrollSpeed, horizontalScrollSpeed, rescaleSpeed);
   setupZoomButtons(timeline, rescaleSpeed)
-  showInstructions();
+  showInstructions();  
 }
 
 window.addEventListener("load", startApp);
-window.addEventListener("resize", startApp);
+
+window.addEventListener("resize", () => {
+    // resize canvas and timeline
+
+    // dpi scaling
+    const dpr = window.devicePixelRatio || 1;
+
+    // Set CSS display size (what the browser sees)
+    canvas.style.width = (window.innerWidth - 10) + "px";
+    canvas.style.height = window.innerHeight + "px";
+
+    // Set actual pixel size of canvas
+    canvas.width = (window.innerWidth - 10) * dpr;
+    canvas.height = window.innerHeight * dpr;
+
+    // Scale drawing context
+    const ctx = canvas.getContext("2d");
+    ctx.scale(dpr, dpr);
+
+    isDragging = false;
+    timeline.draw(canvas)
+  });

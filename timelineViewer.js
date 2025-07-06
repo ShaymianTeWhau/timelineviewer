@@ -1076,6 +1076,14 @@ class Timeline {
 
 }
 
+/**
+ * Represents a horizontal swim lane that holds a collection of time periods on the timeline.
+ *
+ * Each swim lane manages its own height, visibility, layout rows, and internal time period data.
+ * Swim lanes are used to organize multiple time periods visually within the timeline interface.
+ *
+ * @class
+ */
 class SwimLane{
   #name = "";
   #isHidden = false;
@@ -1089,6 +1097,16 @@ class SwimLane{
   #rowHeight;
   #color;
 
+  /**
+   * Creates a new SwimLane instance to group and display time periods on the timeline.
+   *
+   * @constructor
+   * @param {string} name - The name or label of the swim lane.
+   * @param {boolean} isHidden - Whether the swim lane is initially hidden.
+   * @param {number} width - The width allocated for the swim lane in pixels.
+   * @param {TimePeriod[]} timePeriodArr - An array of TimePeriod instances assigned to this swim lane.
+   * @param {string} [color="rgb(234,234,234)"] - Optional background color for the swim lane (CSS color string).
+   */
   constructor(name, isHidden, width, timePeriodArr, color="rgb(234,234,234)"){
     this.#name = name;
     this.#isHidden = isHidden;
@@ -1097,6 +1115,19 @@ class SwimLane{
     this.#color = color;
   }
 
+  /**
+   * Draws the background rectangles for a list of visible swim lanes from bottom to top,
+   * starting at the specified Y-coordinate.
+   * 
+   * Each visible swim lane is set up and drawn in reverse order (last in the array appears at the bottom).
+   *
+   * @static
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context to draw on.
+   * @param {Timeline} timeline - The timeline instance used for layout and scaling context.
+   * @param {SwimLane[]} swimLaneArr - An array of SwimLane instances to draw.
+   * @param {number} y - The starting Y-coordinate from which to begin drawing upward.
+   * @returns {void}
+   */
   static drawBackgrounds(ctx,timeline, swimLaneArr, y){
     // function to draw backgrounds for an array of SwimLanes (bottom up), beginning at a y coordinate
     
@@ -1104,10 +1135,20 @@ class SwimLane{
       if(!swimLaneArr[i].getVisibility()) continue;
       swimLaneArr[i].setUpTimePeriods(ctx, timeline);
       y -= swimLaneArr[i].getHeight();
-      swimLaneArr[i].drawBackground(ctx,timeline, y);
+      swimLaneArr[i].drawBackground(ctx, y);
     }
   }
 
+  /**
+   * Draws the foreground (time periods) for each visible SwimLane in top-to-bottom order.
+   * 
+   * Assumes that layout has already been set up and that each SwimLane knows its position.
+   *
+   * @static
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context used for drawing.
+   * @param {SwimLane[]} swimLaneArr - An array of SwimLane instances whose time periods should be drawn.
+   * @returns {void}
+   */
   static drawForegrounds(ctx, swimLaneArr){
     // function to draw foregrounds for an array of SwimLanes, beginning at y coordinate
     for(let i = 0;i<swimLaneArr.length;i++){
@@ -1140,11 +1181,21 @@ class SwimLane{
     return this.#timePeriodArr;
   }
 
-  drawBackground(ctx,timeline, y){
+  /**
+   * Draws the background of the swim lane at the specified Y-coordinate.
+   * 
+   * Fills the swim lane area with its configured color, optionally draws borders and the title,
+   * and updates the internal `#bottomY` position for layout tracking.
+   * 
+   * Skips rendering if the swim lane is marked as hidden.
+   *
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context used for drawing.
+   * @param {number} y - The Y-coordinate of the top of the swim lane.
+   * @returns {void}
+   */
+  drawBackground(ctx, y){
     if(this.#isHidden) return;
     this.#bottomY = y + this.#height;
-
-    //this.setUpTimePeriods(ctx,timeline);
 
     ctx.fillStyle = this.#color;
     ctx.fillRect(0, y, this.#width, this.#height);
@@ -1173,6 +1224,15 @@ class SwimLane{
     return this.#name + this.#isHidden + this.#width + this.#height;
   }
 
+  /**
+   * Draws all time periods in the swim lane, organized by row, from bottom to top.
+   * 
+   * Each row's Y-coordinate is calculated relative to the bottom of the swim lane (`#bottomY`).
+   * The method skips drawing if the swim lane is hidden or contains no time periods.
+   *
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context used for drawing.
+   * @returns {void}
+   */
   drawTimePeriods(ctx){
     if(this.#isHidden) return;
     if(this.#timePeriodArr.length==0) return;
@@ -1189,44 +1249,66 @@ class SwimLane{
     }
   }
 
+  /**
+   * Calculates layout and assigns rows for all time periods in the swim lane.
+   * 
+   * Each time period is positioned using its `setupCoordinates` method, and assigned to a row 
+   * such that time periods in the same row do not visually overlap. The swim lane height is 
+   * adjusted based on the number of rows and their required space.
+   * 
+   * Skips setup if the swim lane is hidden or contains no time periods.
+   *
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context used to measure text and layout.
+   * @param {Timeline} timeline - The timeline instance used to calculate positioning and scaling.
+   * @returns {void}
+   */
   setUpTimePeriods(ctx, timeline){
     if(this.#isHidden) return;
     if(!this.#timePeriodArr) return;
     if(this.#timePeriodArr.length==0) return;
 
-    
+    // Initialize rows with the first row containing the first time period
     this.#row = [[]];
     this.#row[0].push(0); // add first time period to row 0
     
-    this.#timePeriodArr[0].setupCoordinates(ctx, timeline, this.#bottomY); // setup coords for each period
+    // Set up coordinates and measure height using the first time period
+    this.#timePeriodArr[0].setupCoordinates(ctx, timeline, this.#bottomY);
     this.#rowHeight = this.#timePeriodArr[0].getBoundingHeight();
 
     if(PRINTTIMEPERIODS) console.log(this.#timePeriodArr[0].toStringShort());
 
+    // Start placing the rest of the time periods
     for(let i = 1;i<this.#timePeriodArr.length;i++){
-      this.#timePeriodArr[i].setupCoordinates(ctx, timeline, this.#bottomY); // setup coords for each period
+      this.#timePeriodArr[i].setupCoordinates(ctx, timeline, this.#bottomY);
 
       if(PRINTTIMEPERIODS) console.log(this.#timePeriodArr[i].toStringShort());
 
       let curStartX = this.#timePeriodArr[i].getStartX();
       let curRow = 0;
       
+      // Get the end X of the last period in the current row
       let prevPeriodIndexInCurRow = this.#row[curRow][this.#row[curRow].length-1];
       let prevPeriodInCurRow = this.#timePeriodArr[prevPeriodIndexInCurRow];
       let prevEndXInCurRow = prevPeriodInCurRow.getBoundingEndX();
 
+      // Try to place current period into the first row it can fit into without overlap
       while(curStartX < prevEndXInCurRow){
         curRow++;
 
+        // If no more rows exist, add a new row and skip overlap checks
         if(curRow>=this.#row.length){
           this.#row.push([]); // adds a new empty row
           break; // row is empty so don't do following calculations
         }
+
+        // Get the end X of the last period in the current row
         prevPeriodIndexInCurRow = this.#row[curRow][this.#row[curRow].length-1];
         prevEndXInCurRow = this.#timePeriodArr[prevPeriodIndexInCurRow].getBoundingEndX();
       }
       this.#row[curRow].push(i)
     }
+
+    // Adjust total swim lane height to fit all rows with margin
     this.#height = Math.max(this.#minHeight,this.#margin*2+this.#row.length*this.#rowHeight);
   }
 

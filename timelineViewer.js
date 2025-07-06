@@ -858,7 +858,7 @@ class Timeline {
     // draw swim lane backgrounds
     SwimLane.drawBackgrounds(ctx,this, this.#swimLaneArr, this.#yOffset + this.#canvasHeight - this.#baseLineHeight);
     if(SHOWGRIDLINES) this.#drawGridLines(ctx);
-    SwimLane.drawForegrounds(ctx, this.#swimLaneArr, this.#yOffset, this);
+    SwimLane.drawForegrounds(ctx, this.#swimLaneArr);
 
     this.drawBaseline(canvas);
   }
@@ -1108,11 +1108,11 @@ class SwimLane{
     }
   }
 
-  static drawForegrounds(ctx, swimLaneArr, y, timeline){
+  static drawForegrounds(ctx, swimLaneArr){
     // function to draw foregrounds for an array of SwimLanes, beginning at y coordinate
     for(let i = 0;i<swimLaneArr.length;i++){
       if(!swimLaneArr[i].getVisibility()) continue;
-      swimLaneArr[i].drawTimePeriods(ctx, timeline);
+      swimLaneArr[i].drawTimePeriods(ctx);
     }
   }
 
@@ -1173,10 +1173,9 @@ class SwimLane{
     return this.#name + this.#isHidden + this.#width + this.#height;
   }
 
-  drawTimePeriods(ctx, timeline){
+  drawTimePeriods(ctx){
     if(this.#isHidden) return;
     if(this.#timePeriodArr.length==0) return;
-    //this.#setUpTimePeriods(ctx, timeline);
     
     // draw time periods in each row
     for(let i = 0;i<this.#row.length;i++){
@@ -1185,7 +1184,7 @@ class SwimLane{
 
       for(let j = 0;j< this.#row[i].length;j++){
         let periodIndex = this.#row[i][j];
-        this.#timePeriodArr[periodIndex].draw(ctx, timeline,y);
+        this.#timePeriodArr[periodIndex].draw(ctx, y);
       }
     }
   }
@@ -1233,6 +1232,18 @@ class SwimLane{
 
 }
 
+/**
+ * Represents a labeled time period to be displayed on a timeline.
+ * 
+ * A time period has a name, description, start and end dates.
+ * It is rendered as a colored bar with optional gradient fades and a label, and is aware of its own 
+ * layout and drawing properties.
+ * 
+ * Used internally by the `Timeline` and `SwimLane` classes for layout, rendering,
+ * and user interaction (e.g., hover and click).
+ * 
+ * @class
+ */
 class TimePeriod{
   #name;
   #description;
@@ -1256,6 +1267,18 @@ class TimePeriod{
   #color2;
   #font = "14px Arial";
 
+  /**
+   * Constructs a new TimePeriod instance.
+   *
+   * @param {string} name - The name of the time period (e.g., "World War II").
+   * @param {Date} startDate - The starting date of the period.
+   * @param {Date} endDate - The ending date of the period.
+   * @param {boolean} hasApproxStartDate - Whether the start date is approximate.
+   * @param {boolean} hasApproxEndDate - Whether the end date is approximate.
+   * @param {string} description - A short description to display for the time period.
+   * @param {string} [color1="black"] - Primary color (fill or gradient start).
+   * @param {string} [color2="black"] - Secondary color (stroke or gradient end).
+   */
   constructor(name, startDate, endDate, hasApproxStartDate, hasApproxEndDate, description, color1="black", color2="black"){
     this.#name = name;
     this.#description = description;
@@ -1267,6 +1290,20 @@ class TimePeriod{
     this.#color2 = color2;
   }
 
+  /**
+   * Formats a `Date` object as a `DD/MM/YYYY` string with AD/BC suffix,
+   * and optionally prepends "c." to indicate an approximate date.
+   * 
+   * Example output:
+   * - "03/07/1920 AD"
+   * - "c. 44 BC"
+   * 
+   * @private
+   * @method
+   * @param {Date} date - The date to format.
+   * @param {boolean} [approx=false] - Whether to mark the date as approximate (adds "c.").
+   * @returns {string} The formatted date string.
+   */
   #formatDateDMY(date, approx = false) {
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -1281,6 +1318,19 @@ class TimePeriod{
     return str;
   }
 
+  /**
+   * Updates the visual and interaction state of the time period based on mouse position.
+   * 
+   * Determines whether the mouse is currently hovering over the time period's bounding box.
+   * If the mouse is down (click), it populates the `infoPanel` with details about the time period.
+   * 
+   * Also toggles the bounding box visibility for highlighting.
+   *
+   * @param {number} mouseX - The current X-coordinate of the mouse relative to the canvas.
+   * @param {number} mouseY - The current Y-coordinate of the mouse relative to the canvas.
+   * @param {boolean} [isMouseDown=false] - Whether the mouse button is currently pressed.
+   * @returns {boolean} `true` if the mouse is inside the time period's bounding box, otherwise `false`.
+   */
   updateMouseState(mouseX, mouseY, isMouseDown=false){
     let cursorIsInBoundingBox = false;
 
@@ -1317,6 +1367,14 @@ class TimePeriod{
     return cursorIsInBoundingBox;
   }
 
+  /**
+   * Returns a detailed string representation of the time period's internal state.
+   * 
+   * Includes name, description, dates, dimensions, and rendering-related properties,
+   * primarily for debugging or logging purposes.
+   *
+   * @returns {string} A multiline string describing the time period's properties.
+   */
   toString() {
     return `Name: ${this.#name}
         Description: ${this.#description}
@@ -1334,6 +1392,15 @@ class TimePeriod{
       Bounding Box Visible: ${this.#boundingBoxVisible}`;
   }
 
+  /**
+   * Returns a short string representation of the time period's name and start date.
+   * 
+   * Format: `"<name> YYYY/MM/DD HH:MM:SS"`
+   * 
+   * Primarily used for quick logging or debugging output.
+   *
+   * @returns {string} A single-line summary of the time period's name and precise start time.
+   */
   toStringShort(){
     let d = this.#startDate;
     let month = d.getMonth()+1;
@@ -1348,11 +1415,19 @@ class TimePeriod{
     return this.#description
   }
 
-  draw(ctx, timeline, y){
+  /**
+   * Renders the time period on the given canvas context.
+   * 
+   * Draws the label, bounding box (if hovered), and the time period bar
+   * using gradient styling if the start or end dates are approximate.
+   * 
+   * @param {CanvasRenderingContext2D} ctx - The canvas 2D rendering context to draw on.
+   * @param {number} y - The bottom Y-coordinate where the time period should be vertically aligned.
+   * @returns {void}
+   */
+  draw(ctx, y){
     this.#y = y - this.#boundingHeight; // boundingBox top left corner y coordinate
     this.#barY = y - this.#height; // time period bar top left corner y coordinate
-    
-    //this.setupCoordinates(ctx, timeline, y)
 
     // reposition labelX if off left of screen
     let labelX = this.#x + this.#sideMarginSize;
@@ -1373,9 +1448,18 @@ class TimePeriod{
     ctx.fillText(this.#name, labelX, this.#y+this.#topMarginSize)
     if(this.#boundingBoxVisible) ctx.strokeRect(this.#x, this.#y, this.#boundingWidth, this.#boundingHeight);
     this.#drawBar(ctx, this.#x, this.#barY, this.#width, this.#height)
-    //ctx.fillRect(this.#x, this.#barY, this.#width, this.#height)
   }
 
+  /**
+   * Extracts the red, green, and blue components from an RGB or RGBA color string.
+   * 
+   * If the input is the keyword `"black"`, it is normalized to `"rgb(0,0,0)"`.
+   * 
+   * @private
+   * @param {string} colorStr - A CSS color string in `rgb(r,g,b)` or `rgba(r,g,b,a)` format.
+   * @returns {{r: number, g: number, b: number}} An object containing the RGB components as integers.
+   * @throws {Error} If the input is not a valid RGB(A) color string.
+   */
   #extractRGB(colorStr){
     // extract r,g,b values of a color string
     if(colorStr == "black") colorStr = "rgb(0,0,0)";
@@ -1391,12 +1475,39 @@ class TimePeriod{
     };
   }
 
+  /**
+   * Converts an RGB or RGBA color string to a fully transparent RGBA string.
+   * 
+   * Extracts the RGB components using {@link #extractRGB} and sets the alpha to 0.
+   *
+   * @private
+   * @param {string} colorStr - A color string in `rgb(r,g,b)` or `rgba(r,g,b,a)` format.
+   * @returns {string} A CSS `rgba(r,g,b,0)` string representing the transparent version of the color.
+   */
   #getTransparent(colorStr){
     // return transparent version of a color
     const rgb = this.#extractRGB(colorStr);
     return "rgba("+ rgb.r + ", " + rgb.g + ", " + rgb.b + ", 0)";
   }
 
+  /**
+   * Draws the time period's horizontal bar on the canvas.
+   * 
+   * The bar's style reflects whether the start and/or end dates are approximate:
+   * - If both are approximate, the bar has a fade-in and fade-out gradient.
+   * - If only one end is approximate, a one-sided gradient is used.
+   * - If neither is approximate, the bar is solid.
+   * 
+   * If the bar's width is too narrow, a solid rectangle is drawn without gradients.
+   * 
+   * @private
+   * @param {CanvasRenderingContext2D} ctx - The 2D canvas rendering context.
+   * @param {number} x - The x-coordinate of the top-left corner of the bar.
+   * @param {number} y - The y-coordinate of the top-left corner of the bar.
+   * @param {number} width - The width of the bar in pixels.
+   * @param {number} height - The height of the bar in pixels.
+   * @returns {void}
+   */
   #drawBar(ctx, x, y, width, height) {
     if (this.#width <= 1) {
       // Skip gradient rendering if width is too small
@@ -1441,21 +1552,36 @@ class TimePeriod{
     else {
       gradient = this.#color1;
     }
-
     
     ctx.fillStyle = gradient;
     ctx.fillRect(x, y, width, height);
   }
 
+  /**
+   * Calculates the X-coordinate on the timeline for a given date.
+   * 
+   * The calculation is based on the timeline's scale type and grid structure.
+   * Handles precise positioning for various granularities including:
+   * - `"month"`: accounts for year, month, day, and hour
+   * - `"date"`: includes days and partial days via hours
+   * - `"hour"`: includes minutes
+   * - `"minute"`: millisecond-accurate conversion to minutes
+   * - `"second"`: millisecond-accurate conversion to seconds
+   * - Other types (`"year"`, `"decade"`, `"century"`, etc.): uses interpolated pixel-per-unit ratio
+   * 
+   * If the date falls outside the timeline grid, positioning may be inaccurate or undefined.
+   * 
+   * @private
+   * @param {Timeline} timeline - The timeline instance used to get scale, grid, and conversion context.
+   * @param {Date} dateForConversion - The date to convert into an X-coordinate.
+   * @returns {number} The computed X-coordinate for the given date in pixels.
+   */
   #calculateX(timeline, dateForConversion){
     let x = -1000;
 
     // get timeline grid arrays
     let lineDateArr = timeline.getLineDateArray();
     let linePosArr = timeline.getLinePositionArray();
-
-    // if date is not in grid -don't print
-    // ???
 
     const timelineStartX = linePosArr[0];
     const timelineStartDate = lineDateArr[0];
@@ -1524,8 +1650,6 @@ class TimePeriod{
       gridWidthUnits = endDate.getFullYear() - startDate.getFullYear();
     }
 
-
-//    gridWidthUnits = endDate.getFullYear() - startDate.getFullYear();
     return gridWidthUnits;
   }
 

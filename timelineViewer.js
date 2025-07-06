@@ -214,7 +214,15 @@ function getCalendarDayDifference(date1, date2) {
   return Math.round(diffInMs / msPerDay);
 }
 
-
+/**
+ * Represents a visual timeline with a configurable scale, focus point, and multiple swim lanes.
+ * 
+ * Manages rendering and positioning of date markers (grid lines) and associated visual elements
+ * like swim lanes and time periods. Provides logic for interaction such as zooming, panning,
+ * and layout calculation.
+ * 
+ * @class Timeline
+ */
 class Timeline {
   #title;
   #canvas;
@@ -231,6 +239,15 @@ class Timeline {
   #swimLaneArr = [];
   #baseLineFontColor = "rgb(64, 64, 64)";
 
+  /**
+   * Constructs a new Timeline instance with the given configuration.
+   *
+   * @param {number} scaleWidth - The width in pixels for each unit of the current scale (e.g., a year or month).
+   * @param {string} scaleType - The type of scale used on the timeline (e.g., "year", "month", "decade").
+   * @param {Date} focusDate - The date to center the timeline around.
+   * @param {number} focusX - The X-coordinate (in pixels) at which the focusDate is visually aligned.
+   * @param {number} canvasWidth - The width of the canvas in pixels, used for layout calculations.
+   */
   constructor(scaleWidth, scaleType, focusDate, focusX, canvasWidth) {
     this.#scaleWidth = scaleWidth;
     this.setScaleType(scaleType);
@@ -263,6 +280,16 @@ class Timeline {
     return this.#canvasWidth
   }
 
+  /**
+   * Sets the central focus date around which the timeline is built.
+   * 
+   * This date determines the visual anchor point (aligned with `focusX`)
+   * and influences which time units are rendered across the timeline.
+   * 
+   * @param {Date} focusDate - The date to center the timeline around.
+   * 
+   * @throws {Error} If the provided value is not an instance of the Date class.
+   */
   setFocusDate(focusDate) {
     if (!(focusDate instanceof Date)) {
       throw new Error("focusDate must be an instance of the Date class.");
@@ -270,6 +297,17 @@ class Timeline {
     this.#focusDate = focusDate;
   }
 
+  /**
+   * Sets the granularity of the timeline scale (e.g., "year", "month", "hour").
+   * 
+   * Validates the input against a list of accepted scale types and throws an error if invalid.
+   *
+   * @param {string} scaleType - The scale type to apply. Must be one of:
+   *  "millennium", "century", "decade", "year", "month", "date", 
+   *  "hour", "minute", "second", or "millisecond".
+   * 
+   * @throws {Error} If the provided scaleType is not in the list of valid types.
+   */
   setScaleType(scaleType) {
     const validScaleTypes = [
       "millennium",
@@ -291,6 +329,15 @@ class Timeline {
     this.#scaleType = scaleType;
   }
 
+  /**
+   * Returns the current scale type used by the timeline.
+   * 
+   * The scale type determines the granularity of the timeline and can be one of:
+   * "millennium", "century", "decade", "year", "month", "date",
+   * "hour", "minute", "second", or "millisecond".
+   * 
+   * @returns {string} The current scale type.
+   */
   getScaleType(){
     return this.#scaleType
   }
@@ -299,6 +346,20 @@ class Timeline {
     return this.#scaleWidth;
   }
   
+  /**
+   * Generates a label string for a baseline date on the timeline based on the current scale type and visual scale width.
+   * 
+   * The function selectively suppresses labels based on the `scaleWidth` to avoid clutter.
+   * For large units like "millennium", "century", or "decade", labels are omitted unless the year aligns with a significant interval.
+   * For smaller units like "date", "hour", or "second", labels are filtered based on thresholds to avoid overplotting.
+   *
+   * @private
+   * @param {Date} date - The date object for which to generate a label.
+   * @param {string} scaleType - The type of scale (e.g., "year", "month", "hour", etc.).
+   * @param {number} scaleWidth - The number of pixels representing one unit of the current scale.
+   * 
+   * @returns {string} A string label for the given date, or an empty string if the label should be suppressed.
+   */
   #getBaselineLabel(date, scaleType, scaleWidth) {
     
     let label = getFocusDateAsValue(date, scaleType);
@@ -420,6 +481,19 @@ class Timeline {
     return label;
   }
 
+  /**
+   * Adjusts the zoom level of the timeline by changing the `scaleWidth`, and updates the focus point
+   * to the timeline gridline closest to the mouse X position.
+   * 
+   * A positive `rescaleSpeed` zooms in (increases `scaleWidth`), while a negative value zooms out.
+   * After adjusting the scale width, it recalculates the `focusX` (gridline anchor) and updates the
+   * `focusDate` to match the gridline closest to the `mouseX` coordinate.
+   * 
+   * Finally, the function adjusts the scale type if needed based on the new width.
+   * 
+   * @param {number} rescaleSpeed - The amount to change the scale width by. Positive to zoom in, negative to zoom out.
+   * @param {number} mouseX - The x-coordinate of the mouse, used to determine the nearest timeline gridline to focus on.
+   */
   rescale(rescaleSpeed, mouseX) {
     // -rescaleSpeed to scale zoom out, +rescaleSpeed to scale zoom in
     this.#scaleWidth += rescaleSpeed;
@@ -443,6 +517,22 @@ class Timeline {
     this.updateScaleTypeByWidth(rescaleSpeed);
   }
 
+  /**
+   * Dynamically updates the timeline's `scaleType` based on the current `scaleWidth`.
+   * 
+   * This method allows the timeline to transition smoothly between different time units
+   * (e.g., from "century" to "decade" or from "month" to "date") as the user zooms in or out.
+   * It adjusts both the `scaleType` and resets the `scaleWidth` to an appropriate default
+   * for the new scale to maintain visual clarity.
+   * 
+   * The transitions are:
+   * - Zoom in (larger `scaleWidth`): moves to more granular units (e.g., year → month → date)
+   * - Zoom out (smaller `scaleWidth`): moves to broader units (e.g., decade → century → millennium)
+   * 
+   * Milliseconds are limited and not implemented beyond a threshold.
+   * 
+   * @param {number} rescaleSpeed - The amount the user zoomed in or out, used to help compute new width values on transitions.
+   */
   updateScaleTypeByWidth(rescaleSpeed){
     // change scale type based on width
     if(this.#scaleType == "millennium"){
@@ -546,14 +636,43 @@ class Timeline {
 
   }
 
+  /**
+   * Moves the timeline horizontally by adjusting the `focusX` position.
+   * 
+   * This effectively pans the timeline view left or right.
+   * 
+   * @param {number} horizontalScrollSpeed - The number of pixels to shift the timeline horizontally.
+   * Positive values move the view to the right; negative values move it to the left.
+   */
   moveHorizontal(horizontalScrollSpeed) {
     this.#focusX += horizontalScrollSpeed;
   }
 
+  /**
+   * Moves the timeline vertically by adjusting the vertical offset (`yOffset`).
+   * 
+   * This affects the vertical scroll of the timeline content (e.g., swim lanes).
+   * 
+   * @param {number} verticalScrollSpeed - The number of pixels to shift the timeline vertically.
+   * Positive values move the content down; negative values move it up.
+   */
   moveVertical(verticalScrollSpeed){
     this.#yOffset += verticalScrollSpeed;
   }
 
+  /**
+ * Draws the timeline's baseline, including the background gradient, main line,
+ * tick marks, and date labels.
+ *
+ * The baseline visually represents time units (e.g., years, months) and is positioned
+ * near the bottom of the canvas. Tick marks and labels are drawn based on the current
+ * scale type and spacing defined in `#linePosArr` and `#lineDateArr`.
+ *
+ * If the current `scaleType` is "month" or more granular (e.g., "date", "hour", etc.),
+ * this method also draws additional labels above the baseline for clarity.
+ *
+ * @param {HTMLCanvasElement} canvas - The canvas element on which to draw the baseline.
+ */
   drawBaseline(canvas) {
     const ctx = canvas.getContext("2d");
 
@@ -601,6 +720,22 @@ class Timeline {
     
   }
 
+  /**
+   * Draws curved bracket labels above the baseline to indicate broader time groupings 
+   * (e.g. months, days, hours) depending on the current `scaleType`.
+   *
+   * These labels help contextualize fine-grained tick marks by grouping them visually
+   * and are dynamically filtered to avoid clutter at smaller `scaleWidth`s.
+   *
+   * This method:
+   * - Filters `#lineDateArr` and `#linePosArr` based on the granularity of the scale.
+   * - Formats a label string depending on the `scaleType`.
+   * - Draws a curved bracket and centered label for each valid segment.
+   *
+   * @private
+   * @param {CanvasRenderingContext2D} ctx - The rendering context to draw on.
+   * @param {number} baselineY - The Y-coordinate of the baseline used as the anchor for the brackets.
+   */
   #drawLabelsAboveBaseline(ctx, baselineY){
     
 
@@ -740,9 +875,25 @@ class Timeline {
 
   }
 
+  /**
+   * Renders the entire timeline onto the provided canvas.
+   *
+   * This includes:
+   * - Clearing and preparing the canvas.
+   * - Drawing vertical timeline grid lines based on the current `scaleType` and `focusDate`.
+   * - Storing the grid line dates and X positions.
+   * - Drawing optional temporary markers for debugging (if `SHOWTEMPMARKERS` is true).
+   * - Rendering swim lane backgrounds and foregrounds using `SwimLane` class methods.
+   * - Drawing optional grid lines and the labeled timeline baseline.
+   *
+   * The method avoids drawing grid lines or labels for year 0, except for large time scales 
+   * (millennium, century, decade).
+   *
+   * @param {HTMLCanvasElement} canvas - The canvas DOM element to draw the timeline on.
+   */
   draw(canvas) {
     this.#canvas = canvas;
-    // temp code prevents crash if scale width is less than 1
+    // prevent crash if scale width is less than 1
     if (this.#scaleWidth < 1) this.#scaleWidth = 1;
 
     // clear canvas
@@ -752,19 +903,11 @@ class Timeline {
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    
-
     // clear line date and position arrays
     this.#lineDateArr = [];
     this.#linePosArr = [];
 
-    /*if (this.#scaleWidth <= 10) {
-      // increment scale type?
-      this.#scaleType = "decade";
-      this.#scaleWidth = 180;
-      this.#focusX -= 180 / 2;
-    }*/
-
+    // setup for draw
     ctx.fillStyle = "black";
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
@@ -855,6 +998,7 @@ class Timeline {
     // temp: will have to move this sort function somewhere else
     this.#lineDateArr.sort((a, b) => a - b);
     this.#linePosArr.sort((a, b) => a - b);
+
     // draw swim lane backgrounds
     SwimLane.drawBackgrounds(ctx,this, this.#swimLaneArr, this.#yOffset + this.#canvasHeight - this.#baseLineHeight);
     if(SHOWGRIDLINES) this.#drawGridLines(ctx);
@@ -878,6 +1022,20 @@ class Timeline {
     }
   }
 
+  /**
+   * Updates the mouse interaction state for all time periods in all visible swimlanes.
+   *
+   * Determines whether the mouse is currently hovering over a time period, and updates its
+   * visual state (e.g. showing bounding boxes or rendering info to `infoPanel` on click).
+   *
+   * If the mouse is clicked (`isMouseDown === true`) and no time period is matched, it updates
+   * the info panel to indicate that no time period is selected.
+   *
+   * @param {number} mouseX - The X coordinate of the mouse relative to the canvas.
+   * @param {number} mouseY - The Y coordinate of the mouse relative to the canvas.
+   * @param {boolean} [isMouseDown=false] - Whether the mouse button is currently pressed.
+   * @returns {string} The name of the time period under the cursor, or an empty string if none.
+   */
   updateMouseState(mouseX, mouseY, isMouseDown=false){
     // returns name of timeperiod cursor is hovering over
 
@@ -908,6 +1066,20 @@ class Timeline {
     return hoverSelection;
   }
 
+  /**
+   * Sets up the lane panel UI that allows toggling the visibility of swimlanes.
+   *
+   * Clears the existing content of the `lanePanel` element and creates a button for each
+   * swimlane. Each button toggles the visibility of its associated swimlane when clicked
+   * and triggers a redraw of the timeline.
+   *
+   * Buttons are styled using the `swim-lane-hide-button` CSS class.
+   *
+   * This method assumes that `lanePanel` is a globally accessible DOM element and
+   * that `this.#swimLaneArr` contains initialized swimlane instances.
+   *
+   * @private
+   */
   #setupLanePanel(){
     // setup div for toggling swimlane visibility
 
@@ -936,6 +1108,18 @@ class Timeline {
     return this.#title;
   }
 
+  /**
+   * Parses a custom-formatted date string into a JavaScript `Date` object.
+   *
+   * The expected format is `"YYYY-MM-DD-HH-MM-SS-MS"` (each component separated by a dash),
+   * where time components (hours, minutes, seconds, milliseconds) are optional.
+   * 
+   * Supports negative years (e.g., `-0044-03-15` for 44 BC). A leading `-` indicates a BC date.
+   *
+   * @private
+   * @param {string} dateStr - The date string to parse. Format: "[-]YYYY-MM-DD[-HH-MM-SS-MS]".
+   * @returns {Date} The corresponding `Date` object with the correct year and time fields set.
+   */
   #parseDate(dateStr){
     // parse date string to date object
     let yearMultiplier = 1;
@@ -957,6 +1141,33 @@ class Timeline {
     return date;
   }
 
+  /**
+   * Loads timeline data from a JSON object and initializes internal properties.
+   *
+   * This method sets up the timeline’s title, scale, focus date, and swimlanes
+   * including all associated time periods. It parses date strings into `Date` objects
+   * and rebuilds the internal state from serialized data (e.g., from a saved file or API).
+   *
+   * @param {Object} json - The JSON object containing the timeline data.
+   * @param {string} json.title - The title of the timeline.
+   * @param {number} json.scaleWidth - The pixel width of each timeline unit.
+   * @param {string} json.scaleType - The type of time scale (e.g., "year", "month").
+   * @param {string} json.focusDate - The focus date in custom string format.
+   * @param {number} json.focusX - The x-position of the focus date on the canvas.
+   * @param {Array<Object>} json.swimlanes - The array of swimlane objects.
+   * @param {string} json.swimlanes[].title - Title of the swimlane.
+   * @param {boolean} json.swimlanes[].isHidden - Whether the swimlane is hidden.
+   * @param {string} json.swimlanes[].color - Background color of the swimlane.
+   * @param {Array<Object>} json.swimlanes[].timePeriods - Array of time period objects.
+   * @param {string} json.swimlanes[].timePeriods[].name - Name of the time period.
+   * @param {string} json.swimlanes[].timePeriods[].startDate - Start date in custom format.
+   * @param {string} json.swimlanes[].timePeriods[].endDate - End date in custom format.
+   * @param {boolean} json.swimlanes[].timePeriods[].hasApproxStartDate - Whether the start date is approximate.
+   * @param {boolean} json.swimlanes[].timePeriods[].hasApproxEndDate - Whether the end date is approximate.
+   * @param {string} json.swimlanes[].timePeriods[].description - Description text.
+   * @param {string} json.swimlanes[].timePeriods[].color1 - Primary color for rendering.
+   * @param {string} json.swimlanes[].timePeriods[].color2 - Secondary color for rendering.
+   */
   load(json){
 
     // load timeline properties
@@ -998,79 +1209,6 @@ class Timeline {
       this.#swimLaneArr.push(swimLane)
     })
 
-    /*
-    this.#title = "Example Timeline";
-    // temp implementation
-    let tempTimePeriodArr = [];
-
-    let start1 = new Date(1914, 6, 28); // July is month 6 (0-indexed)
-    let end1 = new Date(1918, 10, 11);  // November is month 10
-    tempTimePeriodArr.push(
-      new TimePeriod("World War I", start1, end1, false, false, "A global war centered in Europe that lasted from 28 July 1914 to 11 November 1918.","rgb(255, 3, 3)", "rgb(255, 0, 0)")
-    );
-
-    let start2 = new Date(1939, 8, 1);  // September 1, 1939
-    let end2 = new Date(1945, 8, 2);    // September 2, 1945
-    tempTimePeriodArr.push(
-      new TimePeriod("World War II", start2, end2, false, false, "A global war that lasted from 1 September 1939 to 2 September 1945.")
-    );
-    
-    // Russian Revolution (1917)
-    let russianRevStart = new Date(1917, 2); // March 1917
-    let russianRevEnd = new Date(1917, 10);  // November 1917
-    tempTimePeriodArr.push(
-      new TimePeriod("Russian Revolution", russianRevStart, russianRevEnd, false, false, "Political revolution in Russia leading to the fall of the Tsar and rise of the Soviet Union.")
-    );
-
-    // approx start example
-    let start0 = new Date(1925, 1, 2,3,4,5);
-    let end0 = new Date(1930, 1, 2,3,4,5);
-    tempTimePeriodArr.push(
-      new TimePeriod("approxStartExample", start0, end0, true, false, "An example time period", "rgb(77, 255, 53)", "rgb(64, 255, 0)")
-    );
-
-    // approx end example
-    tempTimePeriodArr.push(
-      new TimePeriod("approxEndExample", start0, end0, false, true, "An example time period", "rgb(77, 255, 53)", "rgb(255, 0, 0)")
-    );
-
-    // approx start and end example
-    tempTimePeriodArr.push(
-      new TimePeriod("approxStartAndEndExample", start0, end0, true, true, "An example time period", "rgb(77, 255, 53)", "rgb(255, 0, 0)")
-    );
-    
-    // Armenian Genocide (1915–1917)
-    let armenianGenocideStart = new Date(1915, 3); // April 1915
-    let armenianGenocideEnd = new Date(1917, 11);  // December 1917
-    tempTimePeriodArr.push(
-      new TimePeriod("Armenian Genocide", armenianGenocideStart, armenianGenocideEnd, false, false, "Mass killing and deportation of Armenians by the Ottoman Empire during WWI.")
-    );
-
-    // Holocaust (c. 1941–1945)
-    let holocaustStart = new Date(1941, 5); // June 1941
-    let holocaustEnd = new Date(1945, 4);   // May 1945
-    tempTimePeriodArr.push(
-      new TimePeriod("The Holocaust", holocaustStart, holocaustEnd, true, false, "Systematic genocide of six million Jews and millions of others by Nazi Germany.")
-    );
-    
-    // Second Sino-Japanese War (1937–1945)
-    let sinoJapWarStart = new Date(1937, 6, 7); // July 7, 1937
-    let sinoJapWarEnd = new Date(1945, 8, 9);   // September 9, 1945
-    tempTimePeriodArr.push(
-      new TimePeriod("Second Sino-Japanese War", sinoJapWarStart, sinoJapWarEnd, false, false, "Conflict between China and Japan that became part of WWII.")
-    );
-    
-    // Manhattan Project (1942–1946)
-    let manhattanProjectStart = new Date(1942, 0); // January 1942
-    let manhattanProjectEnd = new Date(1946, 11);  // December 1946
-    tempTimePeriodArr.push(
-      new TimePeriod("Manhattan Project", manhattanProjectStart, manhattanProjectEnd, false, false, "U.S.-led research to develop nuclear weapons during WWII.")
-    );
-    
-    this.#swimLaneArr.push(new SwimLane("lane1", false, this.#canvasWidth, [0,1,3].map(i=>tempTimePeriodArr[i]), "rgb(255, 211, 211)"));
-    this.#swimLaneArr.push(new SwimLane("lane2", false, this.#canvasWidth, [2,4,5,9].map(i=>tempTimePeriodArr[i]), "rgb(255, 250, 211)"));
-    this.#swimLaneArr.push(new SwimLane("lane3", false, this.#canvasWidth, [6,7,8].map(i=>tempTimePeriodArr[i]), "rgb(211, 255, 250)"));
-    */
    this.#setupLanePanel();
   }
 

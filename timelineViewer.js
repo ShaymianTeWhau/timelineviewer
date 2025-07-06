@@ -2346,6 +2346,9 @@ function setupZoomButtons(timeline, rescaleSpeed){
 
   zoomInButton.addEventListener("mouseleave", stopZooming);
   zoomOutButton.addEventListener("mouseleave", stopZooming);
+
+  zoomInButton.addEventListener("contextmenu", stopZooming);
+  zoomOutButton.addEventListener("contextmenu", stopZooming);
 }
 
 /**

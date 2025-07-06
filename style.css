@@ -1,12 +1,22 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden; /* optional: hides scrollbars */
+  height: 100%;
+}
+
 body {
   background: black;
   font-family: sans-serif;
   letter-spacing: 1px;
   font-size: 14px;
 }
+
 #timeline-canvas {
   background: white;
 }
+
 #info-panel, #instruction-panel {
   position: fixed;
   z-index: 9999;

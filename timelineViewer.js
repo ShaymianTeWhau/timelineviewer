@@ -2079,11 +2079,11 @@ function initializeDOMElements(){
   const dpr = window.devicePixelRatio || 1;
 
   // Set CSS display size (what the browser sees)
-  canvas.style.width = (window.innerWidth - 10) + "px";
+  canvas.style.width = (window.innerWidth ) + "px";
   canvas.style.height = window.innerHeight + "px";
 
   // Set actual pixel size of canvas
-  canvas.width = (window.innerWidth - 10) * dpr;
+  canvas.width = (window.innerWidth) * dpr;
   canvas.height = window.innerHeight * dpr;
 
   // Scale drawing context
@@ -2402,11 +2402,11 @@ window.addEventListener("resize", () => {
     const dpr = window.devicePixelRatio || 1;
 
     // Set CSS display size (what the browser sees)
-    canvas.style.width = (window.innerWidth - 10) + "px";
+    canvas.style.width = (window.innerWidth) + "px";
     canvas.style.height = window.innerHeight + "px";
 
     // Set actual pixel size of canvas
-    canvas.width = (window.innerWidth - 10) * dpr;
+    canvas.width = (window.innerWidth) * dpr;
     canvas.height = window.innerHeight * dpr;
 
     // Scale drawing context

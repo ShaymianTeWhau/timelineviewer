@@ -1706,6 +1706,9 @@ class TimePeriod{
       }
     }
 
+    // dont draw if width is negative
+    if(this.#width<0) return;
+
     // draw
     ctx.textBaseline = "top";
     ctx.fillStyle = this.#color1;
@@ -1777,21 +1780,30 @@ class TimePeriod{
    * @returns {void}
    */
   #drawBar(ctx, x, y, width, height) {
-    if (this.#width <= 1) {
-      // Skip gradient rendering if width is too small
+    
+
+    // Skip gradient rendering if width is too small
+    if (width <= 1) {
       ctx.fillStyle = this.#color1;
       ctx.fillRect(x, y, width, height);
       return;
     }
+    
+    // Skip gradient and drawRect() if non-finite x or width
+    if(!isFinite(x) || !isFinite(width)){
+      return;
+    }
+
     const fadeWidthInPixels = 30;
-    let gradient;
+    let gradient = this.#color1; // Fallback Case: no approximation
     let gradientProportionMaximum = 0.2;
 
     let gradientProportion = Math.min(gradientProportionMaximum, Math.max(0, fadeWidthInPixels / this.#width)); // clamp between 0 and 1
 
     let transparentColor = this.#getTransparent(this.#color1);
 
-    // Case: both ends are approximate
+
+      // Case: both ends are approximate
     if (this.#hasApproxStartDate && this.#hasApproxEndDate) {
       gradient = ctx.createLinearGradient(x, 0, x + width, 0);
       gradient.addColorStop(0.0, transparentColor);
@@ -1815,11 +1827,9 @@ class TimePeriod{
       gradient.addColorStop(gradientProportion, this.#color1);
       gradient.addColorStop(1.0, this.#color1);
     }
+    
 
-    // Case: no approximation
-    else {
-      gradient = this.#color1;
-    }
+    
     
     ctx.fillStyle = gradient;
     ctx.fillRect(x, y, width, height);

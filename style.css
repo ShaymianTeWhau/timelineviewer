@@ -83,7 +83,7 @@ body {
 
 #lane-panel {
   position: fixed;
-  top: 500px;
+  top: max(10px, min(500px, calc(100vh - 200px)));
   right: 10px;
   z-index: 9999;
   background-color: rgba(0, 0, 0, 0.8); /* dark semi-transparent background */
@@ -94,6 +94,7 @@ body {
   flex-direction: column;
   gap: 8px;
   text-align: center;
+
 }
 
 #lane-panel button{

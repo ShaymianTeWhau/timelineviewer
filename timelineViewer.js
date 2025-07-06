@@ -715,19 +715,19 @@ class Timeline {
     let baselineColor1 = "rgba(208, 220, 231, 0.9)";
     let baselineColor2 = "rgb(208, 220, 231)";
 
-    const baselineGrad = ctx.createLinearGradient(0,canvas.height - this.#baseLineHeight,0,canvas.height)
+    const baselineGrad = ctx.createLinearGradient(0,this.#canvasHeight - this.#baseLineHeight,0,this.#canvasHeight)
     baselineGrad.addColorStop(0,baselineColor1)
     baselineGrad.addColorStop(0.6, baselineColor2)
     ctx.fillStyle = baselineGrad;
-    ctx.fillRect(0, canvas.height - this.#baseLineHeight, canvas.width, this.#baseLineHeight);
+    ctx.fillRect(0, this.#canvasHeight - this.#baseLineHeight, this.#canvasWidth, this.#baseLineHeight);
 
     // draw baseline line
-    const baselineY = canvas.height - this.#baseLineHeight + 50;
+    const baselineY = this.#canvasHeight - this.#baseLineHeight + 50;
     ctx.strokeStyle = this.#baseLineFontColor;
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(0, baselineY);
-    ctx.lineTo(canvas.width, baselineY);
+    ctx.lineTo(this.#canvasWidth, baselineY);
     ctx.stroke();
 
     // draw tick marks and values
@@ -930,13 +930,24 @@ class Timeline {
     this.#canvas = canvas;
     // prevent crash if scale width is less than 1
     if (this.#scaleWidth < 1) this.#scaleWidth = 1;
+    
+    const ctx = canvas.getContext("2d");
+
+    // apply dpi scaling
+    const dpr = window.devicePixelRatio || 1;
+    const logicalWidth = canvas.width / dpr;
+    const logicalHeight = canvas.height /dpr;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);  
+    ctx.scale(dpr, dpr); 
+
+    this.#canvas = canvas;
+    this.#canvasWidth = logicalWidth;
+    this.#canvasHeight = logicalHeight;
+
 
     // clear canvas
-    const ctx = canvas.getContext("2d");
-    this.#canvasWidth = canvas.width;
-    this.#canvasHeight = canvas.height;
     ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, this.#canvasWidth, this.#canvasHeight);
 
     // clear line date and position arrays
     this.#lineDateArr = [];
@@ -954,7 +965,7 @@ class Timeline {
     let pixelDistanceFromFocus = 0;
     let curGridLineX = 0;
     let linesAboveFocus = 0;
-    while (curGridLineX < canvas.width) {
+    while (curGridLineX < this.#canvasWidth) {
       // temp color focus date and grid line
       //if (linesAboveFocus == 0 && this.#focusX < canvas.width) ctx.strokeStyle = "red";
       //else ctx.strokeStyle = "rgb(183, 183, 183)";
@@ -2051,11 +2062,22 @@ function initializeDOMElements(){
     console.error("Element with ID 'timeline-canvas' is not a valid <canvas> element.");
     return;
   }
-  
-  ctx = canvas.getContext("2d");
 
-  canvas.width = window.innerWidth - 10;
-  canvas.height = window.innerHeight;
+  // dpi scaling
+  const dpr = window.devicePixelRatio || 1;
+
+  // Set CSS display size (what the browser sees)
+  canvas.style.width = (window.innerWidth - 10) + "px";
+  canvas.style.height = window.innerHeight + "px";
+
+  // Set actual pixel size of canvas
+  canvas.width = (window.innerWidth - 10) * dpr;
+  canvas.height = window.innerHeight * dpr;
+
+  // Scale drawing context
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
 }
 
 /**
@@ -2104,10 +2126,10 @@ function setupKeyboardControls(timeline, verticalScrollSpeed, horizontalScrollSp
     if (event.altKey){
       if (event.key === "ArrowUp") {
         // scale zoom in
-        timeline.rescale(rescaleSpeed, canvas.width/2);
+        timeline.rescale(rescaleSpeed, timeline.getCanvasWidth()/2);
       } else if (event.key === "ArrowDown") {
         // scale zoom out
-        timeline.rescale(-rescaleSpeed, canvas.width/2);
+        timeline.rescale(-rescaleSpeed, timeline.getCanvasWidth()/2);
       }
     }
     
@@ -2277,11 +2299,13 @@ function setupZoomButtons(timeline, rescaleSpeed){
   const firstZoomDelay = 250;
 
   function startZooming(direction) {
+    const centerPoint = timeline.getCanvasWidth() /2;
+
     // prevent multiple intervals
     if (zoomInterval || zoomTimeout) return;
 
     // initial zoom
-    timeline.rescale(direction * rescaleSpeed, canvas.width / 2);
+    timeline.rescale(direction * rescaleSpeed, centerPoint);
     timeline.draw(canvas);
 
     // Timeout after first zoom
@@ -2289,7 +2313,7 @@ function setupZoomButtons(timeline, rescaleSpeed){
 
       // After first zoom, start regular interval
       zoomInterval = setInterval(() => {
-        timeline.rescale(direction * rescaleSpeed, canvas.width / 2);
+        timeline.rescale(direction * rescaleSpeed, centerPoint);
         timeline.draw(canvas);
       }, zoomSpeedMs);
     }, firstZoomDelay);

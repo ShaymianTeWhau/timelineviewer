@@ -2279,6 +2279,16 @@ function setupMouseEvents(timeline, verticalScrollSpeed, horizontalScrollSpeed, 
       })
     }
   });
+
+  canvas.addEventListener("mouseleave", () => {
+    isDragging = false;
+  })
+
+  canvas.addEventListener("contextmenu", (event) => {
+    //event.preventDefault();
+    isDragging = false;
+  });
+
 }
 
 /**

@@ -29,6 +29,7 @@ const PRINTTIMEPERIODS = false;
 let canvas, ctx, infoPanel, lanePanel, instructionPanel, zoomInButton, zoomOutButton
 let isDragging = false;
 let timeline = null;
+let timeperiodsetupcount = 0;
 
 
 /**
@@ -552,6 +553,11 @@ class Timeline {
 
 
     this.updateScaleTypeByWidth(rescaleSpeed);
+
+    // tell all swimlanes they need to reassign rows to time periods
+    for(let i = 0;i<this.#swimLaneArr.length;i++){
+      this.#swimLaneArr[i].rescale();
+    }
   }
 
   /**
@@ -1282,6 +1288,7 @@ class SwimLane{
   #margin = 5;
   #rowHeight;
   #color;
+  #needsNewRows = true;
 
   /**
    * Creates a new SwimLane instance to group and display time periods on the timeline.
@@ -1341,6 +1348,10 @@ class SwimLane{
       if(!swimLaneArr[i].getVisibility()) continue;
       swimLaneArr[i].drawTimePeriods(ctx);
     }
+  }
+
+  rescale(){
+    this.#needsNewRows = true;
   }
 
   hide = () => this.#isHidden = true;
@@ -1453,6 +1464,16 @@ class SwimLane{
     if(!this.#timePeriodArr) return;
     if(this.#timePeriodArr.length==0) return;
 
+    
+    // skip row assignment if not rescaling
+    if(!this.#needsNewRows){
+      for(let i = 0;i<this.#timePeriodArr.length;i++){
+        this.#timePeriodArr[i].setupCoordinates(ctx, timeline, this.#bottomY)
+      }
+      return;
+    } 
+     
+    this.#needsNewRows = false;
     // Initialize rows with the first row containing the first time period
     this.#row = [[]];
     this.#row[0].push(0); // add first time period to row 0
@@ -1478,7 +1499,7 @@ class SwimLane{
       let prevEndXInCurRow = prevPeriodInCurRow.getBoundingEndX();
 
       // Try to place current period into the first row it can fit into without overlap
-      while(curStartX < prevEndXInCurRow){
+      while(curStartX < (prevEndXInCurRow)){
         curRow++;
 
         // If no more rows exist, add a new row and skip overlap checks

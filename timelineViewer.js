@@ -1499,7 +1499,7 @@ class SwimLane{
       let prevEndXInCurRow = prevPeriodInCurRow.getBoundingEndX();
 
       // Try to place current period into the first row it can fit into without overlap
-      while(Math.floor(curStartX) < Math.floor(prevEndXInCurRow)){ // rounding for consistency
+      while(Math.ceil(curStartX) < Math.floor(prevEndXInCurRow)){ // rounding for consistency
         curRow++;
         // If no more rows exist, add a new row and skip overlap checks
         if(curRow>=this.#row.length){

@@ -1,0 +1,112 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden; /* optional: hides scrollbars */
+  height: 100%;
+}
+
+body {
+  background: white;
+  font-family: sans-serif;
+  letter-spacing: 1px;
+  font-size: 14px;
+}
+
+#timeline-canvas {
+  background: white;
+}
+
+#info-panel, #instruction-panel {
+  position: fixed;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.8); /* dark semi-transparent background */
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+#info-panel{
+  top: 10px;
+  right: 10px;
+  border: 1px solid #ccc;
+}
+
+.info-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.info-panel-dates {
+  margin: 0;
+  letter-spacing: 0.1rem;
+}
+
+
+#instruction-panel{
+  top: 10px;
+  left: 10px;
+}
+
+#instruction-panel button{
+  border-radius: 8px;
+}
+
+#zoom-controls {
+  position: fixed;
+  top: 110px; /* adjust if you change info-panel height */
+  right: 10px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#zoom-controls button {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-family: sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#zoom-controls button:hover {
+  background-color: rgba(50, 50, 50, 0.9);
+}
+
+#lane-panel {
+  position: fixed;
+  top: max(10px, min(500px, calc(100vh - 200px)));
+  right: 10px;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.8); /* dark semi-transparent background */
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+
+}
+
+#lane-panel button{
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  color: black;
+}
+
+#lane-panel button:hover{
+  background-color: rgba(255, 255, 255, 0.9);
+}

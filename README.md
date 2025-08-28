@@ -12,7 +12,9 @@ A JavaScript-based timeline visualization tool that displays time-based events a
 ---
 
 #### Note:
+Has been deployed as a vercel hobby project here: https://timelineviewer.vercel.app/timeline.
+
 Implemented as a Next.js server in TypeScript.
-Use `npm run dev` to test server.
+Use `npm run dev` to run locally.
 The example timeline viewer is under endpoint `/timeline`
 

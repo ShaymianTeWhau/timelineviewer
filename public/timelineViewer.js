@@ -2059,7 +2059,7 @@ function showInstructions(){
  * @function
  */
 function startApp(){
-  fetch('timeline.json')
+  fetch('timeline-example.json')
   .then(res => res.json())
   .then(data => {
     setupCanvas(data)

@@ -12,7 +12,7 @@ A JavaScript-based timeline visualization tool that displays time-based events a
 ---
 
 #### Note:
-There is currently no backend — the app must be served using a local or live server due to fetch() being used to load timeline.json.
-
-The included timeline.json is a sample dataset.
+Implemented as a Next.js server in TypeScript.
+Use `npm run dev` to test server.
+The example timeline viewer is under endpoint `/timeline`
 

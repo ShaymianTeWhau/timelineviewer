@@ -2,7 +2,7 @@ html, body {
   margin: 0;
   padding: 0;
   border: 0;
-  overflow: hidden; /* optional: hides scrollbars */
+  overflow: hidden; 
   height: 100%;
 }
 
@@ -21,7 +21,7 @@ body {
 #info-panel {
   position: fixed;
   z-index: 9999;
-  background-color: rgba(0, 0, 0, 0.8); /* dark semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.8); 
   color: white;
   padding: 10px 15px;
   border-radius: 8px;
@@ -47,7 +47,7 @@ body {
 }
 
 #instruction-panel{
-  background-color: rgba(0, 0, 0, 0.8); /* dark semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.8); 
   color: white;
   padding: 10px 15px;
   border-radius: 8px;
@@ -78,7 +78,7 @@ body {
 
 #zoom-controls {
   position: fixed;
-  top: 110px; /* adjust if you change info-panel height */
+  top: 110px; 
   right: 10px;
   z-index: 9999;
   display: flex;
@@ -108,7 +108,7 @@ body {
   right: 10px;
   z-index: 9999;
   
-  background-color: rgba(0, 0, 0, 0.8); /* dark semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 10px 15px;
   border-radius: 8px;

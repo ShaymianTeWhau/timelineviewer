@@ -20,7 +20,7 @@ export default function TimelinePage() {
         <button id="zoom-in">+</button>
         <button id="zoom-out">−</button>
       </div>
-      <div id="lane-panel"></div>ß
+      <div id="lane-panel"></div>
       <div id="instruction-panel-container"></div>
 
       {/* Load legacy script after hydration */}

@@ -61,6 +61,14 @@ body {
   background-color: rgba(255, 255, 255, 0.8);;
 }
 
+.centered-div {
+  position: fixed;
+  top: calc(40%);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+}
+
 #zoom-controls {
   position: fixed;
   top: 110px; /* adjust if you change info-panel height */

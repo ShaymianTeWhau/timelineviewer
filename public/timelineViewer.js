@@ -2051,6 +2051,10 @@ function hideInstructions(){
  * Appends to instructionPanel.
  */
 function showInstructions(){
+  if(isTouch){
+    instructionPanel.classList.add('centered-div')
+  }
+
   instructionPanel.innerHTML = 
   `
     <div id="instruction-panel">

@@ -30,6 +30,7 @@ let canvas, ctx, infoPanel, lanePanel, instructionPanel, zoomInButton, zoomOutBu
 let isDragging = false;
 let timeline = null;
 let timeperiodsetupcount = 0;
+let isTouch = false;
 
 
 /**
@@ -717,22 +718,34 @@ class Timeline {
  * @param {HTMLCanvasElement} canvas - The canvas element on which to draw the baseline.
  */
   drawBaseline(canvas) {
+    
     const ctx = canvas.getContext("2d");
-
+    
     // draw backing for baseline
     let baselineColor1 = "rgba(208, 220, 231, 0.9)";
     let baselineColor2 = "rgb(208, 220, 231)";
 
+    if(isTouch){
+      baselineColor1 = "rgba(255, 255, 255, 0)"
+      baselineColor2 = "rgb(255, 255, 255, 0.9)"
+    }
+    
     const baselineGrad = ctx.createLinearGradient(0,this.#canvasHeight - this.#baseLineHeight,0,this.#canvasHeight)
     baselineGrad.addColorStop(0,baselineColor1)
     baselineGrad.addColorStop(0.6, baselineColor2)
     ctx.fillStyle = baselineGrad;
     ctx.fillRect(0, this.#canvasHeight - this.#baseLineHeight, this.#canvasWidth, this.#baseLineHeight);
-
+    
     // draw baseline line
-    const baselineY = this.#canvasHeight - this.#baseLineHeight + 50;
+    let baselineY = this.#canvasHeight - this.#baseLineHeight + 50;
     ctx.strokeStyle = this.#baseLineFontColor;
     ctx.lineWidth = 2;
+
+    if(isTouch) {
+      this.#baseLineHeight = 60;
+      baselineY = this.#canvasHeight - this.#baseLineHeight/2;
+    }
+
     ctx.beginPath();
     ctx.moveTo(0, baselineY);
     ctx.lineTo(this.#canvasWidth, baselineY);
@@ -2543,6 +2556,8 @@ function setupZoomButtons(timeline, rescaleSpeed){
  */
 function setupCanvas(timeLineJSON) {
   initializeDOMElements();
+
+  isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
   timeline = initializeTimeline(timeLineJSON);
   timeline.draw(canvas);

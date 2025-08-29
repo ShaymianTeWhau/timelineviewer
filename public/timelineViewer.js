@@ -2051,20 +2051,22 @@ function hideInstructions(){
  * Appends to instructionPanel.
  */
 function showInstructions(){
-  if(isTouch){
-    instructionPanel.classList.add('centered-div')
-  }
-
+  
   instructionPanel.innerHTML = 
   `
-    <div id="instruction-panel">
-      <p>Drag timeline to move view</p>
-      <p>Use buttons to zoom, or alt+scroll</p>
-      <button id="instruction-hide-button">hide</button>
-    </div>
+  <div id="instruction-panel">
+  <p>Drag timeline to move view</p>
+  <p>Use buttons to zoom, or alt+scroll</p>
+  <button id="instruction-hide-button">hide</button>
+  </div>
   `
   const instructionHideButton = document.getElementById("instruction-hide-button");
   instructionHideButton.addEventListener("click", () => hideInstructions())
+  if(isTouch){
+    instructionPanel.classList.add('instruction-panel-centered')
+  }else{
+    instructionPanel.classList.add('instruction-panel-default')
+  }
 }
 
 /**

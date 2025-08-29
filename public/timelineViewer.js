@@ -2056,7 +2056,7 @@ function showInstructions(){
     <div id="instruction-panel">
       <p>Drag timeline to move view</p>
       <p>Use buttons to zoom, or alt+scroll</p>
-      <button id="instruction-hide-button">Hide</button>
+      <button id="instruction-hide-button">hide</button>
     </div>
   `
   const instructionHideButton = document.getElementById("instruction-hide-button");

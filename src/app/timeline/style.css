@@ -15,6 +15,7 @@ body {
 
 #timeline-canvas {
   background: white;
+  touch-action: none;
 }
 
 #info-panel, #instruction-panel {

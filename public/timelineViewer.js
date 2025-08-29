@@ -2184,6 +2184,150 @@ function setupKeyboardControls(timeline, verticalScrollSpeed, horizontalScrollSp
   });
 }
 
+function setupPointerEvents(timeline, verticalScrollSpeed, horizontalScrollSpeed, rescaleSpeed) {
+  // Ensure the canvas variable references your canvas element
+
+  canvas.style.touchAction = 'none'; // disable native panning/zoom on this element
+
+  let mouseX = -1;
+  let mouseY = -1;
+
+  // dragging state
+  let isPanning = false;
+  let dragStart = { x: 0, y: 0 };
+  let drawScheduled = false;
+  let lastHover = "";
+  let activePointerId = null;
+
+  // ---- Wheel (desktop)
+  window.addEventListener("wheel", (event) => {
+    let didChange = false;
+
+    // horizontal movement (Shift)
+    if (event.shiftKey) {
+      if (event.deltaY > 0) {
+        timeline.moveHorizontal(horizontalScrollSpeed);
+        didChange = true;
+      } else if (event.deltaY < 0) {
+        timeline.moveHorizontal(-horizontalScrollSpeed);
+        didChange = true;
+      }
+    }
+    // zoom (Alt)
+    else if (event.altKey) {
+      if (event.deltaY > 0) {
+        timeline.rescale(-rescaleSpeed, mouseX);
+        didChange = true;
+      } else if (event.deltaY < 0) {
+        timeline.rescale(rescaleSpeed, mouseX);
+        didChange = true;
+      }
+    }
+    // vertical movement (no modifier)
+    else {
+      if (event.deltaY > 0) {
+        timeline.moveVertical(-verticalScrollSpeed);
+        didChange = true;
+      } else if (event.deltaY < 0) {
+        timeline.moveVertical(verticalScrollSpeed);
+        didChange = true;
+      }
+    }
+
+    if (didChange && !drawScheduled) {
+      drawScheduled = true;
+      requestAnimationFrame(() => {
+        timeline.draw(canvas);
+        drawScheduled = false;
+      });
+    }
+
+    // prevent page scroll
+    event.preventDefault();
+  }, { passive: false });
+
+  // ----- Pointer Events: works for mouse, touch, pen -----
+  function updateCoordsFromEvent(e) {
+    const rect = canvas.getBoundingClientRect();
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
+  }
+
+  canvas.addEventListener("pointerdown", (e) => {
+    // only track first/primary pointer for panning
+    if (activePointerId !== null && activePointerId !== e.pointerId) return;
+
+    updateCoordsFromEvent(e);
+    isPanning = true;
+    activePointerId = e.pointerId;
+    dragStart.x = mouseX;
+    dragStart.y = mouseY;
+
+    // keep getting events even if finger leaves the canvas
+    canvas.setPointerCapture(e.pointerId);
+
+    // tell timeline mouse is down
+    timeline.updateMouseState(mouseX, mouseY, true);
+
+    // prevent browser gestures (text selection, rubber-band scroll)
+    e.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener("pointermove", (e) => {
+    // hover updates even when not panning
+    updateCoordsFromEvent(e);
+    let didChange = false;
+
+    const hoverSelection = timeline.updateMouseState(mouseX, mouseY);
+    if (hoverSelection !== lastHover) {
+      lastHover = hoverSelection;
+      didChange = true;
+    }
+
+    if (isPanning && e.pointerId === activePointerId) {
+      const dx = mouseX - dragStart.x;
+      const dy = mouseY - dragStart.y;
+
+      timeline.moveHorizontal(dx);
+      timeline.moveVertical(dy);
+
+      dragStart.x = mouseX;
+      dragStart.y = mouseY;
+      didChange = true;
+
+      // prevent page scrolling while dragging on touch
+      e.preventDefault();
+    }
+
+    if (didChange && !drawScheduled) {
+      drawScheduled = true;
+      requestAnimationFrame(() => {
+        timeline.draw(canvas);
+        drawScheduled = false;
+      });
+    }
+  }, { passive: false });
+
+  function endPan(e) {
+    if (e.pointerId !== activePointerId) return;
+    isPanning = false;
+    activePointerId = null;
+    try { canvas.releasePointerCapture(e.pointerId); } catch {}
+  }
+
+  canvas.addEventListener("pointerup", endPan);
+  canvas.addEventListener("pointercancel", endPan);
+  canvas.addEventListener("pointerleave", (e) => {
+    // pointerleave fires on mouse; touch generally uses pointercancel
+    if (e.pointerId === activePointerId) endPan(e);
+  });
+
+  canvas.addEventListener("contextmenu", () => {
+    isPanning = false;
+  });
+}
+
+
 /**
  * Sets up mouse interaction events for the timeline canvas.
  * 
@@ -2206,7 +2350,7 @@ function setupKeyboardControls(timeline, verticalScrollSpeed, horizontalScrollSp
  * @param {number} rescaleSpeed - Pixels to scale timeline per zoom step.
  * @returns {void}
  */
-function setupMouseEvents(timeline, verticalScrollSpeed, horizontalScrollSpeed, rescaleSpeed){
+/*function setupMouseEvents(timeline, verticalScrollSpeed, horizontalScrollSpeed, rescaleSpeed){
   let mouseX = -1;
   let mouseY = -1;
 
@@ -2319,7 +2463,7 @@ function setupMouseEvents(timeline, verticalScrollSpeed, horizontalScrollSpeed, 
     isDragging = false;
   });
 
-}
+}*/
 
 /**
  * Attaches event listeners to zoom-in and zoom-out buttons for continuous zooming.
@@ -2408,7 +2552,7 @@ function setupCanvas(timeLineJSON) {
   let rescaleSpeed = 10;
   
   setupKeyboardControls(timeline, verticalScrollSpeed, horizontalScrollSpeed, rescaleSpeed)
-  setupMouseEvents(timeline, verticalScrollSpeed, horizontalScrollSpeed, rescaleSpeed);
+  setupPointerEvents(timeline, verticalScrollSpeed, horizontalScrollSpeed, rescaleSpeed);
   setupZoomButtons(timeline, rescaleSpeed)
   showInstructions();  
 }

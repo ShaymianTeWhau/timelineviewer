@@ -2290,6 +2290,12 @@ function setupPointerEvents(timeline, verticalScrollSpeed, horizontalScrollSpeed
 
     // prevent browser gestures (text selection, rubber-band scroll)
     e.preventDefault();
+
+    drawScheduled = true;
+    requestAnimationFrame(() => {
+      timeline.draw(canvas);
+      drawScheduled = false;
+    });
   }, { passive: false });
 
   canvas.addEventListener("pointermove", (e) => {

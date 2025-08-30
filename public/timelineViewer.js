@@ -2540,11 +2540,11 @@ function setupZoomButtons(timeline, rescaleSpeed){
   zoomInButton.addEventListener("pointerdown", () => startZooming(1));
   zoomOutButton.addEventListener("pointerdown", () => startZooming(-1));
 
-  zoomInButton.addEventListener("mouseup", stopZooming);
-  zoomOutButton.addEventListener("mouseup", stopZooming);
+  zoomInButton.addEventListener("pointerup", stopZooming);
+  zoomOutButton.addEventListener("pointerup", stopZooming);
 
-  zoomInButton.addEventListener("mouseleave", stopZooming);
-  zoomOutButton.addEventListener("mouseleave", stopZooming);
+  zoomInButton.addEventListener("pointerleave", stopZooming);
+  zoomOutButton.addEventListener("pointerleave", stopZooming);
 
   zoomInButton.addEventListener("contextmenu", stopZooming);
   zoomOutButton.addEventListener("contextmenu", stopZooming);

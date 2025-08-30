@@ -2537,8 +2537,8 @@ function setupZoomButtons(timeline, rescaleSpeed){
     zoomInterval = null;
   }
 
-  zoomInButton.addEventListener("mousedown", () => startZooming(1));
-  zoomOutButton.addEventListener("mousedown", () => startZooming(-1));
+  zoomInButton.addEventListener("pointerdown", () => startZooming(1));
+  zoomOutButton.addEventListener("pointerdown", () => startZooming(-1));
 
   zoomInButton.addEventListener("mouseup", stopZooming);
   zoomOutButton.addEventListener("mouseup", stopZooming);

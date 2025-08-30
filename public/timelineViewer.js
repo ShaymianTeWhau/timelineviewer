@@ -2537,8 +2537,14 @@ function setupZoomButtons(timeline, rescaleSpeed){
     zoomInterval = null;
   }
 
-  zoomInButton.addEventListener("pointerdown", () => startZooming(1));
-  zoomOutButton.addEventListener("pointerdown", () => startZooming(-1));
+  zoomInButton.addEventListener("pointerdown", (e) => {
+    e.preventDefault()
+    startZooming(1)
+  });
+  zoomOutButton.addEventListener("pointerdown", (e) => {
+    e.preventDefault()
+    startZooming(-1)
+  });
 
   zoomInButton.addEventListener("pointerup", stopZooming);
   zoomOutButton.addEventListener("pointerup", stopZooming);
@@ -2546,8 +2552,14 @@ function setupZoomButtons(timeline, rescaleSpeed){
   zoomInButton.addEventListener("pointerleave", stopZooming);
   zoomOutButton.addEventListener("pointerleave", stopZooming);
 
-  zoomInButton.addEventListener("contextmenu", stopZooming);
-  zoomOutButton.addEventListener("contextmenu", stopZooming);
+  zoomInButton.addEventListener("contextmenu", (e) => {
+    e.preventDefault()
+    stopZooming
+  });
+  zoomOutButton.addEventListener("contextmenu", (e) => {
+    e.preventDefault()
+    stopZooming
+  });
 }
 
 /**

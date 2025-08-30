@@ -102,6 +102,11 @@ body {
   background-color: rgba(50, 50, 50, 0.9);
 }
 
+#zoom-in, #zoom-out{
+  touch-action: none;
+  user-select: none;
+}
+
 #lane-panel {
   position: fixed;
   bottom: 130px;

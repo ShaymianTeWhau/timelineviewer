@@ -13,7 +13,7 @@ export default function TimelinePage() {
         <link rel="icon" type="image/png" href="/timeline-viewer.png" />
         <link rel="stylesheet" href="/style.css" />
       </Head>
-      <canvas id="timeline-canvas" data-timeline-id="timeline-example.json"></canvas>
+      <canvas id="timeline-canvas" data-timeline-id="timeline-bible.json"></canvas>
       <div id="info-panel">Select Time Period</div>
       <div id="zoom-controls">
         <button id="zoom-in">+</button>

@@ -2078,7 +2078,8 @@ function showInstructions(){
  * @function
  */
 function startApp(){
-  fetch('timeline-example.json')
+  const filename = document.getElementById("timeline-canvas").dataset.timelineId
+  fetch(filename)
   .then(res => res.json())
   .then(data => {
     setupCanvas(data)

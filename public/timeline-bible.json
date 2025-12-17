@@ -1,0 +1,755 @@
+{
+  "title": "Bible Timeline",
+  "scaleWidth": 200,
+  "scaleType": "millennium",
+  "focusDate": "1-0-1-0-0-0-0",
+  "focusX": 1000,
+  "swimlanes": 
+  [
+    {
+        "title": "Empires",
+        "isHidden": false,
+        "timePeriods": 
+        [
+          {
+            "name": "Akkadian Empire",
+            "startDate": "-2333-0-01",
+            "endDate": "-2153-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "The first ancient empire of Mesopotamia, founded by Sargon of Akkad.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
+          },
+          {
+            "name": "Egyptian Empire (New Kingdom)",
+            "startDate": "-1569-0-01",
+            "endDate": "-1069-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "The period of Egypt's greatest power and prosperity, including the reigns of Tutankhamun and Ramses II.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
+          },
+          {
+            "name": "Persian Empire (Achaemenid)",
+            "startDate": "-0549-0-01",
+            "endDate": "-0329-0-01",
+            "hasApproxStartDate": false,
+            "hasApproxEndDate": false,
+            "description": "An ancient empire founded by Cyrus the Great, known for its tolerance and efficient administration.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
+          },
+          {
+            "name": "Macedonian Empire",
+            "startDate": "-0335-0-01",
+            "endDate": "-0322-5-10",
+            "hasApproxStartDate": false,
+            "hasApproxEndDate": false,
+            "description": "Empire founded by Alexander the Great, stretching from Greece to India.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
+          },
+          {
+            "name": "Roman Empire",
+            "startDate": "-0026-0-16",
+            "endDate": "0476-8-04",
+            "hasApproxStartDate": false,
+            "hasApproxEndDate": false,
+            "description": "The dominant power in Europe and the Mediterranean for centuries; transitioned from Republic to Empire under Augustus.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
+          },
+          {
+            "name": "Byzantine Empire",
+            "startDate": "0330-4-11",
+            "endDate": "1453-4-29",
+            "hasApproxStartDate": false,
+            "hasApproxEndDate": false,
+            "description": "The Eastern Roman Empire, lasting over a thousand years after the fall of Rome.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
+          },
+          {
+            "name": "Mongol Empire",
+            "startDate": "1206-0-01",
+            "endDate": "1368-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "The largest contiguous empire in history, founded by Genghis Khan.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
+          },
+          {
+            "name": "Ottoman Empire",
+            "startDate": "1299-0-01",
+            "endDate": "1922-10-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": false,
+            "description": "A powerful Islamic empire that controlled much of Southeast Europe, Western Asia, and North Africa.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
+          },
+          {
+            "name": "British Empire",
+            "startDate": "1583-0-01",
+            "endDate": "1997-6-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": false,
+            "description": "The largest empire in history, with colonies and territories on every continent.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
+          },
+          {
+            "name": "Holy Roman Empire",
+            "startDate": "0800-11-25",
+            "endDate": "1806-7-06",
+            "hasApproxStartDate": false,
+            "hasApproxEndDate": false,
+            "description": "A multi-ethnic complex of territories in central Europe that developed during the early Middle Ages.",
+            "color1": "rgb(255,98,0,1)",
+            "color2": "rgb(255,170,0)"
+          }
+        ],
+        "color": "rgb(255,227,209)"
+    },
+    {
+        "title": "Books",
+        "isHidden": false,
+        "timePeriods": 
+        [
+          {
+            "name": "Genesis",
+            "startDate": "-4000-0-01",
+            "endDate": "-1657-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },
+          {
+            "name": "Exodus",
+            "startDate": "-1657-0-01",
+            "endDate": "-1512-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },
+          {
+            "name": "Leviticus",
+            "startDate": "-1512-0-01",
+            "endDate": "-1512-0-02",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },
+          {
+            "name": "Numbers",
+            "startDate": "-1512-0-01",
+            "endDate": "-1473-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },
+          {
+            "name": "Deuteronomy",
+            "startDate": "-1473-0-01",
+            "endDate": "-1473-0-03",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Joshua",
+            "startDate": "-1473-0-01",
+            "endDate": "-1450-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Judges",
+            "startDate": "-1450-0-01",
+            "endDate": "-1120-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Ruth",
+            "startDate": "-1090-0-01",
+            "endDate": "-1079-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "1 Samuel",
+            "startDate": "-1180-0-01",
+            "endDate": "-1078-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "2 Samuel",
+            "startDate": "-1077-0-01",
+            "endDate": "-1040-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "1 Kings",
+            "startDate": "-1040-0-01",
+            "endDate": "-911-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "2 Kings",
+            "startDate": "-920-0-01",
+            "endDate": "-580-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "1 Chronicles",
+            "startDate": "-1077-0-01",
+            "endDate": "-1037-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "2 Chronicles",
+            "startDate": "-1037-0-01",
+            "endDate": "-537-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Ezra",
+            "startDate": "-537-0-01",
+            "endDate": "-467-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Nehemiah",
+            "startDate": "-456-0-01",
+            "endDate": "-443-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Esther",
+            "startDate": "-493-0-01",
+            "endDate": "-475-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Job",
+            "startDate": "-1657-0-01",
+            "endDate": "-1473-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "Over 140 years between 1657 and 1473",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Psalms",
+            "startDate": "-460-0-01",
+            "endDate": "-460-0-12",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Proverbs",
+            "startDate": "-717-0-01",
+            "endDate": "-717-0-12",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Ecclesiastes",
+            "startDate": "-1000-0-01",
+            "endDate": "-999-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "Written before 1000bc",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Song of Solomon",
+            "startDate": "-1020-0-01",
+            "endDate": "-1020-0-12",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Isaiah",
+            "startDate": "-778-0-01",
+            "endDate": "-732-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Jeremiah",
+            "startDate": "-647-0-01",
+            "endDate": "-580-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Lamentations",
+            "startDate": "-607-0-01",
+            "endDate": "-607-0-12",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Ezekiel",
+            "startDate": "-613-0-01",
+            "endDate": "-591-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Daniel",
+            "startDate": "-618-0-01",
+            "endDate": "-536-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Hosea",
+            "startDate": "-804-0-01",
+            "endDate": "-745-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Joel",
+            "startDate": "-820-0-01",
+            "endDate": "-820-0-12",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Amos",
+            "startDate": "-804-0-01",
+            "endDate": "-804-0-12",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Micah",
+            "startDate": "-777-0-01",
+            "endDate": "-717-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Nahum",
+            "startDate": "-633-0-01",
+            "endDate": "-632-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "Written before 632bc",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Habukkuk",
+            "startDate": "-628-0-01",
+            "endDate": "-628-0-12",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Zepheniah",
+            "startDate": "-649-0-01",
+            "endDate": "-648-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "Written before 648bc",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Haggai",
+            "startDate": "-520-0-01",
+            "endDate": "-520-0-12",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "112 days",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Zechariah",
+            "startDate": "-520-0-01",
+            "endDate": "-518-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Malachi",
+            "startDate": "-443-0-01",
+            "endDate": "-443-0-12",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Mathew",
+            "startDate": "-2-0-01",
+            "endDate": "33-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Mark",
+            "startDate": "29-0-01",
+            "endDate": "33-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Luke",
+            "startDate": "3-0-01",
+            "endDate": "33-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "John",
+            "startDate": "29-0-01",
+            "endDate": "33-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Acts",
+            "startDate": "33-0-01",
+            "endDate": "61-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Romans",
+            "startDate": "56-0-01",
+            "endDate": "56-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "1 Corinthians",
+            "startDate": "55-0-01",
+            "endDate": "55-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "2 Corinthians",
+            "startDate": "55-0-01",
+            "endDate": "55-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Galatians",
+            "startDate": "50-0-01",
+            "endDate": "52-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Ephesians",
+            "startDate": "60-0-01",
+            "endDate": "61-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Philippians",
+            "startDate": "60-0-01",
+            "endDate": "61-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Colossians",
+            "startDate": "60-0-01",
+            "endDate": "61-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "1 Thessalonians",
+            "startDate": "50-0-01",
+            "endDate": "50-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "2 Thessalonians",
+            "startDate": "51-0-01",
+            "endDate": "51-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "1 Timothy",
+            "startDate": "61-0-01",
+            "endDate": "64-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "2 Timothy",
+            "startDate": "65-0-01",
+            "endDate": "65-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Philemon",
+            "startDate": "60-0-01",
+            "endDate": "61-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Hebrews",
+            "startDate": "61-0-01",
+            "endDate": "61-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "James",
+            "startDate": "62-0-01",
+            "endDate": "62-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "Written before 62",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "1 Peter",
+            "startDate": "62-0-01",
+            "endDate": "64-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "2 Peter",
+            "startDate": "64-0-01",
+            "endDate": "64-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "1 John",
+            "startDate": "98-0-01",
+            "endDate": "98-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "2 John",
+            "startDate": "98-0-01",
+            "endDate": "98-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "3 John",
+            "startDate": "98-0-01",
+            "endDate": "98-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Jude",
+            "startDate": "65-0-01",
+            "endDate": "65-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          },{
+            "name": "Revelation",
+            "startDate": "96-0-01",
+            "endDate": "96-0-01",
+            "hasApproxStartDate": true,
+            "hasApproxEndDate": true,
+            "description": "",
+            "color1": "rgb(255,60,60)",
+            "color2": "rgb(130,0,0)"
+          }
+        ],
+        "color": "rgb(255,213,213)"
+    },
+    {
+        "title": "Kings of Israel",
+        "isHidden": false,
+        "timePeriods": 
+        [
+          {"name":"David","startDate":"-1077-0-01","endDate":"-1037-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Solomon","startDate":"-1037-0-01","endDate":"-997-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Jeroboam","startDate":"-997-0-01","endDate":"-976-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Nadab","startDate":"-976-0-01","endDate":"-975-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Baasha","startDate":"-975-0-01","endDate":"-952-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Elah","startDate":"-952-0-01","endDate":"-951-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Zimri","startDate":"-951-0-01","endDate":"-951-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Omri and Tibni","startDate":"-951-0-01","endDate":"-947-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Omri (alone)","startDate":"-947-0-01","endDate":"-940-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Ahab","startDate":"-940-0-01","endDate":"-920-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Ahaziah","startDate":"-920-0-01","endDate":"-917-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Jehoram","startDate":"-917-0-01","endDate":"-905-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Jehu","startDate":"-905-0-01","endDate":"-876-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Jehoahaz","startDate":"-876-0-01","endDate":"-862-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Jehoahaz and Jehoash","startDate":"-862-0-01","endDate":"-859-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Jehoash (alone)","startDate":"-859-0-01","endDate":"-844-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Jeroboam II","startDate":"-844-0-01","endDate":"-803-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Zechariah","startDate":"-803-0-01","endDate":"-791-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Shallum","startDate":"-791-0-01","endDate":"-780-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Menahem","startDate":"-780-0-01","endDate":"-778-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Pekahiah","startDate":"-778-0-01","endDate":"-758-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Pekah","startDate":"-758-0-01","endDate":"-748-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"},
+          {"name":"Hoshea","startDate":"-748-0-01","endDate":"-740-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(102, 165, 47)","color2":"rgb(102, 165, 47)"}
+        ],
+        "color": "rgb(230,230,230)"
+    },
+    {
+        "title": "Kings of Judah",
+        "isHidden": false,
+        "timePeriods": 
+        [
+          {"name":"Abijah (Abiham)","startDate":"-980-0-01","endDate":"-978-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Asa","startDate":"-978-0-01","endDate":"-937-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Jehoshaphat","startDate":"-937-0-01","endDate":"-913-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Jehoram","startDate":"-913-0-01","endDate":"-906-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Ahaziah","startDate":"-906-0-01","endDate":"-905-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Queen Athaliah","startDate":"-905-0-01","endDate":"-898-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Jehoash","startDate":"-898-0-01","endDate":"-858-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Amaziah","startDate":"-858-0-01","endDate":"-829-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Uzziah (Azariah)","startDate":"-829-0-01","endDate":"-777-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Jotham","startDate":"-777-0-01","endDate":"-765-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Ahaz","startDate":"-765-0-01","endDate":"-746-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Hezekiah","startDate":"-746-0-01","endDate":"-716-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Manasseh","startDate":"-716-0-01","endDate":"-661-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Amon","startDate":"-661-0-01","endDate":"-659-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Josiah","startDate":"-659-0-01","endDate":"-628-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Jehoiakim","startDate":"-628-0-01","endDate":"-618-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Jehoiachin","startDate":"-618-0-01","endDate":"-617-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"},
+{"name":"Zedekiah","startDate":"-617-0-01","endDate":"-607-0-01","hasApproxStartDate":"true","hasApproxEndDate":"true","description":"","color1":"rgb(179, 211, 68)","color2":"rgb(179, 211, 68)"}
+        ],
+        "color": "rgb(230,230,230)"
+    }
+  ]
+}

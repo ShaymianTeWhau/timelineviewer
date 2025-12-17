@@ -5,8 +5,12 @@ import TimelinePage from "./timeline/page";
 export default function Home() {
   return (
     <main>
-      <Link href="/timeline">Click here to see an example timeline</Link>
-      <Link href="/bible">Click here to see the Bible timeline</Link>
+      <p>
+        <Link href="/timeline">Click here to see an example timeline</Link>
+      </p>
+      <p>
+        <Link href="/bible">Click here to see the Bible timeline</Link>
+      </p>
     </main>
   );
 }

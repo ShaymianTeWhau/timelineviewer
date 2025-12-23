@@ -319,6 +319,10 @@ class Timeline {
     return this.#canvasWidth
   }
 
+  getCanvasHeight(){
+    return this.#canvasHeight
+  }
+
   /**
    * Sets the central focus date around which the timeline is built.
    * 
@@ -533,7 +537,7 @@ class Timeline {
    * @param {number} rescaleSpeed - The amount to change the scale width by. Positive to zoom in, negative to zoom out.
    * @param {number} mouseX - The x-coordinate of the mouse, used to determine the nearest timeline gridline to focus on.
    */
-  rescale(rescaleSpeed, mouseX) {
+  rescale(rescaleSpeed, mouseX, mouseY) {
     // -rescaleSpeed to scale zoom out, +rescaleSpeed to scale zoom in
     this.#scaleWidth += rescaleSpeed;
     
@@ -557,7 +561,18 @@ class Timeline {
 
     // tell all swimlanes they need to reassign rows to time periods
     for(let i = 0;i<this.#swimLaneArr.length;i++){
-      this.#swimLaneArr[i].rescale();
+      let curSwimlane = this.#swimLaneArr[i]
+      curSwimlane.rescale();
+
+      // find which swimlane the cursor is hovering over
+      let bottomY = curSwimlane.getBottomY();
+      let topY = bottomY - curSwimlane.getHeight();
+
+      if(mouseY <= bottomY && mouseY > topY){
+        curSwimlane.setIsHover(true);
+      } else{
+        curSwimlane.setIsHover(false);
+      }
     }
   }
 
@@ -1067,9 +1082,10 @@ class Timeline {
     this.#linePosArr.sort((a, b) => a - b);
 
     // draw swim lane backgrounds
-    SwimLane.drawBackgrounds(ctx,this, this.#swimLaneArr, this.#yOffset + this.#canvasHeight - this.#baseLineHeight);
+    let yAdjustment = SwimLane.drawBackgrounds(ctx,this, this.#swimLaneArr, this.#yOffset, this.#canvasHeight, this.#baseLineHeight);
     if(SHOWGRIDLINES) this.#drawGridLines(ctx);
     SwimLane.drawForegrounds(ctx, this.#swimLaneArr);
+    this.#yOffset += yAdjustment; // adjusts yOffset when swimlanes are resized around cursor position
 
     this.drawBaseline(canvas);
   }
@@ -1302,6 +1318,7 @@ class SwimLane{
   #rowHeight;
   #color;
   #needsNewRows = true;
+  #isHover = false;
 
   /**
    * Creates a new SwimLane instance to group and display time periods on the timeline.
@@ -1332,17 +1349,57 @@ class SwimLane{
    * @param {Timeline} timeline - The timeline instance used for layout and scaling context.
    * @param {SwimLane[]} swimLaneArr - An array of SwimLane instances to draw.
    * @param {number} y - The starting Y-coordinate from which to begin drawing upward.
-   * @returns {void}
+   * @returns {number} yAdjustment - To readjust yOffset when swimlanes are repositioned around mouseY.
    */
-  static drawBackgrounds(ctx,timeline, swimLaneArr, y){
+  static drawBackgrounds(ctx,timeline, swimLaneArr, yOffset, canvasHeight, baseLineHeight){
+    let y = yOffset + canvasHeight - baseLineHeight 
+    let yAdjustment = 0;
+
     // function to draw backgrounds for an array of SwimLanes (bottom up), beginning at a y coordinate
-    
-    for(let i = swimLaneArr.length-1;i>=0;i--){
+    let startIndex = swimLaneArr.length-1;
+
+    if(swimLaneArr[0].#needsNewRows){
+      for(let i = 0;i< swimLaneArr.length;i++){
+
+        if(swimLaneArr[i].#isHover){
+          y = swimLaneArr[i].#bottomY
+          startIndex = i;
+          break;
+        }
+      }
+    }
+
+    let startY = y;
+
+    let i = startIndex;
+    // draw hovered swimlane and above
+    for(let i = startIndex;i>=0;i--){
       if(!swimLaneArr[i].getVisibility()) continue;
       swimLaneArr[i].setUpTimePeriods(ctx, timeline);
       y -= swimLaneArr[i].getHeight();
       swimLaneArr[i].drawBackground(ctx, y);
     }
+
+    // draw swimlanes below hovered swimlane
+    if(startIndex == swimLaneArr.length-1){
+      return 0;
+    }
+
+    y = startY;
+    for(let i = startIndex + 1;i<swimLaneArr.length;i++){
+      if(!swimLaneArr[i].getVisibility()) continue;
+      let oldHeight = swimLaneArr[i].getHeight();
+
+      swimLaneArr[i].setUpTimePeriods(ctx, timeline);
+      swimLaneArr[i].drawBackground(ctx, y);
+      let newHeight = swimLaneArr[i].getHeight();
+      let deltaHeight = newHeight - oldHeight;
+      y += newHeight;
+
+      yAdjustment += deltaHeight
+    }
+
+    return yAdjustment
   }
 
   /**
@@ -1386,6 +1443,27 @@ class SwimLane{
     if(this.#isHidden) return 0;
     return this.#height;
   }
+
+  setBottomY(y){
+    this.#bottomY = y;
+  }
+
+  getBottomY(){
+    return this.#bottomY;
+  }
+
+  getHeight(){
+    return this.#height
+  }
+
+  setIsHover(isHover){
+    this.#isHover = isHover;
+  }
+
+  getIsHover(){
+    return this.#isHover;
+  }
+  
 
   getTimePeriods(){
     return this.#timePeriodArr;
@@ -2178,10 +2256,10 @@ function setupKeyboardControls(timeline, verticalScrollSpeed, horizontalScrollSp
     if (event.altKey){
       if (event.key === "ArrowUp") {
         // scale zoom in
-        timeline.rescale(rescaleSpeed, timeline.getCanvasWidth()/2);
+        timeline.rescale(rescaleSpeed, timeline.getCanvasWidth()/2, timeline.getCanvasHeight()/2);
       } else if (event.key === "ArrowDown") {
         // scale zoom out
-        timeline.rescale(-rescaleSpeed, timeline.getCanvasWidth()/2);
+        timeline.rescale(-rescaleSpeed, timeline.getCanvasWidth()/2, timeline.getCanvasHeight()/2);
       }
     }
     
@@ -2236,10 +2314,10 @@ function setupPointerEvents(timeline, verticalScrollSpeed, horizontalScrollSpeed
     // zoom (Alt)
     else if (event.altKey) {
       if (event.deltaY > 0) {
-        timeline.rescale(-rescaleSpeed, mouseX);
+        timeline.rescale(-rescaleSpeed, mouseX, mouseY);
         didChange = true;
       } else if (event.deltaY < 0) {
-        timeline.rescale(rescaleSpeed, mouseX);
+        timeline.rescale(rescaleSpeed, mouseX, mouseY);
         didChange = true;
       }
     }
@@ -2511,13 +2589,14 @@ function setupZoomButtons(timeline, rescaleSpeed){
   const firstZoomDelay = 250;
 
   function startZooming(direction) {
-    const centerPoint = timeline.getCanvasWidth() /2;
+    const centerPointX = timeline.getCanvasWidth() /2;
+    const centerPointY = timeline.getCanvasHeight() /2;
 
     // prevent multiple intervals
     if (zoomInterval || zoomTimeout) return;
 
     // initial zoom
-    timeline.rescale(direction * rescaleSpeed, centerPoint);
+    timeline.rescale(direction * rescaleSpeed, centerPointX, centerPointY);
     timeline.draw(canvas);
 
     // Timeout after first zoom
@@ -2525,7 +2604,7 @@ function setupZoomButtons(timeline, rescaleSpeed){
 
       // After first zoom, start regular interval
       zoomInterval = setInterval(() => {
-        timeline.rescale(direction * rescaleSpeed, centerPoint);
+        timeline.rescale(direction * rescaleSpeed, centerPointX, centerPointY);
         timeline.draw(canvas);
       }, zoomSpeedMs);
     }, firstZoomDelay);
